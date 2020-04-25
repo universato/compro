@@ -4,7 +4,7 @@ struct Int
   def cmb(k, m=10**9+7)
     n = self
     k = n - k if k > n - k
-    return n.prm(k, m) * k.prm(k,m).modinv(m) % m
+    n.prm(k, m) * k.prm(k,m).modinv(m) % m
   end
   # mod must be a prime number
   def modinv(mod = 10**9+7)
