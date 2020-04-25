@@ -39,6 +39,11 @@ struct Int
     end
   end
 
+  def prime?
+    (2_i64).upto((self**0.5).floor){ |i| return false if self % i == 0 }
+    self != 1
+  end
+
   def prime_factor : Hash(Int64, Int64)
     return Hash{1_i64 => 1_i64} if 1 == self
     n = self.to_i64
@@ -83,6 +88,18 @@ describe Int do
     it "is power of an integer" do
       2.pow(10).should eq 1024
       2.pow(10, 1_000_000_007).should eq 1024
+    end
+  end
+  describe "#prime?" do
+    it "is true if an integer is a prime number" do
+      1.prime?.should be_false
+      2.prime?.should be_true
+      3.prime?.should be_true
+      4.prime?.should be_false
+      5.prime?.should be_true
+      9.prime?.should be_false
+      13.prime?.should be_true
+      121.prime?.should be_false
     end
   end
   describe "#prime_factor" do
