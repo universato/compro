@@ -1,15 +1,20 @@
 struct Int
 
+  # O(min(n,k) log m)
   # combination: nPk / k! (mod p), note: m must be a prime number
   def cmb(k, m=10**9+7)
     n = self
     k = n - k if k > n - k
     n.prm(k, m) * k.prm(k,m).modinv(m) % m
   end
+
   # mod must be a prime number
+  # O(log m)
   def modinv(mod = 10**9+7)
     pow(mod-2, mod)
   end
+
+  # O(log n)
   def pow(n : Int, mod = nil ) : Int
     a = to_i64
     res = 1_i64
@@ -25,10 +30,11 @@ struct Int
     res
   end
 
-  def prm(k, m = nil)
+  # O(k)
+  def prm(k, mod = nil)
     (0...k).reduce(1_i64) do |res,i|
       res *= (self - i )
-      res %= m if m
+      res %= mod if mod
       res
     end
   end
