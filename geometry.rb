@@ -13,6 +13,7 @@ end
 class Point
 
   attr_accessor :x, :y
+  include Comparable
 
   def initialize(x, y)
     @x = x
@@ -31,11 +32,7 @@ class Point
     ((x-v.x)**2 + (y-v.y)**2)**(0.5)
   end
 
-  def <(v); @x!=v.x ? @x<v.x : @y<v.y end
-  def >(v); @x!=v.x ? @x>v.x : @y>v.y end
-  def <=(v); @x!=v.x ? @x<v.x : @y<=v.y end
-  def >=(v); @x!=v.x ? @x>v.x : @y>=v.y end
-  #def <=>(v); @x!=v.x ? @x<=>v.x : @y<=>v.y end
+  def <=>(v); @x!=v.x ? @x<=>v.x : @y<=>v.y end
   def ==(v); (@x-v.x).abs < EPS && (@y-v.y).abs < EPS end
 
   def dot(v); @x*v.x + @y*v.y end
@@ -122,18 +119,6 @@ class Line
     res
   end
 
-  # 切断のところで修正した。d2への代入のl.t -> l.s
-  # これよくわからないので作りなおした。削除する?
-  # def getCrossPoint(l)
-  #   base = l.t - l.s
-  #   d1   = base.cross(@s-l.s).abs
-  #   d2   = base.cross(@t-l.t).abs #
-  #   # d2 = base.cross(@t-l.s).abs
-  #   t    = 1.0 * d1 / (d1+d2)
-  #   @s + (@t-@s) * t
-  # end
-
-  #　作りなおしたもの
   def getCrossPoint(l)
     base = t - s
     d1   = base.cross(l.t - l.s).abs
@@ -233,12 +218,7 @@ class Polygon
       l.push(points[i])
     end
 
-    # u.out
-    # l.out
-    # puts "l"
-
     l.points.reverse!
-    # l.out
     (u.size-2).downto(1){ |i| l.push(u.points[i]) }
     l
   end
@@ -280,10 +260,6 @@ class Polygon
       nex = points[(i+1)%n]
       q.push(cur) if (ln.s).ccw(ln.t, cur) != CLOCKWISE
       q.push(ln.getCrossPoint(line(cur,nex))) if (ln.s).ccw(ln.t, cur) *  (ln.s).ccw(ln.t, nex) < 0
-      # if (ln.s).ccw(ln.t, cur) *  (ln.s).ccw(ln.t, nex) < 0
-      #   p [ln, cur, nex, line(cur,nex)]
-      #   p ln.getCrossPoint(line(cur,nex))
-      # end
     end
     q
   end
@@ -472,40 +448,3 @@ class Geometry_Test < Minitest::Test
     assert_equal 1.414213562373095048, Polygon.new([point(0,0),point(1,0),point(1,1),point(0,1)]).diameter
   end
 end
-
-# x,y = gets.to_s.split.map{|t|t.to_f}
-# xc,yc,r = gets.to_s.split.map{|t|t.to_f}
-# xc1,yc1,r1 = gets.to_s.split.map{|t|t.to_f}
-# v = Point.new(x,y)
-# c = Circle.new(xy(xc,yc), r)
-
-# ans = c.common_tangent(v)
-# puts ans
-
-# q = gets.to_s.to_i
-
-# q.times do
-#   xs,ys,xt,yt = gets.to_s.split.map{|t|t.to_f}
-#   ln = line(xs,ys,xt,yt)
-
-#   ans = c.getCrossPoints(ln)
-#   puts "#{ans[0]} #{ans[1]}"
-# end
-
-
-# n = gets.to_s.to_i
-
-# g = Polygon.new
-# n.times do
-#   x,y = gets.to_s.split.map{|t|t.to_f}
-#   g.add_point(xy(x,y))
-# end
-# # p g.area
-# q = gets.to_s.to_i
-# q.times do
-#   xs,ys,xt,yt = gets.to_s.split.map{|t|t.to_f}
-#   l = line(xs,ys,xt,yt)
-#   # p l
-#   # g.cut(l).pout
-#   puts g.cut(l).area
-# end
