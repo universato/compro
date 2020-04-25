@@ -36,6 +36,8 @@ require 'minitest/autorun'
 
 class Array_Test < Minitest::Test
   def test_comparison_operator
+    assert [] < [5]
+    assert [] < ["a","b"]
     assert [1,2,3] < [3,4,5]
     assert [3,4,5] > [1,2,3]
     assert [1,1,1] == [1,1,1]
@@ -43,6 +45,8 @@ class Array_Test < Minitest::Test
     assert [1,2] > [1,1,1]
     assert [1,1] <= [1,1,1]
     assert [1,2] >= [1,1,1]
+    assert ["a","b","c"] < ["a", "b", "d"]
+    assert ["a","b","c"] < ["a", "b", "c", "d"]
   end
   def test_abs_method
     assert_equal [], [].abs
@@ -73,6 +77,7 @@ class Array_Test < Minitest::Test
     assert_equal([3,3,3], [3,3,3].cummax)
     assert_equal([12,12,12], [12,6,2].cummax)
     assert_equal([24,36,36], [24,36,9].cummax)
+    assert_equal([-6,-2,10,10], [-6,-2,10,-5].cummax)
   end
   def test_cumsum
     assert_equal([], [].cumsum)
@@ -82,6 +87,25 @@ class Array_Test < Minitest::Test
     assert_equal([3,6,9], [3,3,3].cumsum)
     assert_equal([12,18,20], [12,6,2].cumsum)
     assert_equal([24,60,69], [24,36,9].cumsum)
+    assert_equal([-1,0,-1,0], [-1,1,-1,1].cumsum)
+  end
+  def test_gcd
+    assert_nil [].gcd
+    assert_equal(1, [1].gcd)
+    assert_equal(1, [1,2,3].gcd)
+    assert_equal(1, [3,2,1].gcd)
+    assert_equal(3, [3,3,3].gcd)
+    assert_equal(2, [12,6,2].gcd)
+    assert_equal(3, [24,36,9].gcd)
+  end
+  def test_lcm
+    assert_nil [].lcm
+    assert_equal(1, [1].lcm)
+    assert_equal(6, [1,2,3].lcm)
+    assert_equal(6, [3,2,1].lcm)
+    assert_equal(3, [3,3,3].lcm)
+    assert_equal(12, [12,6,2].lcm)
+    assert_equal(72, [24,36,9].lcm)
   end
   def test_uniq?
     assert_equal(true, [].uniq?)
