@@ -25,6 +25,7 @@ class Facts
     @fact[n] * @factinv[n-k] % @mod
   end
 
+  # O(t - @n_max)
   private def setup_table(t)
     (@n_max+1).upto(t) do |i|
       @fact.push( @fact[-1] * i % @mod )
