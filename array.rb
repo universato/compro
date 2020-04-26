@@ -89,6 +89,21 @@ class Array_Test < Minitest::Test
     assert_equal([24,60,69], [24,36,9].cumsum)
     assert_equal([-1,0,-1,0], [-1,1,-1,1].cumsum)
   end
+  def test_deru_kui
+    assert_equal [], [].deru_kui(100)
+    assert_equal [], [].deru_kui(-100)
+    assert_equal [0,10,20,50], [0,10,20,100].deru_kui(50)
+    assert_equal [-5,3,10,20], [-5,3,10,100].deru_kui(20)
+    assert_equal [-5,3,3,3], [-5,3,10,100].deru_kui(3)
+    assert_equal [0,-4,-5,0], [3,-4,-5,6].deru_kui(0)
+  end
+  def test_diff
+    assert_equal [], [].diff
+    assert_equal [], [1].diff
+    assert_equal [10,10,80], [0,10,20,100].diff
+    assert_equal [8,7,90], [-5,3,10,100].diff
+    assert_equal [-7,-1,11], [3,-4,-5,6].diff
+  end
   def test_gcd
     assert_nil [].gcd
     assert_equal(1, [1].gcd)
@@ -106,6 +121,71 @@ class Array_Test < Minitest::Test
     assert_equal(3, [3,3,3].lcm)
     assert_equal(12, [12,6,2].lcm)
     assert_equal(72, [24,36,9].lcm)
+  end
+  def test_mean
+    assert_nil [].lcm
+    assert_equal(1, [1].mean)
+    assert_equal(2, [1,2,3].mean)
+    assert_equal(2, [3,2,1].mean)
+    assert_equal(3, [3,3,3].mean)
+    assert_equal(6.666666666666667, [12,6,2].mean)
+    assert_equal(23, [24,36,9].mean)
+  end
+  def test_med
+    # assert_nil [].med
+    assert_equal(1, [1].med)
+    assert_equal(2, [1,2,3].med)
+    assert_equal(2, [3,2,1].med)
+    assert_equal(3, [3,3,3].med)
+    assert_equal(6, [12,6,2].med)
+    assert_equal(24, [24,36,9].med)
+    assert_equal(2.5, [1,2,3,4].med)
+    assert_equal(15.5, [15,16].med)
+    assert_equal(3, [1,2,3,4,5].med)
+  end
+  def test_mod
+    assert_equal [], [].mod(10**9+7)
+    assert_equal([1], [1].mod(10**9+7))
+    assert_equal([1,2,3], [1,2,3].mod(10**9+7))
+    assert_equal([3,2,1], [3,2,1].mod(10**9+7))
+    assert_equal([3,3,3], [3,3,3].mod(10**9+7))
+    assert_equal([12,6,2], [12,6,2].mod(10**9+7))
+    assert_equal([0,0,1], [24,36,9].mod(2))
+    assert_equal([1,0,1,0], [1,2,3,4].mod(2))
+    assert_equal([0,1], [15,16].mod(3))
+    assert_equal([1,2,0,1,2], [1,2,3,4,5].mod(3))
+  end
+  def test_modsum
+    assert_equal 0, [].modsum(10**9+7)
+    assert_equal(1, [1].modsum(10**9+7))
+    assert_equal(6, [1,2,3].modsum(10**9+7))
+    assert_equal(6, [3,2,1].modsum(10**9+7))
+    assert_equal(9, [3,3,3].modsum(10**9+7))
+    assert_equal(20, [12,6,2].modsum(10**9+7))
+    assert_equal(1, [24,36,9].modsum(2))
+    assert_equal(0, [1,2,3,4].modsum(2))
+    assert_equal(1, [15,16].modsum(3))
+    assert_equal(1, [15,16].modsum(5))
+    assert_equal(0, [1,2,3,4,5].modsum(3))
+    assert_equal(3, [1,2,3,4,5].modsum(4))
+  end
+  def test_prod
+    assert_nil [].prod
+    assert_equal 1, [1].prod
+    assert_equal 6, [1,2,3].prod
+    assert_equal 6, [3,2,1].prod
+    assert_equal 27, [3,3,3].prod
+    assert_equal 144, [12,6,2].prod
+    assert_equal 24, [1,2,3,4].prod
+    assert_equal 120, [1,2,3,4,5].prod
+  end
+  def test_soko_age
+    assert_equal [], [].soko_age(100)
+    assert_equal [], [].soko_age(-100)
+    assert_equal [50,50,50,100], [0,10,20,100].soko_age(50)
+    assert_equal [20,20,20,100], [-5,3,10,100].soko_age(20)
+    assert_equal [3,3,10,100], [-5,3,10,100].soko_age(3)
+    assert_equal [3,0,0,6], [3,-4,-5,6].soko_age(0)
   end
   def test_uniq?
     assert_equal(true, [].uniq?)
