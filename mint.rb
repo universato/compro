@@ -20,7 +20,7 @@ class Integer
 
   def /(other)
     @@h[other] ||= other.pow(@@mod-2, @@mod)
-    self * @@h[other] % @@mod
+    self * @@h[other]
   end
 
   alias_method :primitive_equal, :==
@@ -37,7 +37,9 @@ class Integer
   end
 
   def >>(value)
-    self / 2.pow(value, @@mod)
+    t = 2.pow(value, @@mod)
+    @@h[t] ||= t.pow(@@mod-2, @@mod)
+    self * @@h[t]
   end
 
   alias_method :primitive_inspect, :inspect
