@@ -5,16 +5,14 @@ class Integer
   @@mod = 10 ** 9 + 7
   @@h = Hash.new
 
-  alias_method :primitive_add, :+
-  def +(other)
-    self.primitive_add(other) % @@mod
+  def +@(other)
+    super(other) % @@mod
     # res %= @@mod if res < 0 || res >= @@mod
     # res
   end
 
-  alias_method :primitive_minus, :-
-  def -(other)
-    self.primitive_minus(other) % @@mod
+  def -@(other)
+    super(other) % @@mod
     # res %= @@mod if res < 0 || res >= @@mod
     # res
   end
@@ -46,3 +44,5 @@ n, k = gets.to_s.split.map{|e|e.to_i}
 ans = (k..n+1).map{|i| i * (n + n - i + 1) / 2 - i * ( i - 1 ) / 2 + 1 }.sum
 
 puts ans
+# p 1.class.instance_methods
+# p 1.class.superclass.instance_methods
