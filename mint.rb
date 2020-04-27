@@ -7,14 +7,10 @@ class Integer
 
   def +@(other)
     super(other) % @@mod
-    # res %= @@mod if res < 0 || res >= @@mod
-    # res
   end
 
   def -@(other)
     super(other) % @@mod
-    # res %= @@mod if res < 0 || res >= @@mod
-    # res
   end
 
   alias_method :primitive_times, :*
@@ -25,6 +21,23 @@ class Integer
   def /(other)
     @@h[other] ||= other.pow(@@mod-2, @@mod)
     self * @@h[other] % @@mod
+  end
+
+  alias_method :primitive_equal, :==
+  def ==(other)
+    ( self % @@mod ).primitive_equal( other % @@mod )
+  end
+
+  def abs
+    self % @@mod
+  end
+
+  def <<(value)
+    self * 2.pow(value, @@mod)
+  end
+
+  def >>(value)
+    self / 2.pow(value, @@mod)
   end
 
   alias_method :primitive_inspect, :inspect
