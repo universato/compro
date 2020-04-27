@@ -28,6 +28,10 @@ class Integer
     ( self % @@mod ).primitive_equal( other % @@mod )
   end
 
+  # def **(other)
+  #   self.pow(other,@@mod)
+  # end
+
   def abs
     self % @@mod
   end
@@ -44,7 +48,7 @@ class Integer
 
   alias_method :primitive_inspect, :inspect
   def inspect
-    (self % @@mod).primitive_inspect
+    self.primitive_inspect + " (mod #{@@mod.primitive_to_s})"
   end
 
   alias_method :primitive_to_s, :to_s
