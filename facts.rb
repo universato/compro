@@ -26,15 +26,15 @@ class Facts
   end
 
   private
-  # O(t)
-  def setup_table(t)
-    (@n_max+1).upto(t) do |i|
-      @fact.push( @fact[-1] * i % @mod )
-      @inv.push( -@inv[@mod % i] * (@mod / i) % @mod )
-      @factinv.push( @factinv[-1] * @inv[-1] % @mod )
+    # O(t)
+    def setup_table(t)
+      (@n_max+1).upto(t) do |i|
+        @fact.push( @fact[-1] * i % @mod )
+        @inv.push( -@inv[@mod % i] * (@mod / i) % @mod )
+        @factinv.push( @factinv[-1] * @inv[-1] % @mod )
+      end
+      @n_max = t
     end
-    @n_max = t
-  end
 end
 
 require 'minitest/autorun'
