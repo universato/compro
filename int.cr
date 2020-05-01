@@ -1,6 +1,6 @@
 struct Int
 
-  # O(min(n,k) log m)
+  # O(min(n-k,k) log m)
   # combination: nPk / k! (mod p), note: m must be a prime number
   def cmb(k, m=10**9+7)
     n = self
