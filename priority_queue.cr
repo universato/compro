@@ -4,9 +4,14 @@ class PriorityQueue(T)
   @heap : Array(T)
   getter :size
 
-  def initialize( heap = Array(T).new(0_i64) )
+  def initialize
+    @size = 0_i64
+    @heap = [] of T
+  end
+
+  def initialize(heap : Enumerable(T))
     @size = heap.size.to_i64
-    @heap = heap.sort
+    @heap = heap.to_a.sort
   end
 
   # log( log n )
@@ -24,6 +29,10 @@ class PriorityQueue(T)
       i = par
     end
     @heap[i] = x
+  end
+
+  def <<(x)
+    push(x)
   end
 
   # log( log n )
@@ -47,6 +56,11 @@ class PriorityQueue(T)
     ret
   end
 
+  def pop?(x)
+    return nil if @heap.size == 0
+    pop(x)
+  end
+
   def top
     @heap[0]
   end
@@ -59,12 +73,16 @@ class PriorityQueue(T)
     @heap
   end
 
-  def empty?
-    @size == 0
-  end
-
   def any?
     @size > 0
+  end
+
+  delegate :empty?, to: @heap
+end
+
+class Array
+  def to_pq
+    PriorityQueue.new(self)
   end
 end
 
@@ -100,6 +118,20 @@ describe PriorityQueue do
       pq.any?.should eq true
       pq.pop.should eq 10
       pq.empty?.should eq true
+    end
+  end
+  describe "priorityque" do
+    it "is priorityque" do
+      n = 100
+      r = Array.new(n){|i| i }.shuffle
+      pq0 = r.to_pq
+      pq1 = PriorityQueue(Int32).new
+      r.each{|e| pq1.push(e) }
+      pq0.size.should eq n
+      pq1.size.should eq n
+      n.times{ pq0.pop.should eq pq1.pop }
+      #n.times{|i| pq0.pop.should eq i }
+      #n.times{|i| pq1.pop.should eq i }
     end
   end
 end
