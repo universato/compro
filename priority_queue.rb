@@ -114,9 +114,10 @@ end
 # AtCoder ABC137 D - Summer Vacation
 # AtCoder PAST002 F - タスクの消化
 
+
 require 'minitest/autorun'
 
-class MintExpendsNumeric_Test < Minitest::Test
+class PriorityQueue_Test < Minitest::Test
 
   def test_pq
     pq = PriorityQueue.new
@@ -172,3 +173,13 @@ class MintExpendsNumeric_Test < Minitest::Test
     assert_nil pq1.third
   end
 end
+
+# 蟻本 2-4 p.71
+# AtCoder ABC137 D - Summer Vacation
+# AtCoder PAST002 F - タスクの消化
+
+# [ruby] Priority Queueの実装 | このコードわからん
+# https://hai3.net/blog/ruby-priority-queue/
+
+# Ruby で Priority Queue を実装してみたい - Qiita
+# https://qiita.com/mochizukikotaro/items/c335e6dcc5020ead0b92
