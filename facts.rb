@@ -37,6 +37,8 @@ class Facts
     end
 end
 
+# ABC145 2020/5/6
+
 require 'minitest/autorun'
 
 class Facts_Test < Minitest::Test
