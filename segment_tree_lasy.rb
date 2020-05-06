@@ -8,19 +8,46 @@ class SegmentTree
     # @n: leaf node size(2^k)
     # @n*2-1: tree node size
     @nodes = Array.new(@n*2-1, @@inf)
+    @lazys = Array.new(@n*2-1, @@inf)
   end
 
-  def update(i, val)
-    # @n-1: inner node size
-    i += @n - 1
-    @nodes[i] = val
-    while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = [@nodes[2*i+1], @nodes[2*i+2]].min
+  # def update(i, val)
+  #   # @n-1: inner node size
+  #   i += @n - 1
+  #   @nodes[i] = val
+  #   while i > 0
+  #     i = ( i - 1 ) / 2
+  #     @nodes[i] = [@nodes[2*i+1], @nodes[2*i+2]].min
+  #   end
+  # end
+
+  def update(a,b,val,k=0,l=0,r=@n)
+    # p @nodes
+    eval(k)
+    if a <= l && r <= b
+      @lazys[k] = val
+      eval(k)
+    elsif a < r && l < b
+      update(a, b, val, k*2+1,l,(l+r)/2)
+      update(a, b, val, k*2+2,(l+r)/2,r)
+      #p @nodes
+      @nodes[k] = [@nodes[k*2+1], @nodes[k*2+2]].min
     end
   end
 
+  def eval(k)
+    return if @lazys[k] == @@inf
+    if k < @n - 1
+      @lazys[k*2+1] = @lazys[k]
+      @lazys[k*2+2] = @lazys[k]
+    end
+    @nodes[k] = @lazys[k]
+    @lazys[k] = @@inf
+  end
+
   def getmin(a, b, k=0, l=0, r=-1)
+
+    eval(k)
 
     r = @n if r < 0
     return @@inf if (r <= a || b <= l)
@@ -53,15 +80,15 @@ end
 
 n, q = gets.to_s.split.map{|t|t.to_i}
 st = SegmentTree.new(n)
-p st
+# p st
 q.times do
 
   c, x, y = gets.to_s.split
   c, x, y = c.to_i, x.to_i, y.to_i
 
   if c.zero?
-    st.update(x, y)
-    p st
+    st.update(x, x+1, y)
+    # p st
   else
     puts st.getmin(x, y+1)
   end
