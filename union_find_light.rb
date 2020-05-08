@@ -1,57 +1,19 @@
 class UnionFind
 
-  #attr_accessor :parents
   def initialize(n)
-    @rank = Array.new(n, 0)
-    @size = Array.new(n, 0)
-    @parents = Array.new(n, -1)
+    @parents = Array.new(n, -1) # if negative value means size
   end
 
   def unite(a, b)
     a = root(a)
     b = root(b)
 
-    if a == b
-      return false
-    else
-      a, b = b, a if @rank[a] < @rank[b]
-      @rank[a] += 1 if @rank[a] == @rank[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @size[a] += @size[b]
-      @size[b] = @size[a]
-      @parents[b] = a
-      return true
-    end
-  end
+    return false if a == b
 
-  def unite_by_size(a, b)
-    a = root(a)
-    b = root(b)
-
-    if a == b
-      return false
-    else
-      a, b = b, a if @size[a] < @size[b]
-      @size[a] += @size[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @parents[b] = a
-      return true
-    end
-  end
-
-  def unite_by_rank(a, b)
-    a = root(a)
-    b = root(b)
-
-    if a == b
-      return false
-    else
-      a, b = b, a if @rank[a] < @rank[b]
-      @rank[a] += 1 if @rank[a] == @rank[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @parents[b] = a
-      return true
-    end
+    a, b = b, a if -@parents[a] < -@parents[b]
+    @parents[a] += @parents[b] # if negative value means size
+    @parents[b] = a
+    true
   end
 
   def root(a)
@@ -63,7 +25,7 @@ class UnionFind
   end
 
   def size(a)
-    -parents[root(a)]
+    -@parents[root(a)]
   end
 end
 
@@ -77,8 +39,10 @@ class UnionFind_Test < Minitest::Test
     query.each do |(q,a,b)|
       if q == 0
         uft.unite(a,b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert uft.same?(a,b)
+        assert_equal uft.size(a), uft.size(b)
       end
     end
   end
@@ -88,6 +52,7 @@ class UnionFind_Test < Minitest::Test
     query.each do |(q,a,b)|
       if q == 0
         uft.unite(a,b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert uft.same?(a,b)
       end
@@ -99,6 +64,7 @@ class UnionFind_Test < Minitest::Test
     query.each do |(q,a,b)|
       if q == 0
         uft.unite(a,b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert !uft.same?(a,b)
       end
@@ -114,27 +80,27 @@ class UnionFind_Test < Minitest::Test
       assert !uft.same?(a,b)
     end
   end
-  def test_unite_by_size
-    n = 100
-    uf0 = UnionFind.new(n)
-    uf1 = UnionFind.new(n)
-    uf2 = UnionFind.new(n)
-    n.times do
-      a = rand(n)
-      b = rand(n)
-      uf0.unite(a, b)
-      uf1.unite_by_size(a, b)
-      uf2.unite_by_rank(a, b)
-      assert uf0.same?(a,b)
-      assert uf1.same?(a,b)
-    end
-    n.times do
-      a = rand(n)
-      b = rand(n)
-      assert_equal uf0.same?(a,b), uf1.same?(a,b)
-      assert_equal uf0.same?(a,b), uf2.same?(a,b)
-    end
-  end
+  # def test_unite_by_size
+  #   n = 100
+  #   uf0 = UnionFind.new(n)
+  #   uf1 = UnionFind.new(n)
+  #   uf2 = UnionFind.new(n)
+  #   n.times do
+  #     a = rand(n)
+  #     b = rand(n)
+  #     uf0.unite(a, b)
+  #     uf1.unite_by_size(a, b)
+  #     uf2.unite_by_rank(a, b)
+  #     assert uf0.same?(a,b)
+  #     assert uf1.same?(a,b)
+  #   end
+  #   n.times do
+  #     a = rand(n)
+  #     b = rand(n)
+  #     assert_equal uf0.same?(a,b), uf1.same?(a,b)
+  #     assert_equal uf0.same?(a,b), uf2.same?(a,b)
+  #   end
+  # end
 end
 
 # https://atc001.contest.atcoder.jp/tasks/unionfind_a
