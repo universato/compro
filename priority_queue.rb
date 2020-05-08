@@ -24,7 +24,7 @@ class PriorityQueue
 
     ret = @heap[0]
     x = @heap[@size-=1]
-    @heap.delete_at(-1)
+    # @heap.delete_at(-1)
 
     i = 0
     while (child = i * 2 + 1) < @size
@@ -36,6 +36,7 @@ class PriorityQueue
     end
 
     @heap[i] = x
+    @heap.delete_at(-1)
     ret
   end
 
