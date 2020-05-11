@@ -20,6 +20,10 @@ class Facts
     @fact[n]
   end
 
+  def hom(n,k)
+    cmb(n+k-1, k)
+  end
+
   def prm(n,k)
     setup_table(n) if @n_max < n
     @fact[n] * @factinv[n-k] % @mod
@@ -38,6 +42,29 @@ class Facts
 end
 
 # ABC145 2020/5/6
+# ABC156 Roaming 2020/5/11 AC
+# ABC167 E - Colorful Blocks 2020/5/11 AC
+
+# ABC156 Roaming 2020/5/11 AC
+# mod = 10 ** 9 + 7
+
+# n, k = gets.to_s.split.map{|t|t.to_i}
+
+# ans = 0
+# f = Facts.new
+
+# if n <= k
+#   puts f.hom(n, n)
+#   puts "a"
+#   exit
+# end
+
+# 0.upto([n-1, k].min) do |i|
+#   ans += f.cmb(n, i) * f.hom(n-i, i)
+#   ans %= mod if ans >= mod
+# end
+
+# puts ans
 
 require 'minitest/autorun'
 
@@ -66,6 +93,14 @@ class Facts_Test < Minitest::Test
     assert_equal 24, f.factorial(4)
     assert_equal 120, f.factorial(5)
     assert_equal 720, f.factorial(6)
+  end
+  def test_hom
+    mod = 10 ** 9 + 7
+    f = Facts.new
+    assert_equal 607923868, f.hom(200000,1000000000)
+    n = rand(1..100)
+    k = n + rand(1..100)
+    assert_equal f.hom(n,n), (0..k).reduce(0){|s,i|s += f.cmb(n, i) * f.hom(n-i, i) % mod } % mod
   end
   def test_prm
     f = Facts.new

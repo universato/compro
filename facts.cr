@@ -1,6 +1,6 @@
 class Facts
 
-  def initialize(mod : (Int64) = (10**9+7).to_i64, n_max : (Int64|Int32) = 1_i64 )
+  def initialize(mod : (Int64|Int32) = 10**9+7, n_max : (Int64|Int32) = 1_i64 )
     @mod = mod
     @n_max = n_max
     @fact = [1_i64, 1_i64]
@@ -10,7 +10,7 @@ class Facts
   end
 
   def cmb(n,r)
-    return 0 if r < 0 || n < r
+    return 0 if (r < 0 || n < r)
     setup_table(n) if @n_max < n
     @fact[n] * (@factinv[r] * @factinv[n-r] % @mod) % @mod
   end
@@ -18,6 +18,10 @@ class Facts
   def factorial(n)
     setup_table(n) if @n_max < n
     @fact[n]
+  end
+
+  def hom(n,k)
+    cmb(n+k-1, k)
   end
 
   def prm(n,k)
@@ -35,6 +39,10 @@ class Facts
     @n_max = t
   end
 end
+
+# ABC145
+# ABC156 Roaming 2020/5/11 AC ver 0.20
+# ABC167 E - Colorful Blocks 2020/5/11
 
 require "spec"
 
