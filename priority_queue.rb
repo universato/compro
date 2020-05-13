@@ -71,6 +71,10 @@ class PriorityQueue
   def third
     @size < 3 ? nil : [@heap[1], @heap[2]].max
   end
+
+  def sum
+    @heap.reduce(0){|s,t| s+t }
+  end
 end
 
 class Array
@@ -79,6 +83,10 @@ class Array
 
   def to_pq
     PriorityQueue.new(self)
+  end
+
+  def -@
+    map{|e| -e.to_i }
   end
 end
 
