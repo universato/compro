@@ -11,12 +11,40 @@ class Array
   def diff; (size-1).times.map { |i| self[i + 1] - self[i] } end
   def diff; (size-1).times.map { |i| self[i + 1] - self[i] }.to_a end
   # def diff; s = self[0]; self[1...(self.size)].map{|k|d=k-s; s=k; d} end
+  # Frequency Distribution
+  # 非負整数の度数分布を返す。0 ~ max(or 引数)の配列を返す。#tallyメソッドの配列版。
+  def fd(n=nil); n = self.max if n.nil?; res = Array.new(n+1,0);self.map{|e| res[e]+=1 };res;end
   def gcd; inject(:gcd) end
+
+  # Array#is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to
+  # O(self.size)
+  # required conditions:
+  # only positive values and sorted in ascending order;[1, 2, 3, 4, 5]
+  # or only negative values ans sorted in descending order;[-1, -2, -3, -4, -5]
+  def is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(x)
+    res = 0
+    l = 0
+    r = self.size - 1
+    while l < r
+      r -= 1 while l < r && !(self[l] * self[r] <= x)
+      res += r - l
+      l += 1
+    end
+    res
+  end
+
   def lcm; inject(:lcm) end
   def mean; inject(:+)*1.0/size end
   def med; n = size; s = sort; n.odd? ? s[n/2] : (s[n/2] + s[n/2-1]) / 2.0 end
   def mod(m); map{|e|e%m} end
   def modsum(m); reduce(0){|s,t| s+=t; s %= m if s >= m; s } end
+
+  # fd.reverse.cumsum.reverseの返り値による配列(reverse累積度数分布)が使うメソッド
+  def number_greater_than(x)
+    return self[0] if x <= 0
+    return 0  if size <= x+1
+    self[x+1]
+  end
   def prod; inject(:*) end
   def soko_age(m); map{|t| t<m ? m : t } end
   def uniq?
@@ -104,6 +132,14 @@ class Array_Test < Minitest::Test
     assert_equal [8,7,90], [-5,3,10,100].diff
     assert_equal [-7,-1,11], [3,-4,-5,6].diff
   end
+  def test_fd
+    assert_equal [0]*6, [].fd(5)
+    assert_equal [1]*6, [0, 1, 2, 3, 4, 5].fd
+    assert_equal [0, 3], [1,1,1].fd
+    assert_equal [0, 1, 0, 3, 1, 2], [5, 1, 4, 5, 3, 3, 3].fd
+    n = rand(1..100)
+    assert_equal [0]*(n+1), [].fd(n)
+  end
   def test_gcd
     assert_nil [].gcd
     assert_equal(1, [1].gcd)
@@ -112,6 +148,15 @@ class Array_Test < Minitest::Test
     assert_equal(3, [3,3,3].gcd)
     assert_equal(2, [12,6,2].gcd)
     assert_equal(3, [24,36,9].gcd)
+  end
+  def test_is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to
+    assert_nil [].gcd
+    assert_equal 0, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(1)
+    assert_equal 1, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(2) # 1 pairs: only 2 = 1 x 2
+    assert_equal 6, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(6)
+    assert_equal 36, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(81) # 36 pairs = 9 x 8 / 2
+    assert_equal 36, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(10000)
+    assert_equal 36, (-9..-1).to_a.reverse.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(81)
   end
   def test_lcm
     assert_nil [].lcm
@@ -168,6 +213,16 @@ class Array_Test < Minitest::Test
     assert_equal(1, [15,16].modsum(5))
     assert_equal(0, [1,2,3,4,5].modsum(3))
     assert_equal(3, [1,2,3,4,5].modsum(4))
+  end
+  def test_number_greater_than
+    cfd = [1, 3, 3, 3, 4, 5, 5, 6].fd.reverse.cumsum.reverse
+    assert_equal 8, cfd.number_greater_than(-100)
+    assert_equal 8, cfd.number_greater_than(0)
+    assert_equal 7, cfd.number_greater_than(1)
+    assert_equal 4, cfd.number_greater_than(3)
+    assert_equal 1, cfd.number_greater_than(5)
+    assert_equal 0, cfd.number_greater_than(6)
+    assert_equal 0, cfd.number_greater_than(100)
   end
   def test_prod
     assert_nil [].prod

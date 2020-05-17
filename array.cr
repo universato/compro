@@ -5,6 +5,14 @@ class Array
   def cumsum; s = 0; map{|k| s += k } end
   def deru_kui(m); map{|t| t>m ? m : t } end
   def diff; (size-1).times.map { |i| self[i + 1] - self[i] }.to_a end
+  def fd(n=nil); n = self.max if n.nil?; res = Array.new(n+1,0);self.map{|e| res[e]+=1 };res;end
+
+  # fd.reverse.cumsum.reverseの返り値による配列が使うメソッド
+  def number_greater_than(x)
+    return self[0] if x <= 0
+    return 0  if size <= x+1
+    self[x+1]
+  end
   def soko_age(m); map{|t| t<m ? m : t } end
 end
 
