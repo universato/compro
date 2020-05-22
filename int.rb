@@ -9,6 +9,10 @@ class Integer
     n.prm(k, m) * k.prm(k,m).modinv(m) % m
   end
 
+  def hom(k, mod = 10**9+7)
+    (self+k-1).cmb(k, mod)
+  end
+
   # mod must be a prime number
   # O(log m)
   def modinv(mod = 10**9+7)
@@ -16,6 +20,7 @@ class Integer
   end
 
   # O(log n)
+  # before Ruby 2.3
   def pow(n , mod = nil )
     a = self
     res = 1
