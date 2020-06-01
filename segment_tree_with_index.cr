@@ -1,8 +1,10 @@
+# これはセグメントツリー内に数値とインデックスをもたせてるけど、遅いのでよくない。
+# インデックスは別管理した方が良い。
 class SegmentTree
 
   @n : (Int64|Int32)
-  @nodes : Array(Int64)
-  @identity_element : Int64
+  @nodes : Array(Array(Int32))
+  @identity_element : Array(Int32)
 
   def initialize(n, identity_element)
 
@@ -20,7 +22,16 @@ class SegmentTree
       @n *= 2
     end
 
-    @nodes = Array(Int64).new(@n*2-1, @identity_element)
+    @nodes = Array.new(@n*2-1){@identity_element}
+  end
+
+  def update_min(i, val)
+    i += @n - 1
+    @nodes[i] = val
+    while i > 0
+      i = ( i - 1 ) >> 1
+     @nodes[i] = {@nodes[2*i+1], @nodes[2*i+2]}.min
+    end
   end
 
   def update_or(i, val)
@@ -63,8 +74,8 @@ class SegmentTree
         r -= 1
         rres |= @nodes[r]
       end
-      l /= 2
-      r /= 2
+      l //= 2
+      r //= 2
     end
     return lres | rres
   end
@@ -82,10 +93,29 @@ class SegmentTree
         r -= 1
         rres = (@nodes[r]).gcd rres
       end
-      l /= 2
-      r /= 2
+      l //= 2
+      r //= 2
     end
     return lres.gcd rres
+  end
+
+  def get_min(l, r)
+    l += @n - 1
+    r += @n - 1
+    lres, rres = @identity_element, @identity_element
+    while l < r
+      if 0 == ( l & 1 )
+        lres = {lres, @nodes[l]}.min
+        l += 1
+      end
+      if 0 == ( r & 1 )
+        r -= 1
+        rres = {@nodes[r], rres}.min
+      end
+      l //= 2
+      r //= 2
+    end
+    return {lres, rres}.min
   end
 
   def get_sum(l, r)
@@ -101,18 +131,32 @@ class SegmentTree
         r -= 1
         rres = rres + @nodes[r]
       end
-      l /= 2
-      r /= 2
+      l //= 2
+      r //= 2
     end
     return lres + rres
   end
 
+  def swap_min(i, j)
+    # @n-1: inner node size
+    n_i = @nodes[i + @n-1].dup
+    n_j = @nodes[j + @n-1].dup
+    n_i[-1] = j
+    n_j[-1] = i
+    update_min(i, n_j)
+    update_min(j, n_i)
+  end
 end
 
 class Array
   def to_segment_tree_for_gcd
     st = SegmentTree.new(size.to_i64, 0_i64)
     each_with_index{ |t, i| st.update_gcd(i, t) }
+    st
+  end
+  def to_segment_tree_for_min(inf = 10 ** 12)
+    st = SegmentTree.new(size, inf)
+    each_with_index{ |t, i| st.update_min(i, t) }
     st
   end
   def to_segment_tree_for_sum
@@ -122,46 +166,21 @@ class Array
   end
 end
 
-#
-n = gets.to_s.to_i64
-s = gets.to_s.chomp
-q = gets.to_s.to_i
+# yukicoder No.875 Range Mindex Query
+n, q = gets.to_s.split.map{|t| t.to_i }
+a    = gets.to_s.split.map{|t| t.to_i }
 
-# sts = Array.new(26){ SegmentTree.new(n, form: :sum) }
-st = SegmentTree.new(n, 0i64)
-# p st
-# p "a".ord #=> 97
-s.bytes.each_with_index do |c, i|
-  # sts[c - 97].update_sum(i, c)
-  st.update_or(i, 1i64 << (c-97))
-end
+inf = [n + 1, 0]
+# st = SegmentTree.new(n, inf)
+st = a.map_with_index{|t, i| [t, i] }.to_segment_tree_for_min(inf)
 
 q.times do
-
-  t, x, y = gets.to_s.split
-
-  if t == "1"
-    #p y[0]
-    i, c = x.to_i64-1, y[0].ord
-    st.update_or(i, 1i64 << (c-97))
+  x, l, r = gets.to_s.split.map{|t| t.to_i - 1 }
+  # p "aaa"
+  if x == 0
+    st.swap_min(l, r)
   else
-    l, r = x.to_i-1, y.to_i-1
-    # p st
-    puts st.get_or(l, r+1).popcount
+    # puts "ans:"
+    p st.get_min(l, r+1)[-1] + 1
   end
 end
-
-#  ABC125 C - GCD on Blackboard
-n = gets.to_s.to_i64
-a = gets.to_s.split.map{|t| t.to_i64 }
-
-st = a.to_segment_tree_for_sum
-
-ans = [st.get_sum(1, n), st.get_sum(0, n-1)].max
-
-1.upto(n-2) do |i|
-  p v = st.get_sum(0, i) + st.get_sum(i+1, n)
-  ans = v if ans < v
-end
-
-puts ans
