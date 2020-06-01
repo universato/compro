@@ -20,6 +20,7 @@ class Facts
     @fact[n]
   end
 
+  # nHk
   def hom(n,k)
     cmb(n+k-1, k)
   end
@@ -27,6 +28,10 @@ class Facts
   def prm(n,k)
     setup_table(n) if @n_max < n
     @fact[n] * @factinv[n-k] % @mod
+  end
+
+  def catalan_number(n)
+    cmb(2 * n, n) * @inv[n+1] % @mod
   end
 
   private
@@ -98,7 +103,7 @@ class Facts_Test < Minitest::Test
   def test_hom
     mod = 10 ** 9 + 7
     f = Facts.new
-    assert_equal 607923868, f.hom(200000,1000000000)
+    # assert_equal 607923868, f.hom(200000,1000000000)
     n = rand(1..100)
     k = n + rand(1..100)
     assert_equal f.hom(n,n), (0..k).reduce(0){|s,i|s += f.cmb(n, i) * f.hom(n-i, i) % mod } % mod
@@ -111,5 +116,15 @@ class Facts_Test < Minitest::Test
     assert_equal 60, f.prm(5,3)
     assert_equal 120, f.prm(5,4)
     assert_equal 120, f.prm(5,5)
+  end
+  def test_catalan_number
+    f = Facts.new
+    assert_equal 1, f.catalan_number(0)
+    assert_equal 1, f.catalan_number(1)
+    assert_equal 2, f.catalan_number(2)
+    assert_equal 5, f.catalan_number(3)
+    assert_equal 42, f.catalan_number(5)
+    assert_equal 16796, f.catalan_number(10)
+    assert_equal 9694845, f.catalan_number(15)
   end
 end
