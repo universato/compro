@@ -45,17 +45,37 @@ struct Int
     self != 1
   end
 
+  # 素因数分解
   def prime_factor : Hash(Int64, Int64)
-    return Hash{1_i64 => 1_i64} if 1 == self
+    #return Hash{1_i64 => 1_i64} if 1 == self
+    return Hash(Int64, Int64).new if 1 == self
     n = self.to_i64
-    res = Hash(Int64, Int64).new(0_i64);
-      (2_i64).upto((self**0.5).to_i64) do |i|
+    res = Hash(Int64, Int64).new(0_i64)
+    (2_i64).upto((self**0.5).to_i64) do |i|
       while n % i == 0
         res[i] += 1_i64
         n = (n / i).to_i64
       end
     end
     res[n] = 1_i64 if n != 1
+    res
+  end
+
+  # 素因数分解
+  def prime_division : Array(Tuple(Int64, Int64))
+    #return [{1_i64, 1_i64}] if 1 == self
+    return Array(Tuple(Int64, Int64)).new if 1 == self
+    n = self.to_i64
+    res = Array(Tuple(Int64, Int64)).new
+    (2_i64).upto((self**0.5).to_i64) do |i|
+      t = 0_i64
+      while n % i == 0
+        t += 1_i64
+        n = (n / i).to_i64
+      end
+      res.push({i, t}) if t != 0
+    end
+    res.push({n, 1_i64}) if n != 1_i64
     res
   end
 end
