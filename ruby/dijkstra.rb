@@ -1,17 +1,17 @@
 class PriorityQueue
-
-  def initialize(heap=[])
+  def initialize(heap = [])
     @size = heap.size
     @heap = heap.sort
   end
 
   # log( log n )
-  def push x
+  def push(x)
     i = @size
     @size += 1
     while i > 0
-      par = ( i - 1 ) / 2
+      par = (i - 1) / 2
       break if @heap[par] <= x
+
       @heap[i] = @heap[par]
       i = par
     end
@@ -21,16 +21,15 @@ class PriorityQueue
   # log( log n )
   # return nil if @size == 0
   def pop
-
     ret = @heap[0]
-    x = @heap[@size-=1]
-
+    x = @heap[@size -= 1]
 
     i = 0
     while (child = i * 2 + 1) < @size
       child_1 = i * 2 + 2
       child = child_1 if child_1 < @size && @heap[child_1] < @heap[child]
       break if @heap[child] >= x
+
       @heap[i] = @heap[child]
       i = child
     end
@@ -74,7 +73,6 @@ class PriorityQueue
 end
 
 class Array
-
   include Comparable
 
   def to_pq
@@ -83,8 +81,8 @@ class Array
 end
 
 class Node
-
   attr_accessor :to, :cost
+
   def initialize(to, cost)
     @to = to
     @cost = cost
@@ -93,38 +91,38 @@ end
 
 # with PriorityQueue O(|E|log|V|)
 def dijkstra(g, s)
-
   # inf = 10 ** 12
   inf = Float::INFINITY
   dist = Array.new(g.size, inf)
   dist[s] = 0
 
   que = PriorityQueue.new
-  que.push( [0, s] )
+  que.push([0, s])
 
   while que.any?
 
     d, v = que.pop
     next if dist[v] < d
+
     # p g[v]
     g[v].each do |e|
       if dist[e.to] > dist[v] + e.cost
         dist[e.to] = dist[v] + e.cost
-        que.push( [dist[e.to], e.to ] )
+        que.push([dist[e.to], e.to ])
       end
     end
     # p que
   end
 
   # dist
-  dist.map!{|d| d == inf ? "INF" : d }
+  dist.map!{ |d| d == inf ? "INF" : d }
 end
 
-v, e, r = gets.to_s.split.map{|t|t.to_i}
+v, e, r = gets.to_s.split.map(&:to_i)
 
 G = Array.new(v){ [] }
 e.times do
-  s, t, d = gets.to_s.split.map{|t|t.to_i}
+  s, t, d = gets.to_s.split.map(&:to_i)
   G[s] << Node.new(t, d)
   # G[t] << Node.new(s, d)
 end

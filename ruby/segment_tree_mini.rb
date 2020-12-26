@@ -1,6 +1,5 @@
 # 0-indexedで、getは半開区間であることに注意
 class SegmentTree
-
   @@inf = (1 << 60) - 1
 
   # O(n)
@@ -8,31 +7,31 @@ class SegmentTree
     case form
     when "and"
       @identity_element = (1 << 60) - 1
-      @func = Proc.new{|x, y| x & y }
+      @func = proc{ |x, y| x & y }
     when "gcd"
       @identity_element = 0
-      @func = Proc.new{|x, y| x.gcd y }
+      @func = proc{ |x, y| x.gcd y }
     when "lcm"
       @identity_element = 1
-      @func = Proc.new{|x, y| x.lcm y }
+      @func = proc{ |x, y| x.lcm y }
     when "max"
       @identity_element = -@@inf
-      @func = Proc.new{|x, y| x > y ? x : y }
+      @func = proc{ |x, y| x > y ? x : y }
     when "min"
       @identity_element =  @@inf
-      @func = Proc.new{|x, y| x < y ? x : y }
+      @func = proc{ |x, y| x < y ? x : y }
     when "min_with_index"
-      @identity_element =  [@@inf, n+1]
-      @func = Proc.new{|x, y| x < y ? x : y }
+      @identity_element =  [@@inf, n + 1]
+      @func = proc{ |x, y| x < y ? x : y }
     when "or"
       @identity_element = 0
-      @func = Proc.new{|x, y| x | y}
+      @func = proc{ |x, y| x | y }
     when "prod"
       @identity_element = 1
-      @func = Proc.new{|x, y| x * y}
+      @func = proc{ |x, y| x * y }
     when "sum"
       @identity_element = 1
-      @func = Proc.new{|x, y| x + y}
+      @func = proc{ |x, y| x + y }
     end
 
     # @identity_element = identity_element
@@ -41,7 +40,7 @@ class SegmentTree
     # @n: leaf node size(2^k)
     # @n*2-1: tree node size
     @n_1 = @n - 1
-    @nodes = Array.new(@n*2-1){ @identity_element }
+    @nodes = Array.new(@n * 2 - 1){ @identity_element }
   end
 
   def update(i, val)
@@ -49,8 +48,8 @@ class SegmentTree
     i += @n_1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @func.call(@nodes[2*i+1], @nodes[2*i+2])
+      i = (i - 1) / 2
+      @nodes[i] = @func.call(@nodes[2 * i + 1], @nodes[2 * i + 2])
     end
     true
   end
@@ -93,7 +92,7 @@ class SegmentTree
   end
 
   def all_update
-    @n_1.downto(1){ |i| @nodes[i-1] = @func.call(@nodes[2*i-1], @nodes[2*i]) }
+    @n_1.downto(1){ |i| @nodes[i - 1] = @func.call(@nodes[2 * i - 1], @nodes[2 * i]) }
   end
 
   def [](k)
@@ -108,16 +107,14 @@ class SegmentTree
     @@inf = x
   end
 
-  def inf()
+  def inf
     @@inf
   end
 
   def inspect
-
     t = 0
     res = "SegmentTree\n  "
-    @nodes.each_with_index do |e,i|
-
+    @nodes.each_with_index do |e, i|
       res << e.to_s << " "
       if t == i && i < @n_1
         res << "\n  "
@@ -138,21 +135,21 @@ class Array
   end
 end
 
-n, q = gets.to_s.split.map{|t| t.to_i }
-a    = gets.to_s.split.map{|t| t.to_i }
+n, q = gets.to_s.split.map(&:to_i)
+a    = gets.to_s.split.map(&:to_i)
 
 # inf = [n + 1, nil]
 # st = SegmentTree.new(n, inf)
-st = a.map.with_index{|t, i| [t, i] }.to_st("min_with_index")
+st = a.map.with_index{ |t, i| [t, i] }.to_st("min_with_index")
 
 q.times do
-  x, l, r = gets.to_s.split.map{|t| t.to_i - 1 }
+  x, l, r = gets.to_s.split.map{ |t| t.to_i - 1 }
   # p "aaa"
   if x == 0
     st.swap_with_index(l, r)
   else
     # puts "ans:"
-    p st.get(l, r+1)[-1] + 1
+    p st.get(l, r + 1)[-1] + 1
   end
 end
 
@@ -179,8 +176,6 @@ end
 # end
 #
 # puts ans
-
-
 
 # yukicoder
 # n, q = gets.to_s.split.map{|t| t.to_i }
@@ -213,26 +208,28 @@ end
 
 require 'minitest/autorun'
 
-class SegmentTree_Test < Minitest::Test
+class SegmentTreeTest < Minitest::Test
   def test_get_min
     n = 3
     st = SegmentTree.new(n, "min")
     st.update(0, 1)
     st.update(1, 2)
     st.update(2, 3)
-    assert_equal 1, st.get(0,2)
-    assert_equal 2, st.get(1,2)
+    assert_equal 1, st.get(0, 2)
+    assert_equal 2, st.get(1, 2)
   end
+
   def test_gcd
-    st = [7,6,8].to_st("gcd")
-    assert_equal 7, st.get(0,1)
-    assert_equal 2, st.get(1,3)
+    st = [7, 6, 8].to_st("gcd")
+    assert_equal 7, st.get(0, 1)
+    assert_equal 2, st.get(1, 3)
   end
+
   def test_get_min
     n = 3
     st = [2, 1, 3].to_st("min")
-    assert_equal 1, st.get(0,3)
+    assert_equal 1, st.get(0, 3)
     st.swap(1, 2)
-    assert_equal 1, st.get(0,3)
+    assert_equal 1, st.get(0, 3)
   end
 end

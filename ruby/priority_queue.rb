@@ -1,17 +1,17 @@
 class PriorityQueue
-
-  def initialize(heap=[])
+  def initialize(heap = [])
     @size = heap.size
     @heap = heap.sort
   end
 
   # log( log n )
-  def push x
+  def push(x)
     i = @size
     @size += 1
     while i > 0
-      par = ( i - 1 ) / 2
+      par = (i - 1) / 2
       break if @heap[par] <= x
+
       @heap[i] = @heap[par]
       i = par
     end
@@ -21,9 +21,8 @@ class PriorityQueue
   # log( log n )
   # return nil if @size == 0
   def pop
-
     ret = @heap[0]
-    x = @heap[@size-=1]
+    x = @heap[@size -= 1]
     # @heap.delete_at(-1)
 
     i = 0
@@ -31,6 +30,7 @@ class PriorityQueue
       child_1 = i * 2 + 2
       child = child_1 if child_1 < @size && @heap[child_1] < @heap[child]
       break if @heap[child] >= x
+
       @heap[i] = @heap[child]
       i = child
     end
@@ -73,12 +73,11 @@ class PriorityQueue
   end
 
   def sum
-    @heap.reduce(0){|s,t| s+t }
+    @heap.reduce(0){ |s, t| s + t }
   end
 end
 
 class Array
-
   include Comparable
 
   def to_pq
@@ -86,7 +85,7 @@ class Array
   end
 
   def -@
-    map{|e| -e.to_i }
+    map{ |e| -e.to_i }
   end
 end
 
@@ -123,11 +122,9 @@ end
 # AtCoder ABC137 D - Summer Vacation
 # AtCoder PAST002 F - タスクの消化
 
-
 require 'minitest/autorun'
 
 class PriorityQueue_Test < Minitest::Test
-
   def test_pq
     pq = PriorityQueue.new
     pq.push(20)
@@ -141,7 +138,7 @@ class PriorityQueue_Test < Minitest::Test
 
   def test_suhhle_array
     n = 100
-    pq = Array.new(n){|i| i}.shuffle.to_pq
+    pq = Array.new(n){ |i| i }.shuffle.to_pq
     assert_equal n, pq.size
     assert_equal 0, pq.top
     n.times{ |i| assert_equal i, pq.pop }
@@ -150,7 +147,7 @@ class PriorityQueue_Test < Minitest::Test
 
   def test_suhhle_array2
     n = 100
-    pq = Array.new(n){|i| [i, 0] }.shuffle.to_pq
+    pq = Array.new(n){ |i| [i, 0] }.shuffle.to_pq
     assert_equal n, pq.size
     assert_equal [0, 0], pq.top
     n.times{ |i| assert_equal [i, 0], pq.pop }
@@ -165,7 +162,7 @@ class PriorityQueue_Test < Minitest::Test
     rand_ary.each{ |e| pq1.push(e) }
     assert_equal pq0.size, pq1.size
     assert_equal pq0.top, pq1.top
-    n.times{ |i| assert_equal pq0.pop, pq1.pop }
+    n.times{ |_i| assert_equal pq0.pop, pq1.pop }
     assert pq0.empty?
     assert pq1.empty?
   end
