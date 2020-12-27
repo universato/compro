@@ -1,0 +1,6 @@
+class Point
+  def initialize: (x: Numeric, y: Numeric) -> void
+
+  attr_accrssor x: Numeric
+  attr_accrssor y: Numeric
+end

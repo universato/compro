@@ -44,6 +44,10 @@ class Integer
       res
     end
   end
+
+  def popcount
+    to_s(2).count('1')
+  end
 end
 
 # ABC145

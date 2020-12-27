@@ -1,92 +1,118 @@
+require 'forwardable'
+
 EPS = 1e-10
 COUNTER_CLOCKWISE = 1
 CLOCKWISE    = -1
 ONLINE_BACK  =  2
 ONLINE_FRONT = -2
 ON_SEGMENT   =  0
-points_position = { 1 => :COUNTER_CLOCKWISE, -1 => :CLOCKWISE, 2 => :ONLINE_BACK, -2 => :ONLINE_FRONT, 0 => :ON_SEGMENT }
+POINTS_POSITION = { 1 => :COUNTER_CLOCKWISE, -1 => :CLOCKWISE, 2 => :ONLINE_BACK, -2 => :ONLINE_FRONT, 0 => :ON_SEGMENT }.freeze
 
+# Numeric
 class Numeric
   def equals(d)
     (self - d).abs < EPS
   end
 end
 
+# Point
 class Point
-  attr_accessor :x, :y
-
+  include Math
   include Comparable
 
-  def initialize(x, y)
+  def initialize(x = 0.0, y = 0.0)
     @x = x
     @y = y
   end
+  attr_accessor :x, :y
 
-  def +(v)
-    Point.new(@x + v.x, @y + v.y)
+  class << self
+    def origin
+      Point.new(0.0, 0.0)
+    end
   end
 
-  def -(v)
-    Point.new(@x - v.x, @y - v.y)
+  def +(other)
+    Point.new(@x + other.x, @y + other.y)
+  end
+
+  def -(other)
+    Point.new(@x - other.x, @y - other.y)
+  end
+
+  def -@
+    Point.new(-@x, -@y)
   end
 
   def *(a)
-    Point.new(1.0 * @x * a,   1.0 * @y * a)
+    Point.new(@x * a, @y * a)
   end
 
   def /(a)
-    Point.new(1.0 * @x / a,   1.0 * @y / a)
+    Point.new(@x / a, @y / a)
   end
 
   def norm
-    @x**2 + @y**2
+    @x * @x + @y * @y
   end
 
   def abs
-    norm**0.5
+    sqrt(@x * @x + @y * @y)
   end
 
-  def dist(v = nil)
-    v = Point.new(0, 0) if v.nil?
-    ((x - v.x)**2 + (y - v.y)**2)**0.5
+  def dist(other = nil)
+    other.nil? ? hypot(@x, @y) : hypot(@x - other.x, @y - other.y)
   end
 
-  def <=>(v)
-    @x != v.x ? @x <=> v.x : @y <=> v.y
+  def distance_to_point(other)
+    (self - other).abs
+  end
+  alias getDistance distance_to_point
+
+  def distance_to_line(l)
+    b = l.t - l.s
+    b.cross(self - l.s).abs / b.abs
   end
 
-  def ==(v)
-    (@x - v.x).abs < EPS && (@y - v.y).abs < EPS
+  def distance_to_segment(s)
+    return (self - s.s).abs if (s.t - s.s).dot(v - s.s) < 0.0
+    return (self - s.t).abs if (s.s - s.t).dot(v - s.t) < 0.0
+
+    distance_to_line(s)
   end
 
-  def dot(v)
-    @x * v.x + @y * v.y
+  def <=>(other)
+    @x != other.x ? @x <=> other.x : @y <=> other.y
   end
 
-  def cross(v)
-    @x * v.y - @y * v.x
+  def ==(other)
+    (@x - other.x).abs < EPS && (@y - other.y).abs < EPS
   end
 
-  def orthogonal?(v)
-    dot(v).equals(0.0)
+  def dot(other)
+    @x * other.x + @y * other.y
   end
 
-  def parallel?(v)
-    cross(v).equals(0.0)
+  def cross(other)
+    @x * other.y - @y * other.x
+  end
+
+  def orthogonal?(other)
+    dot(other).abs < EPS
+  end
+
+  def parallel?(other)
+    cross(other).abs < EPS
   end
 
   def project(l)
     base = l.t - l.s
-    r = 1.0 * (self - l.s).dot(base) / base.norm
+    r = (self - l.s).dot(base) / base.norm
     l.s + base * r
   end
 
   def reflect(l)
     self + (project(l) - self) * 2
-  end
-
-  def getDistance(v)
-    (self - v).abs
   end
 
   def ccw(v1, v2)
@@ -102,48 +128,72 @@ class Point
 
   # 三点が作る三角形の面積
   def area(v1, v2 = nil)
-    v2 = Point.new(0, 0) if v2.nil?
+    v2 = Point.new(0.0, 0.0) if v2.nil?
     a = self - v2
     b = v1   - v2
     (a.x * b.y - a.y * b.x) / 2.0
   end
 
   def arg
-    Math.atan2(y, x)
+    Math.atan2(@y, @x)
   end
 
   def rot90
-    Point.new(-y, x)
+    Point.new(-@y, @x)
+  end
+
+  def to_line
+    Line.new(Point.origin, self)
+  end
+  alias to_segment to_line
+
+  def origin?
+    @x.abs < EPS && @y.abs < EPS
+  end
+
+  def to_a
+    [@x, @y]
+  end
+
+  def [](i)
+    case i
+    when 0
+      @x
+    when 1, -1
+      @y
+    else
+      raise ArgumentError
+    end
   end
 
   def to_s
-    "#{x.round(12)} #{y.round(12)}"
+    "#{@x.round(12)} #{@y.round(12)}"
   end
 
   # def to_s; "#{x} #{y}" end
   def inspect
-    "(#{x}, #{y})"
+    "Point(#{@x}, #{@y})"
   end
 
   def out
-    puts "#{x} #{y}"
+    puts "#{@x} #{@y}"
   end
 end
 
+# Line
 class Line
-  attr_accessor :s, :t
-
   def initialize(s, t)
     @s = s
     @t = t
   end
+  attr_accessor :s, :t
 
   def orthogonal?(l)
-    (0.0).equals((@s - @t).dot(l.s - l.t))
+    (@s - @t).dot(l.s - l.t).abs < EPS
   end
 
   def parallel?(l)
-    (0.0).equals((@s - @t).cross(l.s - l.t))
+    (@s - @t).cross(l.s - l.t).abs < EPS
   end
 
   def project(v)
@@ -171,7 +221,7 @@ class Line
     @s.ccw(@t, l.s) * @s.ccw(@t, l.t) <= 0 && l.s.ccw(l.t, @s) * l.s.ccw(l.t, @t) <= 0
   end
 
-  def getDistance(l)
+  def distance(l)
     return 0.0 if intersect?(l)
 
     res = getDistanceSP(l.s)
@@ -183,57 +233,51 @@ class Line
     res = m3 if res > m3
     res
   end
+  alias getDistance distance
 
-  def getCrossPoint(l)
-    base = t - s
+  def cross_point(l)
+    base = @t - @s
     d1   = base.cross(l.t - l.s).abs
-    d2   = base.cross(t   - l.s).abs #
+    d2   = base.cross(@t  - l.s).abs #
     return l.s if d1.abs < EPS && d2.abs < EPS # same line!!
     return warn "!!!PRECONDITION NOT SATISFIED!!!" if d1.abs < EPS
 
     l.s + (l.t - l.s) * 1.0 * d2 / d1
   end
+  alias getCrossPoint cross_point
 
   def ==(other)
-    s == other.s and t == other.t
+    @s == other.s && @t == other.t
+  end
+
+  def to_point
+    Point.new(@t.x - @s.x, @t.y - @s.y)
   end
 
   def to_s
-    "#{s} #{t}"
+    "#{@s} #{@t}"
   end
 
   def inspect
-    "[(#{s.x}, #{s.y}) -> (#{t.x}, #{t.y})]"
+    "[(#{@s.x}, #{@s.y}) -> (#{@t.x}, #{@t.y})]"
   end
 end
+Segment = Line
 
+# Polygon
 class Polygon
-  attr_accessor :points
-
   def initialize(points = [])
     @points = points
-    @n = @points.size
   end
+  attr_accessor :points
 
-  def add_point(v)
-    @points.push(v)
-  end
-
-  def push(v)
-    @points.push(v)
-  end
-
-  def pop
-    points.pop
-  end
+  extend Forwardable
+  def_delegators(:@points, :push, :pop, :size)
+  alias add_point push
 
   def area
-    s = 0.0
     o = @points[-1]
-    (@points.size - 1).times do |i|
-      s += o.area(@points[i - 1], @points[i])
-    end
-    s.abs
+    (0...@points.size - 1).sum{ |i| o.area(@points[i - 1], @points[i]) }.abs
   end
 
   def convex?
@@ -269,22 +313,22 @@ class Polygon
     end
     f ? 2 : 0
   end
+  alias includes? include?
+  alias contain? include?
+  alias contain include?
 
   def sort!
     points.sort!{ |a, b| (a.y <=> b.y).nonzero? || a.x <=> b.x }
   end
 
-  def andrewScan
+  def andrew_scan
     u = Polygon.new
     l = Polygon.new
     return self if size < 3
 
     sort!
 
-    u.push points[0]
-    u.push points[1]
-    l.push points[-1]
-    l.push points[-2]
+    u.push(points[0], points[1], points[-1], points[-2])
 
     (2...size).each do |i|
       (u.size).downto(2) do |n|
@@ -308,6 +352,7 @@ class Polygon
     (u.size - 2).downto(1){ |i| l.push(u.points[i]) }
     l
   end
+  alias andrewScan andrew_scan
 
   def diameter
     n = size
@@ -345,51 +390,49 @@ class Polygon
       cur = points[i]
       nex = points[(i + 1) % n]
       q.push(cur) if ln.s.ccw(ln.t, cur) != CLOCKWISE
-      q.push(ln.getCrossPoint(line(cur, nex))) if ln.s.ccw(ln.t, cur) * ln.s.ccw(ln.t, nex) < 0
+      q.push(ln.cross_point(line(cur, nex))) if ln.s.ccw(ln.t, cur) * ln.s.ccw(ln.t, nex) < 0
     end
     q
   end
 
   def out
     puts size
-    points.each do |point|
-      puts point
-    end
+    puts points
   end
 
   def pout
     puts size
-    points.each do |point|
-      p point
-    end
-  end
-
-  def contain?(v)
-    include(v)
-  end
-
-  def size
-    points.size
+    puts points.map(&:inspect)
   end
 end
 
+# Circle
 class Circle
-  attr_accessor :c, :r
-
-  def initialize(c, r)
+  def initialize(c = Point.new(0.0, 0.0), r = 0.0)
     @c = c
     @r = r
   end
+  attr_accessor :c, :r
+  alias center c
+  alias radius r
+
+  class << self
+    def unit_ciercle
+      Circle.new(Point.new(0.0, 0.0), 1.0)
+    end
+  end
+
+  include Math
 
   def relation(other)
-    d = (c - other.c).dist
+    d = (@c - other.c).dist
 
-    r_sum = r + other.r
+    r_sum = @r + other.r
     return 4 if d > r_sum
     return 3 if d == r_sum
 
-    r0, r1 = r, other.r
-    r0, r1 = other.r, r if other.r < r
+    r0, r1 = @r, other.r
+    r0, r1 = other.r, r if other.r < @r
     r_diff = r1 - r0
     return 2 if d > r_diff # && d < r_sum
 
@@ -400,40 +443,61 @@ class Circle
   end
   alias number_of_common_tangents relation
 
-  def getCrossPoints(other)
+  def intersection_to_line(line)
+    warn "円と線は交わらない(接していない含む)" if @r < @c.distance_to_line(line)
+    pr   = l.project(@c)
+    e    = (l.t - l.s) / (l.t - l.s).abs # unit vector
+    base = sqrt(@r * @r - (pr - c).norm)
+    t    = e * base
+    [pr - t, pr + t] # .sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
+  end
+  alias cross_points_to_line intersection_to_line
+
+  def intersection_to_circle(other)
+    # 途中、螺旋本p.397
+    d = @c.dist(other.c)
+    warn "両円は交わらない(接していない含む)" if d > @r + other.r
+    a = Math.acos(Rational(@r * @r + d * d - other.r**2, 2.0 * @r * d))
+    t = (other.c - @c).arg
+    [c + polar(r, t + a), c + polar(r, t - a)] # .sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
+  end
+  alias cross_points_to_circle intersection_to_circle
+
+  def cross_points(other)
     if other.instance_of?(Line)
       l = other
-      warn "円と線は交わらない中(接していない含む)、交点を求めようとしました" if l.getDistanceLP(c) > r
-      pr = l.project(c)
-      e    = (l.t - l.s) / (l.t - l.s).abs * 1.0 # 単位ベクトル
-      base = (r * r - (pr - c).norm)**0.5
+      warn "円と線は交わらない中(接していない含む)、交点を求めようとしました" if l.getDistanceLP(@c) > @r
+      pr = l.project(@c)
+      e    = (l.t - l.s) / (l.t - l.s).abs # unit vector
+      base = sqrt(@r * @r - (pr - c).norm)
       t = e * base
       return [pr - t, pr + t].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
     elsif other.instance_of?(Circle)
       # 途中、螺旋本p.397
-      d = c.dist(other.c)
-      warn "両円が交わらない中(接していない含む)、交点を求めようとしました" if d > r + other.r
-      a = Math.acos(Rational(r**2 + d**2 - other.r**2, 2.0 * r * d))
-      t = (other.c - c).arg
+      d = @c.dist(other.c)
+      warn "両円が交わらない中(接していない含む)、交点を求めようとしました" if d > @r + other.r
+      a = Math.acos(Rational(@r * @r + d * d - other.r**2, 2.0 * @r * d))
+      t = (other.c - @c).arg
       return [c + polar(r, t + a), c + polar(r, t - a)].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
     end
   end
+  alias getCrossPoints cross_points
 
   def common_tangent(other)
     if other.instance_of?(Point)
       # refer to drken-san
       # http://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=3140448#1
-      d = (other - c).norm
-      l = d - r * r
+      d = (other - @c).norm
+      l = d - @r * @r
       return Point.new(0, 0) if l < -EPS
 
       l = 0.0 if l <= 0.0
-      cq = (other - c) * (r * r / d)
-      qs = ((other - c) * (r * l**0.5 / d)).rot90
-      return [c + cq + qs, c + cq - qs].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
+      cq = (other - @c) * (@r * @r / d)
+      qs = ((other - @c) * (@r * sqrt(l) / d)).rot90
+      return [@c + cq + qs, c + cq - qs].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
     elsif other.instance_of?(Circle)
 
-      # 工事中。
+      # TODO: 工事中
 
     end
     p "???"
@@ -444,25 +508,27 @@ def point(x, y)
   Point.new(x, y)
 end
 alias xy point
+alias Point point
 
 def line(a, b = nil, c = nil, d = nil)
   if b
     c ? Line.new(xy(a, b), xy(c, d)) : Line.new(a, b)
   else
-    Line.new(a[0], a[1], a[2], a[3])
+    Line.new(*a)
   end
 end
 
 def circle(x, y, r)
   Circle.new(Point.new(x, y), r)
 end
+alias Circle circle
 
 def triangle(a, b = nil, c = nil, d = nil, e = nil, f = nil)
   res = Polygon.new
   if f
-    res.push(point(a, b))
-    res.push(point(c, d))
-    res.push(point(e, f))
+    res.push(point(a, b), point(c, d), point(e, f))
+  elsif c
+    res.push(a, b, c)
   end
   res
 end
@@ -473,84 +539,146 @@ def rect(x, y, w, h)
   res.push(x + h, y)
   res.push(x + w, y + h)
   res.push(x, y + h)
-  res
 end
 
 def polar(a, r)
   Point.new((Math.cos(r) * a).round(13), (Math.sin(r) * a).round(13))
 end
 
-require 'minitest/autorun'
+def cgl1a
+  xs, ys, xt, yt = gets.to_s.split.map{ |t| t.to_f }
 
-class Geometry_Test < Minitest::Test
-  def test_projection_CGL_1_A
-    o = point(0, 0)
-    a = point(3, 4)
-    b = point(2, 5)
-    assert_equal point(3.12, 4.16), line(o, a).project(b)
-    c = point(2, 0)
-    assert_equal point(-1.0, 0.0), line(o, c).project(xy(-1, 1))
-    assert_equal point(0.0, 0.0), line(o, c).project(xy(0, 1))
-    assert_equal point(1.0, 0.0), line(o, c).project(xy(1, 1))
-    x_axis = line(0, 0, 1, 0)
-    y_axis = line(0, 0, 0, 1)
-    assert_equal point(5, 0), x_axis.project(point(5, 5))
-    assert_equal point(0, 5), y_axis.project(point(5, 5))
+  o = Point.new(xs, ys)
+  a = Point.new(xt, yt)
+  l = Line.new(o, a)
+
+  q = gets.to_s.to_i
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    ans = l.project(Point.new(x, y))
+    puts "#{ans.x} #{ans.y}"
+  end
+end
+
+def cgl1b
+  xs, ys, xt, yt = gets.to_s.split.map{ |t| t.to_f }
+
+  o = Point.new(xs, ys)
+  a = Point.new(xt, yt)
+  l = Line.new(o, a)
+
+  q = gets.to_s.to_i
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    ans = l.reflect(Point.new(x, y))
+    puts "#{ans.x} #{ans.y}"
+  end
+end
+
+def cgl1c
+  xs, ys, xt, yt = gets.to_s.split.map{ |t| t.to_f }
+
+  o = Point.new(xs, ys)
+  a = Point.new(xt, yt)
+  l = Line.new(o, a)
+
+  q = gets.to_s.to_i
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    t = o.ccw(a, Point.new(x, y))
+    puts POINTS_POSITION[t]
+  end
+end
+
+def cgl2a
+  q = gets.to_s.to_i
+  q.times do
+    x0, y0, x1, y1, x2, y2, x3, y3 = gets.to_s.split.map{ |t| t.to_f }
+    p0 = Point.new(x0, y0)
+    p1 = Point.new(x1, y1)
+    p2 = Point.new(x2, y2)
+    p3 = Point.new(x3, y3)
+    s1 = Line.new(p0, p1)
+    s2 = Line.new(p2, p3)
+
+    if s1.parallel?(s2)
+      puts 2
+    elsif s1.orthogonal?(s2)
+      puts 1
+    else
+      puts 0
+    end
+  end
+end
+
+def cgl2b
+  q = gets.to_s.to_i
+  q.times do
+    x0, y0, x1, y1, x2, y2, x3, y3 = gets.to_s.split.map{ |t| t.to_f }
+    p0 = Point.new(x0, y0)
+    p1 = Point.new(x1, y1)
+    p2 = Point.new(x2, y2)
+    p3 = Point.new(x3, y3)
+    s1 = Line.new(p0, p1)
+    s2 = Line.new(p2, p3)
+
+    puts s1.intersect?(s2) ? 1 : 0
+  end
+end
+
+def cgl2c
+  q = gets.to_s.to_i
+  q.times do
+    x0, y0, x1, y1, x2, y2, x3, y3 = gets.to_s.split.map{ |t| t.to_f }
+    p0 = Point.new(x0, y0)
+    p1 = Point.new(x1, y1)
+    p2 = Point.new(x2, y2)
+    p3 = Point.new(x3, y3)
+    s1 = Line.new(p0, p1)
+    s2 = Line.new(p2, p3)
+
+    puts s1.cross_point(s2)
+  end
+end
+
+def cgl2d
+  q = gets.to_s.to_i
+  q.times do
+    x0, y0, x1, y1, x2, y2, x3, y3 = gets.to_s.split.map{ |t| t.to_f }
+    p0 = Point.new(x0, y0)
+    p1 = Point.new(x1, y1)
+    p2 = Point.new(x2, y2)
+    p3 = Point.new(x3, y3)
+    s1 = Line.new(p0, p1)
+    s2 = Line.new(p2, p3)
+
+    ans = s1.getDistance(s2)
+    puts ans
+  end
+end
+
+def cgl3a
+  q = gets.to_s.to_i
+
+  g = Polygon.new
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    v = Point.new(x, y)
+    g.add_point(v)
   end
 
-  def test_reflection_CGL_1_B
-    l = line(0, 0, 3, 4)
-    x_axis = line(0, 0, 1, 0)
-    y_axis = line(0, 0, 0, 1)
-    assert_equal point(4.24, 3.32), l.reflect(point(2, 5))
-    assert_equal point(3.56, 2.08), l.reflect(point(1, 4))
-    assert_equal point(2.88, 0.84), l.reflect(point(0, 3))
-    assert_equal point(5, -5), x_axis.reflect(point(5, 5))
-    assert_equal point(-5,  5), y_axis.reflect(point(5, 5))
+  puts g.area
+end
+
+def cgl3b
+  q = gets.to_s.to_i
+
+  g = Polygon.new
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    v = Point.new(x, y)
+    g.add_point(v)
   end
 
-  def test_lines_relation_CGL_2_A
-    l = line(0, 0, 3, 0)
-    assert l.parallel?(line(0, 2, 3, 2))
-    assert !l.orthogonal?(line(0, 2, 3, 2))
-    assert l.orthogonal?(line(1, 1, 1, 4))
-    assert !l.parallel?(line(1, 1, 1, 4))
-    assert !l.parallel?(line(1, 1, 2, 2))
-    assert !l.orthogonal?(line(1, 1, 2, 2))
-  end
-
-  def test_segments_relation_CGL_2_B
-    s = line(0, 0, 3, 0)
-    assert s.intersect?(line(1, 1, 2, -1))
-    assert s.intersect?(line(3, 1, 3, -1))
-    assert !s.intersect?(line(3, -2, 5, 0))
-  end
-
-  def test_cross_point_CGL_2_C
-    assert_equal point(1,  0), line(0, 0, 2, 0).getCrossPoint(line(1, 1, 1, -1))
-    assert_equal point(0.5, 0.5), line(0, 0, 1, 1).getCrossPoint(line(0, 1, 1, 0))
-    assert_equal point(0.5, 0.5), line(0, 0, 1, 1).getCrossPoint(line(1, 0, 0, 1))
-  end
-
-  def test_distance_between_segments_CGL_2_D
-    assert_equal 1, line(0, 0, 1, 0).getDistance(line(0, 1, 1, 1))
-    # 小数点未満でエラーがでてしまう。誤差だと思う。たぶん答えが√2
-    # assert_equal 1.414213562373095048, line(0,0,1,0).getDistance(line(2,1,1,2))
-    assert_equal 0, line(-1, 0, 1, 0).getDistance(line(0, 1, 1, -1))
-  end
-
-  def test_area_CGL_3_A
-    assert_equal 2.0, triangle(0, 0, 2, 2, -1, 1).area
-    assert_equal 1.5, Polygon.new([point(0, 0), point(1, 1), point(1, 2), point(0, 2)]).area
-  end
-
-  def test_convex_CGL_4_A
-    assert  Polygon.new([point(0, 0), point(3, 1), point(2, 3), point(0, 3)]).convex?
-    assert !Polygon.new([point(0, 0), point(2, 0), point(1, 1), point(2, 2), point(0, 2)]).convex?
-  end
-
-  def test_diameter_CGL_4_B
-    assert_equal 4, triangle(0, 0,  4, 0,  2, 2).diameter
-    assert_equal 1.414213562373095048, Polygon.new([point(0, 0), point(1, 0), point(1, 1), point(0, 1)]).diameter
-  end
+  puts g.convex? ? 1 : 0
 end
