@@ -1,9 +1,9 @@
 # MInt(ModInt)
 class Integer
-
   attr_accessor :mod
-  @@mod = 10 ** 9 + 7
-  @@h = Hash.new
+
+  @@mod = 10**9 + 7
+  @@h = {}
 
   def +@
     super % @@mod
@@ -13,30 +13,30 @@ class Integer
     super % @@mod
   end
 
-  alias_method :primitive_plus, :+
+  alias primitive_plus +
   def +(other)
     res = primitive_plus(other) % @@mod
   end
 
-  alias_method :primitive_minus, :-
+  alias primitive_minus -
   def -(other)
     primitive_minus(other) % @@mod
   end
 
-  alias_method :primitive_times, :*
+  alias primitive_times *
   def *(other)
-    self.primitive_times(other) % @@mod
+    primitive_times(other) % @@mod
   end
 
-  #alias_method :primitive_div, :/
+  # alias_method :primitive_div, :/
   def /(other)
-    @@h[other] ||= other.pow(@@mod-2, @@mod)
+    @@h[other] ||= other.pow(@@mod - 2, @@mod)
     self * @@h[other]
   end
 
-  alias_method :primitive_equal, :==
+  alias primitive_equal ==
   def ==(other)
-    ( self % @@mod ).primitive_equal( other % @@mod )
+    (self % @@mod).primitive_equal(other % @@mod)
   end
 
   # def **(other)
@@ -53,25 +53,25 @@ class Integer
 
   def >>(value)
     t = 2.pow(value, @@mod)
-    @@h[t] ||= t.pow(@@mod-2, @@mod)
+    @@h[t] ||= t.pow(@@mod - 2, @@mod)
     self * @@h[t]
   end
 
-  alias_method :primitive_inspect, :inspect
+  alias primitive_inspect inspect
   def inspect
-    self.primitive_inspect + " (mod #{@@mod.primitive_to_s})"
+    primitive_inspect + " (mod #{@@mod.primitive_to_s})"
   end
 
-  alias_method :primitive_to_s, :to_s
+  alias primitive_to_s to_s
   def to_s
     (self % @@mod).primitive_to_s
   end
 end
 
 # ABC163
-n, k = gets.to_s.split.map{|e|e.to_i}
+n, k = gets.to_s.split.map(&:to_i)
 
-ans = (k..n+1).map{|i| i * (n + n - i + 1) / 2 - i * ( i - 1 ) / 2 + 1 }.sum
+ans = (k..n + 1).map{ |i| i * (n + n - i + 1) / 2 - i * (i - 1) / 2 + 1 }.sum
 
 puts ans
 # p 1.class.instance_methods

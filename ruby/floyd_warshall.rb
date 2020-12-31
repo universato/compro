@@ -1,7 +1,6 @@
 class Array
-
   def floyd_warshall
-    self.dup.floyd_warshall!
+    dup.floyd_warshall!
   end
 
   def floyd_warshall!
@@ -16,7 +15,4 @@ class Array
       end
     end
   end
-
 end
-
-  

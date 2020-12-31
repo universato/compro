@@ -1,6 +1,5 @@
 # 0-indexedで、getは半開区間であることに注意
 class SegmentTree
-
   # O(n)
   # and :2^1-1
   # gcd :    0
@@ -11,18 +10,17 @@ class SegmentTree
   # set :   []
   # sum :    0
   def initialize(n, form)
-
     @form = form
     case form
     when "gcd"
       @identity_element = 1
-      @func = Proc.new{|x, y| x.gcd }
+      @func = proc{ |x, _y| x.gcd }
     when "min"
-      @identity_element = ( inf = 10 ** 12 )
-      @func = Proc.new{|x, y| x < y ? x : y }
+      @identity_element = (inf = 10**12)
+      @func = proc{ |x, y| x < y ? x : y }
     when "sum"
       @identity_element = 1
-      @func = Proc.new{|x, y| x + y}
+      @func = proc{ |x, y| x + y }
     end
 
     # @identity_element = identity_element
@@ -30,7 +28,7 @@ class SegmentTree
     @n *= 2 while @n < n
     # @n: leaf node size(2^k)
     # @n*2-1: tree node size
-    @nodes = Array.new(@n*2-1){ @identity_element }
+    @nodes = Array.new(@n * 2 - 1){ @identity_element }
   end
 
   def update(i, val)
@@ -38,13 +36,13 @@ class SegmentTree
     i += @n - 1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @func.call(@nodes[2*i+1], @nodes[2*i+2])
+      i = (i - 1) / 2
+      @nodes[i] = @func.call(@nodes[2 * i + 1], @nodes[2 * i + 2])
     end
   end
 
   def update(i, val)
-    send("update_" + @form, i, val)
+    send("update_#{@form}", i, val)
   end
 
   def update_gcd(i, val)
@@ -52,8 +50,8 @@ class SegmentTree
     i += @n - 1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @nodes[2*i+1].gcd @nodes[2*i+2]
+      i = (i - 1) / 2
+      @nodes[i] = @nodes[2 * i + 1].gcd @nodes[2 * i + 2]
     end
   end
 
@@ -64,8 +62,8 @@ class SegmentTree
     # p [i]
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = [@nodes[2*i+1], @nodes[2*i+2]].min
+      i = (i - 1) / 2
+      @nodes[i] = [@nodes[2 * i + 1], @nodes[2 * i + 2]].min
     end
   end
 
@@ -74,8 +72,8 @@ class SegmentTree
     i += @n - 1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @nodes[2*i+1] | @nodes[2*i+2]
+      i = (i - 1) / 2
+      @nodes[i] = @nodes[2 * i + 1] | @nodes[2 * i + 2]
     end
   end
 
@@ -84,8 +82,8 @@ class SegmentTree
     i += @n - 1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @nodes[2*i+1] + @nodes[2*i+2]
+      i = (i - 1) / 2
+      @nodes[i] = @nodes[2 * i + 1] + @nodes[2 * i + 2]
     end
   end
 
@@ -94,25 +92,25 @@ class SegmentTree
     i += @n - 1
     @nodes[i] = val
     while i > 0
-      i = ( i - 1 ) / 2
-      @nodes[i] = @nodes[2*i+1] + @nodes[2*i+2]
+      i = (i - 1) / 2
+      @nodes[i] = @nodes[2 * i + 1] + @nodes[2 * i + 2]
     end
   end
 
   def swap(i, j)
     # @n-1: inner node size
-    n_i = @nodes[i + @n-1].dup
-    n_j = @nodes[j + @n-1].dup
+    n_i = @nodes[i + @n - 1].dup
+    n_j = @nodes[j + @n - 1].dup
     n_i[-1] = j
     n_j[-1] = i
-    send("update_" + @form, i, n_j)
-    send("update_" + @form, j, n_i)
+    send("update_#{@form}", i, n_j)
+    send("update_#{@form}", j, n_i)
   end
 
   def swap_min(i, j)
     # @n-1: inner node size
-    n_i = @nodes[i + @n-1].dup
-    n_j = @nodes[j + @n-1].dup
+    n_i = @nodes[i + @n - 1].dup
+    n_j = @nodes[j + @n - 1].dup
     n_i[-1] = j
     n_j[-1] = i
     update_min(i, n_j)
@@ -120,7 +118,7 @@ class SegmentTree
   end
 
   def get(i, val)
-    send("get_" + @form, i, val)
+    send("get_#{@form}", i, val)
   end
 
   def get_gcd(l, r)
@@ -200,13 +198,11 @@ class SegmentTree
   end
 
   def inspect
-
     t = 0
     res = "SegmentTree\n  "
-    @nodes.each_with_index do |e,i|
-
+    @nodes.each_with_index do |e, i|
       res << e.to_s << " "
-      if t == i && i < @n-1
+      if t == i && i < @n - 1
         res << "\n  "
         t = t * 2 + 2
       end
@@ -223,7 +219,6 @@ class Array
     st
   end
 end
-
 
 # n, q = gets.to_s.split.map{|t| t.to_i }
 # a    = gets.to_s.split.map{|t| t.to_i }
@@ -334,7 +329,7 @@ end
 
 require 'minitest/autorun'
 
-class SegmentTree_Test < Minitest::Test
+class SegmentTreeTest < Minitest::Test
   def test_get_min
     n = 3
     # inf = Float::INFINITY
@@ -343,8 +338,8 @@ class SegmentTree_Test < Minitest::Test
     st.update(0, 1)
     st.update(1, 2)
     st.update(2, 3)
-    assert_equal 1, st.get(0,2)
-    assert_equal 2, st.get(1,2)
+    assert_equal 1, st.get(0, 2)
+    assert_equal 2, st.get(1, 2)
   end
   # def test_get_min
   #   st = [7,6,8].to_st

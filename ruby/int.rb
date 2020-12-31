@@ -1,27 +1,27 @@
 class Integer
-
   # O(min(n-k,k) log m)
   # combination: nPk / k! (mod p), note: m must be a prime number
-  def cmb(k, m=10**9+7)
+  def cmb(k, m = 10**9 + 7)
     n = self
     return 0 if k < 0 || n < k
+
     k = n - k if k > n - k
-    n.prm(k, m) * k.prm(k,m).modinv(m) % m
+    n.prm(k, m) * k.prm(k, m).modinv(m) % m
   end
 
-  def hom(k, mod = 10**9+7)
-    (self+k-1).cmb(k, mod)
+  def hom(k, mod = 10**9 + 7)
+    (self + k - 1).cmb(k, mod)
   end
 
   # mod must be a prime number
   # O(log m)
-  def modinv(mod = 10**9+7)
-    pow(mod-2, mod)
+  def modinv(mod = 10**9 + 7)
+    pow(mod - 2, mod)
   end
 
   # O(log n)
   # before Ruby 2.3
-  def pow(n , mod = nil )
+  def pow(n, mod = nil)
     a = self
     res = 1
     while n > 0
@@ -38,11 +38,15 @@ class Integer
 
   # O(k)
   def prm(k, mod = nil)
-    (0...k).reduce(1) do |res,i|
-      res *= (self - i )
+    (0...k).reduce(1) do |res, i|
+      res *= (self - i)
       res %= mod if mod
       res
     end
+  end
+
+  def popcount
+    to_s(2).count('1')
   end
 end
 
@@ -55,6 +59,7 @@ class Facts_Test < Minitest::Test
     assert_equal 1024, 2.pow(10)
     assert_equal 1024, 2.pow(10, 1_000_000_007)
   end
+
   def test_cmb
     assert_equal 1, 10.cmb(0)
     assert_equal 10, 10.cmb(1)
@@ -65,6 +70,7 @@ class Facts_Test < Minitest::Test
     assert_equal 45, 10.cmb(8)
     assert_equal 120, 10.cmb(7)
   end
+
   def test_modinv
     assert_equal 8, 5.modinv(13)
     assert_equal 4, 3.modinv(11)
@@ -73,6 +79,7 @@ class Facts_Test < Minitest::Test
     assert_equal 9, 5.modinv(11)
     assert_equal 8, 7.modinv(11)
   end
+
   def test_prm
     assert_equal 2, 2.prm(1)
     assert_equal 2, 2.prm(2)

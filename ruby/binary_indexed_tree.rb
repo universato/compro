@@ -1,10 +1,9 @@
 class BinaryIndexedTree
-
   attr_accessor :bit
 
   def initialize(n)
     @n    = n
-    @bit  = Array.new(n+1){ 0 }
+    @bit  = Array.new(n + 1){ 0 }
   end
 
   # i : 1-indexed
@@ -12,7 +11,7 @@ class BinaryIndexedTree
     res = 0
     while i > 0
       res += @bit[i]
-      i -= ( i & -i )
+      i -= (i & -i)
     end
     res
   end
@@ -20,7 +19,7 @@ class BinaryIndexedTree
   def add(i, x)
     while i <= @n
       @bit[i] += x
-      i += ( i & -i )
+      i += (i & -i)
     end
   end
 
@@ -32,8 +31,8 @@ class BinaryIndexedTree
     rx = i
     k = 1 << @n.bit_length - 1
     while k > 0
-      if res + k <= @n && @bit[res+k] < rx
-        rx -= @bit[res+k]
+      if res + k <= @n && @bit[res + k] < rx
+        rx -= @bit[res + k]
         res += k
       end
       k >>= 1
@@ -50,7 +49,6 @@ m_a = X_MAX
 m_b = 1
 q = gets.to_s.to_i
 $<.read.split.map(&:to_i).each_slice(2) do |t, x|
-
   if t == 1
     b.add(x, 1)
     m_a = x if m_a > x
@@ -61,7 +59,6 @@ $<.read.split.map(&:to_i).each_slice(2) do |t, x|
   end
 end
 
-
 # n = 4
 # a = [3, 1, 4, 2]
 
@@ -71,7 +68,7 @@ end
 # n = 4
 # a = [3, 1, 4, 2]
 
-#蟻本
+# 蟻本
 # b = BinaryIndexedTree.new(n)
 # ans = 0
 # n.times do |j|
@@ -80,8 +77,7 @@ end
 # end
 # puts ans
 
-
-#POJ 3468
+# POJ 3468
 # n, q = gets.to_s.split.map{|t| t.to_i }
 # a    = [0] + gets.to_s.split.map{|t| t.to_i }
 
