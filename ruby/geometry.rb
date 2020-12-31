@@ -6,12 +6,46 @@ CLOCKWISE    = -1
 ONLINE_BACK  =  2
 ONLINE_FRONT = -2
 ON_SEGMENT   =  0
-POINTS_POSITION = { 1 => :COUNTER_CLOCKWISE, -1 => :CLOCKWISE, 2 => :ONLINE_BACK, -2 => :ONLINE_FRONT, 0 => :ON_SEGMENT }.freeze
+POINTS_POSITION = { COUNTER_CLOCKWISE: 1, CLOCKWISE: -1, ONLINE_BACK: 2, ONLINE_FRONT: -2, ON_SEGMENT: 0 }.invert
 
 # Numeric
 class Numeric
-  def equals(d)
-    (self - d).abs < EPS
+  def equals(other)
+    (other - self).abs < EPS
+  end
+end
+
+# Array
+class Array
+  def to_point
+    Point.new(*self)
+  end
+
+  def to_points
+    each_slice(2).map{ |x, y| Point.new(x, y) }
+  end
+
+  def to_circle
+    cx, cy, r = self
+    Circle.new(Point.new(cx, cy), r)
+  end
+end
+
+# String
+class String
+  def to_point
+    x, y = split.map{ |t| t.to_f }
+    Point.new(x, y)
+  end
+
+  def to_circle
+    cx, cy, r = split.map{ |t| t.to_f }
+    Circle.new(Point.new(cx, cy), r)
+  end
+
+  def to_line
+    sx, sy, tx, ty = split.map{ |t| t.to_f }
+    Line.new(Point(sx, sy), Point.new(tx, ty))
   end
 end
 
@@ -20,15 +54,37 @@ class Point
   include Math
   include Comparable
 
-  def initialize(x = 0.0, y = 0.0)
+  def initialize(x = 0, y = 0)
     @x = x
     @y = y
   end
   attr_accessor :x, :y
 
   class << self
+    # def gets
+    #   str = Kernel.gets or return nil
+    #   x, y = str.split.map{ |t| t.to_f }
+    #   Point.new(x, y)
+    # end
+
+    def getf
+      str = Kernel.gets or return nil
+      x, y = str.split.map{ |t| t.to_f }
+      Point.new(x, y)
+    end
+
+    def geti
+      str = Kernel.gets or return nil
+      x, y = str.split.map{ |t| t.to_i }
+      Point.new(x, y)
+    end
+
     def origin
       Point.new(0.0, 0.0)
+    end
+
+    def polar(r, θ)
+      Point.new(Math.cos(θ) * r, Math.sin(θ) * r)
     end
   end
 
@@ -44,30 +100,51 @@ class Point
     Point.new(-@x, -@y)
   end
 
-  def *(a)
-    Point.new(@x * a, @y * a)
+  def *(k)
+    Point.new(@x * k, @y * k)
   end
 
-  def /(a)
-    Point.new(@x / a, @y / a)
+  def /(k)
+    Point.new(@x / k, @y / k)
   end
 
-  def norm
+  def fdiv(k)
+    Point.new(@x.fdiv(k), @y.fdiv(k))
+  end
+
+  def quo(k)
+    Point.new(@x.quo(k), @y.quo(k))
+  end
+
+  def abs2
     @x * @x + @y * @y
   end
+  alias sum_of_squares abs2
+  # alias norm abs2
+  alias ss abs2
 
   def abs
     sqrt(@x * @x + @y * @y)
   end
+  # alias length abs
 
   def dist(other = nil)
     other.nil? ? hypot(@x, @y) : hypot(@x - other.x, @y - other.y)
   end
 
-  def distance_to_point(other)
-    (self - other).abs
+  def distance_to(other)
+    case other
+    when Point   then distance_to_point(other)
+    when Segment then distance_to_segment(other)
+    when Line    then distance_to_line(other)
+    when Circle  then distance_to_circle(other)
+    else raise ArgumentError end
   end
-  alias getDistance distance_to_point
+  # alias getDistance distance_to
+
+  def distance_to_point(other)
+    (other - self).abs
+  end
 
   def distance_to_line(l)
     b = l.t - l.s
@@ -75,10 +152,15 @@ class Point
   end
 
   def distance_to_segment(s)
-    return (self - s.s).abs if (s.t - s.s).dot(v - s.s) < 0.0
-    return (self - s.t).abs if (s.s - s.t).dot(v - s.t) < 0.0
+    (s.t - s.s).dot(v = (self - s.s)) < 0.0 and return v.abs
+    (s.s - s.t).dot(v = (self - s.t)) < 0.0 and return v.abs
 
     distance_to_line(s)
+  end
+
+  def distance_to_circle(circle)
+    diff = (circle.center - self).abs - circle.radius
+    # diff < 0 ? 0 : diff
   end
 
   def <=>(other)
@@ -104,10 +186,11 @@ class Point
   def parallel?(other)
     cross(other).abs < EPS
   end
+  alias parallel_to? parallel?
 
   def project(l)
     base = l.t - l.s
-    r = (self - l.s).dot(base) / base.norm
+    r = (self - l.s).dot(base) / base.abs2
     l.s + base * r
   end
 
@@ -121,7 +204,7 @@ class Point
     return COUNTER_CLOCKWISE if a.cross(b) >  EPS
     return CLOCKWISE         if a.cross(b) < -EPS
     return ONLINE_BACK       if a.dot(b)   < -EPS
-    return ONLINE_FRONT      if a.norm     < b.norm
+    return ONLINE_FRONT      if a.abs2     < b.abs2
 
     return ON_SEGMENT
   end
@@ -142,6 +225,36 @@ class Point
     Point.new(-@y, @x)
   end
 
+  def rot90!
+    @x, @y = -@y, @x
+  end
+
+  def rot(θ)
+    Point.new(@x * cos(θ) - @y * sin(θ), @x * sin(θ) + @y * cos(θ))
+  end
+  alias rotate rot
+
+  def rot!(θ)
+    @x, @y = @x * cos(θ) - @y * sin(θ), @x * sin(θ) + @y * cos(θ)
+  end
+  alias rotate! rot!
+
+  def polar
+    Complex(@x, @y).polar
+  end
+
+  def flip!
+    @x, @y = @y, @x
+  end
+  alias swap! flip!
+  alias reverse! flip!
+
+  def flip
+    Point.new(@y, @x)
+  end
+  alias swap flip
+  alias reverse flip
+
   def to_line
     Line.new(Point.origin, self)
   end
@@ -151,28 +264,34 @@ class Point
     @x.abs < EPS && @y.abs < EPS
   end
 
+  def size
+    2
+  end
+
   def to_a
     [@x, @y]
   end
 
+  def to_c
+    Complex(@x, @y)
+  end
+
   def [](i)
     case i
-    when 0
-      @x
-    when 1, -1
-      @y
+    when 0 then @x
+    when 1, -1 then @y
     else
       raise ArgumentError
     end
   end
 
   def to_s
-    "#{@x.round(12)} #{@y.round(12)}"
+    "#{@x.round(12)} #{@y.round(12)}" % [@x, @y]
   end
 
   # def to_s; "#{x} #{y}" end
   def inspect
-    "Point(#{@x}, #{@y})"
+    "(%f %f)" % [@x, @y]
   end
 
   def out
@@ -188,6 +307,26 @@ class Line
   end
   attr_accessor :s, :t
 
+  class << self
+    # def gets
+    #   s = Kernel.gets or return nil
+    #   sx, sy, tx, ty = s.to_s.split.map{ |e| e.to_f }
+    #   Line.new(Point.new(sx, sy), Point.new(tx, ty))
+    # end
+
+    def getf
+      s = Kernel.gets or return nil
+      sx, sy, tx, ty = s.to_s.split.map{ |e| e.to_f }
+      Line.new(Point.new(sx, sy), Point.new(tx, ty))
+    end
+
+    def geti
+      s = Kernel.gets or return nil
+      sx, sy, tx, ty = s.to_s.split.map{ |e| e.to_i }
+      Line.new(Point.new(sx, sy), Point.new(tx, ty))
+    end
+  end
+
   def orthogonal?(l)
     (@s - @t).dot(l.s - l.t).abs < EPS
   end
@@ -195,10 +334,11 @@ class Line
   def parallel?(l)
     (@s - @t).cross(l.s - l.t).abs < EPS
   end
+  alias parallel_to? parallel?
 
   def project(v)
     base = @t - @s
-    r = 1.0 * (v - @s).dot(base) / base.norm
+    r = 1.0 * (v - @s).dot(base) / base.abs2
     @s + base * r
   end
 
@@ -206,9 +346,32 @@ class Line
     v + (project(v) - v) * 2.0
   end
 
-  def getDistanceLP(v)
+  def ccw(v)
+    a = @t - @s
+    b = v - @s
+    return COUNTER_CLOCKWISE if a.cross(b) >  EPS
+    return CLOCKWISE         if a.cross(b) < -EPS
+    return ONLINE_BACK       if a.dot(b)   < -EPS
+    return ONLINE_FRONT      if a.abs2     < b.abs2
+
+    return ON_SEGMENT
+  end
+
+  def distance_to(other)
+    case other
+    when Point   then distance_to_point(other)
+    when Segment then distance_to_segment(other)
+    when Line    then distance_to_line(other)
+    when Circle  then distance_to_circle(other)
+    end
+  end
+  alias dist distance_to
+  alias distance distance_to
+
+  def distance_to_point(v)
     ((@t - @s).cross(v - @s) / (@t - @s).abs).abs
   end
+  alias getDistanceLP distance_to_point
 
   def getDistanceSP(v)
     return (v - @s).abs if (@t - @s).dot(v - @s) < 0.0
@@ -218,36 +381,62 @@ class Line
   end
 
   def intersect?(l)
-    @s.ccw(@t, l.s) * @s.ccw(@t, l.t) <= 0 && l.s.ccw(l.t, @s) * l.s.ccw(l.t, @t) <= 0
+    ccw(l.s) * ccw(l.t) <= 0 && l.ccw(@s) * l.ccw(@t) <= 0
   end
 
-  def distance(l)
+  def intersect_to_circle?(c)
+    distance_to_circle(c) < EPS
+  end
+
+  def distance_to_line(l)
     return 0.0 if intersect?(l)
 
-    res = getDistanceSP(l.s)
-    m1 = getDistanceSP(l.t)
-    m2 = l.getDistanceSP(@s)
-    m3 = l.getDistanceSP(@t)
-    res = m1 if res > m1
-    res = m2 if res > m2
-    res = m3 if res > m3
-    res
+    [
+      getDistanceSP(l.s),
+      getDistanceSP(l.t),
+      l.getDistanceSP(@s),
+      l.getDistanceSP(@t),
+    ].min
   end
-  alias getDistance distance
+  # alias getDistance distance_to_line
+
+  def distance_to_circle(c)
+    pl = c.center.project(self)
+    [(pl - c.c).abs - c.r, 0.0].min
+  end
 
   def cross_point(l)
     base = @t - @s
     d1   = base.cross(l.t - l.s).abs
-    d2   = base.cross(@t  - l.s).abs #
+    d2   = base.cross(@t  - l.s).abs
     return l.s if d1.abs < EPS && d2.abs < EPS # same line!!
     return warn "!!!PRECONDITION NOT SATISFIED!!!" if d1.abs < EPS
 
     l.s + (l.t - l.s) * 1.0 * d2 / d1
   end
-  alias getCrossPoint cross_point
+  # alias getCrossPoint cross_point
 
   def ==(other)
     @s == other.s && @t == other.t
+  end
+
+  def length
+    Float::INFINITY
+  end
+
+  def slope
+    dy = @t.y - @s.y
+    dx = @t.x - @s.x
+
+    dy / dx
+  end
+
+  def reverse
+    self.class.new(@t, @s)
+  end
+
+  def reverse!
+    @s, @t = @t, @s
   end
 
   def to_point
@@ -262,22 +451,81 @@ class Line
     "[(#{@s.x}, #{@s.y}) -> (#{@t.x}, #{@t.y})]"
   end
 end
-Segment = Line
+
+# Segment
+class Segment < Line
+  def intersect?(other)
+    ccw(other.s) * ccw(other.t) <= 0 && l.ccw(@s) * l.ccw(@t) <= 0
+  end
+
+  def distance_to(other)
+    case other
+    when Point   then distance_to_point(other)
+    when Segment then distance_to_segment(other)
+    when Line    then distance_to_line(other)
+    when Circle  then distance_to_circle(other)
+    end
+  end
+  # alias getDistance distance_to
+
+  def distance_to_point(v)
+    return (v - @s).abs if (@t - @s).dot(v - @s) < 0.0
+    return (v - @t).abs if (@s - @t).dot(v - @t) < 0.0
+
+    super
+  end
+  # alias getDistanceSP distance_to_point
+
+  def distance_to_segment(other)
+    return 0.0 if intersect?(other)
+
+    [
+      distance_to_point(other.s),
+      distance_to_point(other.t),
+      other.distance_to_point(@s),
+      other.distance_to_point(@t),
+    ].min
+  end
+
+  def distance_to_line(l)
+    intersect?(l) ? 0.0 : [l.distance_to_point(@s), l.distance_to_point(@t)].min
+  end
+
+  def distance_to_circle(c)
+    pc = c.center.project(self)
+    t = [@s.dist(c.c), @t.dist(c.c)]
+    t << @pc.dist(c.c) if ccw(pc).odd?
+    [t.min - c.r, 0.0].max
+  end
+
+  def length
+    (@t - @s).abs
+  end
+end
 
 # Polygon
 class Polygon
-  def initialize(points = [])
-    @points = points
+  def initialize(arg = nil)
+    if block_given?
+      @points = []
+      arg.times{ @points << yield }
+    else
+      @points = arg || []
+    end
   end
   attr_accessor :points
 
   extend Forwardable
-  def_delegators(:@points, :push, :pop, :size)
+  def_delegators(:@points, :push, :pop, :append, :prepend, :shift, :unshift, :size, :sort, :sort!, :sort_by, :sort_by!, :to_a, :uniq, :uniq!, :max_by, :max_by, :max, :min, :map)
   alias add_point push
 
   def area
     o = @points[-1]
     (0...@points.size - 1).sum{ |i| o.area(@points[i - 1], @points[i]) }.abs
+  end
+
+  def length
+    (@points + @points[0]).each_cons(2).sum{ |x, y| (x - y).abs }
   end
 
   def convex?
@@ -297,10 +545,8 @@ class Polygon
     true
   end
 
-  ON_EDGE = 1
-  IN_POLYGON = 2
-  OUT_OF_POLYGON = 0
   def include?(v)
+    # { ON_EDGE: 1, IN_POLYGON: 2, OUT_OF_POLYGON:0 }
     n = @points.size
     f = false
     n.times do |i|
@@ -317,18 +563,65 @@ class Polygon
   alias contain? include?
   alias contain include?
 
-  def sort!
-    points.sort!{ |a, b| (a.y <=> b.y).nonzero? || a.x <=> b.x }
+  def ==(other)
+    @points.sort == other.points.sort
+  end
+
+  def closest_pair
+    # http://www.prefield.com/algorithm/geometry/closest_pair.html
+    # pair<P,P> closestPair(vector<P> p) {
+    #   int n = p.size(), s = 0, t = 1, m = 2, S[n]; S[0] = 0, S[1] = 1;
+    #   sort(ALL(p)); // "p < q" <=> "p.x < q.x"
+    #   double d = norm(p[s]-p[t]);
+    #   for (int i = 2; i < n; S[m++] = i++) REP(j, m) {
+    #     if (norm(p[S[j]]-p[i])<d) d = norm(p[s = S[j]]-p[t = i]);
+    #     if (real(p[S[j]]) < real(p[i]) - d) S[j--] = S[--m];
+    #   }
+    #   return make_pair( p[s], p[t] );
+    # }
+    n = @points.size
+    s = 0
+    t = 1
+    m = 2
+    ss = Array.new(n)
+    ss[0] = 0
+    ss[1] = 1
+    @points.sort!
+    d = (@points[s] - @points[t]).abs2
+    i = 2
+    while i < n
+      m.times do |j|
+        if d > (@points[ss[j]] - @points[i]).abs2
+          d = (@points[s = ss[j]] - @points[t = i]).abs2
+        end
+        if @points[ss[j]].x < @points[i].x - d
+          ss[j] = ss[m -= 1]
+          j -= 1
+        end
+      end
+      ss[m] = i
+      m += 1
+      i += 1
+    end
+
+    [@points[s], @points[t]]
   end
 
   def andrew_scan
+    g = Polygon.new
+    g.points = @points.map(&:dup)
+    g.andrew_scan!
+  end
+
+  def andrew_scan!
     u = Polygon.new
     l = Polygon.new
     return self if size < 3
 
-    sort!
+    @points.sort!{ |a, b| (a.y <=> b.y).nonzero? || a.x <=> b.x }
 
-    u.push(points[0], points[1], points[-1], points[-2])
+    u.push(points[0], points[1])
+    l.push(points[-1], points[-2])
 
     (2...size).each do |i|
       (u.size).downto(2) do |n|
@@ -364,20 +657,16 @@ class Polygon
 
     dmax = (points[is] - points[js]).dist
 
-    i = maxi = is
-    j = maxj = js
-    loop do
+    i = is
+    j = js
+    while true
       if (points[(i + 1) % n] - points[i]).cross(points[(j + 1) % n] - points[j]) >= 0
         j = (j + 1) % n
       else
         i = (i + 1) % n
       end
       d = (points[i] - points[j]).dist
-      if d > dmax
-        dmax = d
-        maxi = i
-        maxj = j
-      end
+      dmax = d if dmax < d
       break if i == is && j == js
     end
     dmax
@@ -389,10 +678,27 @@ class Polygon
     n.times do |i|
       cur = points[i]
       nex = points[(i + 1) % n]
-      q.push(cur) if ln.s.ccw(ln.t, cur) != CLOCKWISE
-      q.push(ln.cross_point(line(cur, nex))) if ln.s.ccw(ln.t, cur) * ln.s.ccw(ln.t, nex) < 0
+      q.push(cur) if ln.ccw(cur) != CLOCKWISE
+      q.push(ln.cross_point(line(cur, nex))) if ln.ccw(cur) * ln.ccw(nex) < 0
     end
     q
+  end
+
+  def center_of_gravity
+    # @points.sum(Point.new(0, 0)).fdiv(@points.size)
+    @points.sum(Point.new(0, 0)).quo(@points.size)
+  end
+
+  def rhombus?
+    size == 4 && @points.map{ |e| e.abs }.uniq.size == 1
+  end
+
+  def parallelogram?
+    size == 4 && @points[0].parallel?(@points[2]) && @points[1].parallel?(@points[3])
+  end
+
+  def square?
+    rhombus? && parallelogram?
   end
 
   def out
@@ -403,6 +709,93 @@ class Polygon
   def pout
     puts size
     puts points.map(&:inspect)
+  end
+end
+
+# Triangle
+class Triangle < Polygon
+  def initialize(points = [])
+    if block_given?
+      3.times{ points << yield }
+      @points = points
+    else
+      super
+    end
+  end
+
+  class << self
+    # def gets
+    #   str = Kernel.gets or return nil
+    #   a, b, c, d, e, f = str.split.map{ |e| e.to_f }
+    #   Polygon.new([xy(a, b), xy(c, d), xy(e, f)])
+    # end
+
+    def getf
+      str = Kernel.gets or return nil
+      a, b, c, d, e, f = str.split.map{ |e| e.to_f }
+      Polygon.new([xy(a, b), xy(c, d), xy(e, f)])
+    end
+
+    def geti
+      str = Kernel.gets or return nil
+      a, b, c, d, e, f = str.split.map{ |e| e.to_i }
+      Polygon.new([xy(a, b), xy(c, d), xy(e, f)])
+    end
+  end
+
+  def inradius
+    @inradius or inscribed_circle and @inradius
+  end
+
+  def inner_center
+    @inner_center or inscribed_circle and @inner_center
+  end
+
+  def inscribed_circle
+    a, b, c = @points
+    x = (b - c).abs
+    y = (c - a).abs
+    z = (a - b).abs
+    @inner_center = (a * x + b * y + c * z) * 1.0 / (x + y + z)
+    @inradius = area * 2.0 / (x + y + z)
+    Circle.new(inner_center, inradius)
+  end
+
+  def circumradius
+    a = (@points[1] - @points[0]).abs
+    b = (@points[2] - @points[1]).abs
+    c = (@points[0] - @points[2]).abs
+    (a * b * c).fdiv(4 * area)
+  end
+
+  def circumcenter
+    a, b, c = @points
+    x = (b - c).abs2
+    y = (c - a).abs2
+    z = (a - b).abs2
+
+    t = x * (y + z - x)
+    u = y * (z + x - y)
+    w = z * (x + y - z)
+
+    (a * t + b * u + c * w).fdiv(t + u + w)
+
+    # r = circumradius
+    # ca = Circle.new(@points[0], r)
+    # cb = Circle.new(@points[1], r)
+    # cc = Circle.new(@points[2], r)
+    # p0, p1 = ca.cross_points_to_circle(cb)
+    # q0, q1 = ca.cross_points_to_circle(cc)
+    # pp [ca.cross_points_to_circle(cb), ca.cross_points_to_circle(cc), cb.cross_points_to_circle(cc)]
+
+    # return p0 if p0 == q0 || p0 == q1
+    # return p1 if p1 == q0 || p1 == q1
+
+    # raise "Triangle cannot find circumcenter"
+  end
+
+  def circumscribed_circle
+    Circle.new(circumcenter, circumradius)
   end
 end
 
@@ -417,9 +810,40 @@ class Circle
   alias radius r
 
   class << self
+    def gets
+      str = Kernel.gets or return nil
+      cx, cy, r = str.to_s.split.map{ |e| e.to_f }
+      Circle.new(Point.new(cx, cy), r)
+    end
+
+    def getf
+      str = Kernel.gets or return nil
+      cx, cy, r = str.to_s.split.map{ |e| e.to_f }
+      Circle.new(Point.new(cx, cy), r)
+    end
+
+    def geti
+      str = Kernel.gets or return nil
+      cx, cy, r = str.to_s.split.map{ |e| e.to_f }
+      Circle.new(Point.new(cx, cy), r)
+    end
+
     def unit_ciercle
       Circle.new(Point.new(0.0, 0.0), 1.0)
     end
+  end
+
+  def diameter
+    @r * 2
+  end
+
+  def length
+    2 * @r * Math::PI
+  end
+  alias circumference length
+
+  def area
+    @r * @r * Math::PI
   end
 
   include Math
@@ -439,68 +863,177 @@ class Circle
     warn "完全一致" if r_diff == 0 && d == 0
     return 1 if d == r_diff
 
-    return 0 # if d < r_diff
+    return 0
   end
   alias number_of_common_tangents relation
 
-  def intersection_to_line(line)
-    warn "円と線は交わらない(接していない含む)" if @r < @c.distance_to_line(line)
+  def intersection_to_line(l)
+    warn "円と線は交わらない(接していない含む)" if @r < @c.distance_to_line(l)
     pr   = l.project(@c)
     e    = (l.t - l.s) / (l.t - l.s).abs # unit vector
-    base = sqrt(@r * @r - (pr - c).norm)
+    base = sqrt(@r * @r - (pr - c).abs2)
     t    = e * base
     [pr - t, pr + t] # .sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
   end
   alias cross_points_to_line intersection_to_line
 
+  def cross_points_count(other)
+    dc = @c.dist(other.c) # distance between centers
+
+    lr, sr = @r, other.r
+    lr, sr = sr, lr if lr < sr
+    dr = lr - sr # diff between radiuses
+    sr = lr + sr # sum of radiuses
+
+    if dc < dr
+      warn "Large circle contains small circle"
+      0
+    elsif dc == dr
+      if dr == 0
+        warn "Both circles are a perfect match: @c=#{@c.inspect}, @r=#{@r}"
+        return Float::INFINITY
+      end
+      warn "One circle is inscribed inside another circle"
+      1
+    elsif dc > sr
+      warn "Both circles don't intercect. 交点・接点はない"
+      0
+    elsif dc == sr
+      1
+    else
+      2
+    end
+  end
+
   def intersection_to_circle(other)
     # 途中、螺旋本p.397
     d = @c.dist(other.c)
-    warn "両円は交わらない(接していない含む)" if d > @r + other.r
+
+    lr, sr = @r, other.r
+    lr, sr = sr, lr if lr < sr
+    dr = lr - sr
+    if d < dr
+      warn "Large circle contains small circle"
+    elsif d == dr
+      if dr == 0
+        warn "Both circles are a perfect match: @c=#{@c.inspect}, @r=#{@r}"
+        return dup
+      end
+      warn "One circle is inscribed inside another circle"
+    elsif d > @r + other.r
+      warn "Both circles don't intercect. 交点・接点はない"
+      return nil
+    end
+
     a = Math.acos(Rational(@r * @r + d * d - other.r**2, 2.0 * @r * d))
     t = (other.c - @c).arg
-    [c + polar(r, t + a), c + polar(r, t - a)] # .sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
+    [Point.polar(r, t + a) + c, Point.polar(r, t - a) + c] # .sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
   end
   alias cross_points_to_circle intersection_to_circle
 
   def cross_points(other)
-    if other.instance_of?(Line)
-      l = other
-      warn "円と線は交わらない中(接していない含む)、交点を求めようとしました" if l.getDistanceLP(@c) > @r
-      pr = l.project(@c)
-      e    = (l.t - l.s) / (l.t - l.s).abs # unit vector
-      base = sqrt(@r * @r - (pr - c).norm)
-      t = e * base
-      return [pr - t, pr + t].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
-    elsif other.instance_of?(Circle)
-      # 途中、螺旋本p.397
-      d = @c.dist(other.c)
-      warn "両円が交わらない中(接していない含む)、交点を求めようとしました" if d > @r + other.r
-      a = Math.acos(Rational(@r * @r + d * d - other.r**2, 2.0 * @r * d))
-      t = (other.c - @c).arg
-      return [c + polar(r, t + a), c + polar(r, t - a)].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
-    end
+    case other
+    when Line   then intersection_to_line(other)
+    when Circle then intersection_to_circle(other)
+    else raise ArgumentError end
   end
-  alias getCrossPoints cross_points
+  # alias getCrossPoints cross_points
+  alias intersectiton cross_points
+  alias cross_points_to cross_points
 
-  def common_tangent(other)
-    if other.instance_of?(Point)
-      # refer to drken-san
-      # http://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=3140448#1
-      d = (other - @c).norm
-      l = d - @r * @r
-      return Point.new(0, 0) if l < -EPS
+  def contact_points_with_point(point)
+    # https://ei1333.github.io/luzhiled/snippets/geometry/template.html
+    # pair< Point, Point > tangent(const Circle &c1, const Point &p2)
+    return cross_points_to_circle(Circle.new(point, Math.sqrt((@c - point).abs2 - @r * @r)))
 
-      l = 0.0 if l <= 0.0
-      cq = (other - @c) * (@r * @r / d)
-      qs = ((other - @c) * (@r * sqrt(l) / d)).rot90
-      return [@c + cq + qs, c + cq - qs].sort{ |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
-    elsif other.instance_of?(Circle)
+    # refer to CGL_7_F code written by drken-san
+    # http://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=3140448#1
+    d = (@c - point).abs2
+    l = d - @r * @r
+    return Point.new(0, 0) if l < -EPS
 
-      # TODO: 工事中
+    l = 0.0 if l <= 0.0
+    cq = (point - @c) * (@r * @r / d)
+    qs = ((point - @c) * (@r * sqrt(l) / d)).rot90
+    [@c + cq + qs, c + cq - qs] # .sort # { |a, b| (a.x <=> b.x).nonzero? || a.y <=> b.y }
+  end
+  # alias tangent contact_points_with_point
 
+  def common_tangent_to_circle(other)
+    # http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=CGL_7_G
+    # common_tangent CGL_7_G
+    tangents = []
+    c1, c2 = self, other
+    # if c1.r < c2.r
+    #   c1, c2 = c2, c1
+    #   # p "swap"
+    # end
+    g = (c1.c - c2.c).abs2
+    return [] if g.abs < EPS
+
+    u = (c2.c - c1.c) / Math.sqrt(g)
+    v = u.rot(Math::PI * 0.5)
+
+    [-1, 1].each do |s|
+      h = (c1.r + s * c2.r) / Math.sqrt(g)
+      if (1 - h * h).abs < EPS
+        uu = h > 0 ? u : -u
+        tangents.push(line(c1.c + uu * c1.r, c1.c + uu * c1.r + v))
+      elsif 0 < 1 - h * h
+        uu = u * h
+        vv = v * Math.sqrt(1 - h * h)
+        tangents.push(line(c1.c + (uu + vv) * c1.r, c2.c - (uu + vv) * c2.r * s))
+        tangents.push(line(c1.c + (uu - vv) * c1.r, c2.c - (uu - vv) * c2.r * s))
+        # p [c1.c + (uu + vv) * c1.r, c2.c - (uu + vv) * c2.r * s, c1.c + (uu - vv) * c1.r, c2.c - (uu - vv) * c2.r * s] # xoxo # xoxo
+      end
     end
-    p "???"
+    tangents
+  end
+
+  def contact_points_with_polygon(other)
+    # [TODO] http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=CGL_7_H
+    # Intersection of a Circle and a Polygon CGL_7_H
+  end
+
+  def contact_points(other)
+    case other
+    when Point   then contact_points_with_point(other)
+    when Circle  then contact_points_with_circle(other)
+    when Polygon then contact_points_with_circle(other)
+    else raise ArgumentError end
+  end
+  alias common_tangent contact_points
+
+  def ==(other)
+    @c.x - other.c.x < EPS && @c.y - other.c.y < EPS && @r - other.r < EPS
+  end
+
+  # https://ei1333.github.io/algorithm/geometry_new.html
+  def area_of_intersection_with_circle(other)
+    d = @c.dist(other.c)
+    return 0.0 if d >= @r + other.r
+    return (@r < other.r ? self : other).area if d <= (@r - other.r).abs
+
+    # p1, p2 = cross_points(other)
+    c1, c2 = self, other
+    rc = (d * d + c1.r * c1.r - c2.r * c2.r) / (2 * d)
+    θ = acos(rc / c1.r)
+    φ = acos((d - rc) / c2.r)
+    c1.r * c1.r * θ + c2.r * c2.r * φ - d * c1.r * sin(θ)
+    # res -= (Triangle.new(@c, p1, p2).area + Triangle.new(other.c, p1, p2))
+  end
+
+  # def move(dx, dy)
+  #   @c.x += dx
+  #   @c.y += dy
+  # end
+
+  def to_a
+    [@c.x, @c.y, @r]
+  end
+
+  def to_s
+    "%f %f %f" % [@c.x, @c.y, @r]
   end
 end
 
@@ -518,13 +1051,21 @@ def line(a, b = nil, c = nil, d = nil)
   end
 end
 
+def segment(a, b = nil, c = nil, d = nil)
+  if b
+    c ? Segment.new(xy(a, b), xy(c, d)) : Segment.new(a, b)
+  else
+    Segment.new(*a)
+  end
+end
+
 def circle(x, y, r)
   Circle.new(Point.new(x, y), r)
 end
 alias Circle circle
 
 def triangle(a, b = nil, c = nil, d = nil, e = nil, f = nil)
-  res = Polygon.new
+  res = Triangle.new
   if f
     res.push(point(a, b), point(c, d), point(e, f))
   elsif c
@@ -541,8 +1082,9 @@ def rect(x, y, w, h)
   res.push(x, y + h)
 end
 
-def polar(a, r)
-  Point.new((Math.cos(r) * a).round(13), (Math.sin(r) * a).round(13))
+def polar(r, θ)
+  # Point.new((Math.cos(θ) * r).round(13), (Math.sin(θ) * r).round(13))
+  Point.new(Math.cos(θ) * r, Math.sin(θ) * r)
 end
 
 def cgl1a
@@ -652,15 +1194,14 @@ def cgl2d
     s1 = Line.new(p0, p1)
     s2 = Line.new(p2, p3)
 
-    ans = s1.getDistance(s2)
+    ans = s1.distance(s2)
     puts ans
   end
 end
 
 def cgl3a
-  q = gets.to_s.to_i
-
   g = Polygon.new
+  q = gets.to_s.to_i
   q.times do
     x, y = gets.to_s.split.map{ |t| t.to_f }
     v = Point.new(x, y)
@@ -671,9 +1212,8 @@ def cgl3a
 end
 
 def cgl3b
-  q = gets.to_s.to_i
-
   g = Polygon.new
+  q = gets.to_s.to_i
   q.times do
     x, y = gets.to_s.split.map{ |t| t.to_f }
     v = Point.new(x, y)
@@ -681,4 +1221,153 @@ def cgl3b
   end
 
   puts g.convex? ? 1 : 0
+end
+
+def cgl3c
+  g = Polygon.new
+  n = gets.to_s.to_i
+  n.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    v = Point.new(x, y)
+    g.add_point(v)
+  end
+
+  q = gets.to_s.to_i
+  q.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    v = Point.new(x, y)
+    puts g.include?(v)
+  end
+end
+
+def cgl4a
+  g = Polygon.new
+  n = gets.to_s.to_i
+  n.times do
+    x, y = gets.to_s.split.map{ |t| t.to_i }
+    g.add_point(xy(x, y))
+  end
+
+  g.andrew_scan.out
+end
+
+def cgl4b
+  g = Polygon.new
+  n = gets.to_s.to_i
+  n.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    g.add_point(xy(x, y))
+  end
+
+  puts g.diameter
+end
+
+def cgl4c
+  g = Polygon.new
+  n = gets.to_s.to_i
+  n.times do
+    x, y = gets.to_s.split.map{ |t| t.to_f }
+    g.add_point(xy(x, y))
+  end
+
+  q = gets.to_s.to_i
+  q.times do
+    xs, ys, xt, yt = gets.to_s.split.map{ |t| t.to_f }
+    l = line(xs, ys, xt, yt)
+    puts g.cut(l).area
+  end
+end
+
+def cgl5a
+  n = gets.to_s.to_i
+  x, y = Polygon.new(n){ Point.gets }.closest_pair
+  puts x.dist(y)
+end
+
+def cgl7a
+  xc0, yc0, r0 = gets.to_s.split.map{ |t| t.to_f }
+  xc1, yc1, r1 = gets.to_s.split.map{ |t| t.to_f }
+
+  c0 = Circle.new(xy(xc0, yc0), r0)
+  c1 = Circle.new(xy(xc1, yc1), r1)
+
+  puts c0.relation(c1)
+end
+
+def cgl7b
+  t = Triangle.new{ Point.geti }
+  puts t.inscribed_circle
+end
+
+def cgl7c
+  t = Triangle.new{ Point.geti }
+  puts t.circumscribed_circle
+end
+
+def cgl7d
+  x, y, r = gets.to_s.split.map{ |t| t.to_f }
+  c = Circle.new(xy(x, y), r)
+  q = gets.to_s.to_i
+  q.times do
+    xs, ys, xt, yt = gets.to_s.split.map{ |t| t.to_f }
+    ln = line(xs, ys, xt, yt)
+    ans = c.cross_points(ln)
+    puts ans.join(" ")
+  end
+end
+
+def cgl7e
+  x, y, r = gets.to_s.split.map{ |t| t.to_f }
+  x1, y1, r1 = gets.to_s.split.map{ |t| t.to_f }
+
+  c = Circle.new(xy(x, y), r)
+  c1 = Circle.new(xy(x1, y1), r1)
+  puts c1.cross_points(c).join(" ")
+end
+
+def cgl7f
+  v = Point.getf
+  c = Circle.getf
+  ans = c.contact_points(v).sort
+  puts ans
+end
+
+def cgl7g
+  c1 = Circle.getf
+  c2 = Circle.getf
+  lines = c1.common_tangent_to_circle(c2)
+  ans = lines.map{ |line| line.s }.sort
+  # p ans.map{ |point| point.inspect }
+  puts ans
+end
+
+def cgl7i
+  c1 = Circle.getf
+  c2 = Circle.getf
+  puts c1.area_of_intersection_with_circle(c2)
+end
+
+def abc016
+  karate_chop = Line.geti
+  n = gets.to_s.to_i
+  board = Array.new(n){ Point.geti }
+  board << board[0]
+
+  cross_count = board.each_cons(2).count{ |s, t| karate_chop.intersect?(line(s, t)) }
+
+  puts cross_count / 2 + 1
+end
+
+def abc022
+  n = gets.to_s.to_i
+  a = Polygon.new(n){ Point.geti }
+  b = Polygon.new(n){ Point.geti }
+
+  ga = a.center_of_gravity
+  gb = b.center_of_gravity
+
+  la = a.max_by{ |q| ga.dist(q) }.abs
+  lb = b.max_by{ |q| gb.dist(q) }.abs
+
+  puts lb / la
 end
