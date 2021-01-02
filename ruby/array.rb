@@ -53,6 +53,10 @@ class Array
   end
 
   def gcd
+    inject(0, :gcd)
+  end
+
+  def gcd?
     inject(:gcd)
   end
 
@@ -74,14 +78,22 @@ class Array
   end
 
   def lcm
+    inject(1, :lcm)
+  end
+
+  def lcm?
     inject(:lcm)
   end
 
   def mean
-    inject(:+) * 1.0 / size
+    raise ArgumentError if size == 0
+
+    sum.fdiv(size)
   end
 
   def med
+    raise ArgumentError if size == 0
+
     n = size
     s = sort
     n.odd? ? s[n / 2] : (s[n / 2] + s[n / 2 - 1]) / 2.0
@@ -215,17 +227,26 @@ class ArrayTest < Minitest::Test
   end
 
   def test_gcd
-    assert_nil [].gcd
-    assert_equal(1, [1].gcd)
-    assert_equal(1, [1, 2, 3].gcd)
-    assert_equal(1, [3, 2, 1].gcd)
-    assert_equal(3, [3, 3, 3].gcd)
-    assert_equal(2, [12, 6, 2].gcd)
-    assert_equal(3, [24, 36, 9].gcd)
+    assert_equal 0, [].gcd
+    assert_equal 1, [1].gcd
+    assert_equal 1, [1, 2, 3].gcd
+    assert_equal 1, [3, 2, 1].gcd
+    assert_equal 3, [3, 3, 3].gcd
+    assert_equal 2, [12, 6, 2].gcd
+    assert_equal 3, [24, 36, 9].gcd
+  end
+
+  def test_gcd?
+    assert_nil [].gcd?
+    assert_equal 1, [1].gcd?
+    assert_equal 1, [1, 2, 3].gcd?
+    assert_equal 1, [3, 2, 1].gcd?
+    assert_equal 3, [3, 3, 3].gcd?
+    assert_equal 2, [12, 6, 2].gcd?
+    assert_equal 3, [24, 36, 9].gcd?
   end
 
   def test_is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to
-    assert_nil [].gcd
     assert_equal 0, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(1)
     assert_equal 1, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(2) # 1 pairs: only 2 = 1 x 2
     assert_equal 6, (1..9).to_a.is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to(6)
@@ -235,17 +256,27 @@ class ArrayTest < Minitest::Test
   end
 
   def test_lcm
-    assert_nil [].lcm
-    assert_equal(1, [1].lcm)
-    assert_equal(6, [1, 2, 3].lcm)
-    assert_equal(6, [3, 2, 1].lcm)
-    assert_equal(3, [3, 3, 3].lcm)
-    assert_equal(12, [12, 6, 2].lcm)
-    assert_equal(72, [24, 36, 9].lcm)
+    assert_equal 1, [].lcm
+    assert_equal 1, [1].lcm
+    assert_equal 6, [1, 2, 3].lcm
+    assert_equal 6, [3, 2, 1].lcm
+    assert_equal 3, [3, 3, 3].lcm
+    assert_equal 12, [12, 6, 2].lcm
+    assert_equal 72, [24, 36, 9].lcm
+  end
+
+  def test_lcm?
+    assert_nil [].lcm?
+    assert_equal 1, [1].lcm?
+    assert_equal 6, [1, 2, 3].lcm?
+    assert_equal 6, [3, 2, 1].lcm?
+    assert_equal 3, [3, 3, 3].lcm?
+    assert_equal 12, [12, 6, 2].lcm?
+    assert_equal 72, [24, 36, 9].lcm?
   end
 
   def test_mean
-    assert_nil [].lcm
+    assert_raises(ArgumentError){ [].mean }
     assert_equal(1, [1].mean)
     assert_equal(2, [1, 2, 3].mean)
     assert_equal(2, [3, 2, 1].mean)
@@ -255,7 +286,7 @@ class ArrayTest < Minitest::Test
   end
 
   def test_med
-    # assert_nil [].med
+    assert_raises(ArgumentError){ [].med }
     assert_equal(1, [1].med)
     assert_equal(2, [1, 2, 3].med)
     assert_equal(2, [3, 2, 1].med)

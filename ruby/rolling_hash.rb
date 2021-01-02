@@ -1,5 +1,5 @@
+## This library doesn`t work.
 ## うまくいってない
-
 class RollingHash
   @@base1 = 1007
   @@base2 = 2009

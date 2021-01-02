@@ -1,2 +1,17 @@
 # compro
-for competitive programming 2020-
+
+For competitive programming 2020-
+
+競プロ用(競技プログラミング用)のライブラリです。
+
+自分で完全コピペしておきながら自分で書いたと故意に嘘をつかなければ、自由に使ってもらって構いません。
+
+このライブラリは作りかけで放置されたものやバグだらけかもしれませんが、
+Issueに報告してもらえたりPRをだしてもらえたら嬉しいです。
+まあ、IssueやPRがあったところで、対処するとは限りませんが。
+
+# Ruby
+
+有用なライブラリは、geometry, facts, 対称隣接行列用のfloyd_warshallです。
+
+ac-library-rbにあるやつは、そっちを見た方がいいです。

@@ -5,10 +5,16 @@ class Clock
     @s = s
   end
 
-  def radian_of_between_hour_hand_and_minute_hand
-    r = ratio_of_hour_hand - ratio_of_minute_hand
+  def radian_between_hour_hand_and_minute_hand
+    r = (ratio_of_hour_hand - ratio_of_minute_hand).abs
     r = [1 - r, r].min
     2 * Math::PI * r
+  end
+
+  def degrees_between_hour_hand_and_minute_hand
+    r = (ratio_of_hour_hand - ratio_of_minute_hand).abs
+    r = [1 - r, r].min
+    (360 * r)
   end
 
   def how_many_minutes_to_wait_for_coincidence_of_hour_hand_and_minute_hand
@@ -54,16 +60,16 @@ class Clock
   end
 end
 
-a, b, h, m = gets.to_s.split.map(&:to_f)
+# a, b, h, m = gets.to_s.split.map(&:to_f)
 
-clock = Clock.new(h, m)
-r = clock.radian_of_between_hour_hand_and_minute_hand
-ans = (a**2 + b**2 - 2 * a * b * Math.cos(r))**0.5
+# clock = Clock.new(h, m)
+# r = clock.radian_of_between_hour_hand_and_minute_hand
+# ans = (a**2 + b**2 - 2 * a * b * Math.cos(r))**0.5
 
-puts ans
+# puts ans
 
-clock = Clock.new(12, 0o0)
-clock.add_hour(10.5)
-p clock
-tmp = clock.how_many_minutes_to_wait_for_coincidence_of_hour_hand_and_minute_hand
-p ( tmp / 60)
+# clock = Clock.new(12, 0o0)
+# clock.add_hour(10.5)
+# p clock
+# tmp = clock.how_many_minutes_to_wait_for_coincidence_of_hour_hand_and_minute_hand
+# p ( tmp / 60)

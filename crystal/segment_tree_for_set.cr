@@ -1,10 +1,8 @@
 class SegmentTree(T)
-
   @n : (Int64|Int32)
   @nodes : Array(Set(T))
 
   def initialize(n)
-
     @n = 1
     while @n < n
       @n *= 2

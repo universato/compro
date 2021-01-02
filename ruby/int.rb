@@ -8,10 +8,14 @@ class Integer
     k = n - k if k > n - k
     n.prm(k, m) * k.prm(k, m).modinv(m) % m
   end
+  alias binom cmb
+  alias nCk cmb
+  alias nCb cmb
 
   def hom(k, mod = 10**9 + 7)
     (self + k - 1).cmb(k, mod)
   end
+  alias nHk hom
 
   # mod must be a prime number
   # O(log m)
@@ -21,20 +25,20 @@ class Integer
 
   # O(log n)
   # before Ruby 2.3
-  def pow(n, mod = nil)
-    a = self
-    res = 1
-    while n > 0
-      if (n & 1) != 0
-        res *= a
-        res %= mod if mod
-      end
-      a *= a
-      a %= mod if mod
-      n >>= 1
-    end
-    res
-  end
+  # def pow(n, mod = nil)
+  #   a = self
+  #   res = 1
+  #   while n > 0
+  #     if (n & 1) != 0
+  #       res *= a
+  #       res %= mod if mod
+  #     end
+  #     a *= a
+  #     a %= mod if mod
+  #     n >>= 1
+  #   end
+  #   res
+  # end
 
   # O(k)
   def prm(k, mod = nil)
@@ -44,6 +48,7 @@ class Integer
       res
     end
   end
+  alias nPk prm
 
   def popcount
     to_s(2).count('1')

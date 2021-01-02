@@ -263,18 +263,20 @@ class Point
   def origin?
     @x.abs < EPS && @y.abs < EPS
   end
+  alias zero? origin?
 
-  def size
-    2
-  end
+  # def size
+  #   2
+  # end
 
   def to_a
     [@x, @y]
   end
+  alias to_ary to_a
 
-  def to_c
-    Complex(@x, @y)
-  end
+  # def to_c
+  #   Complex(@x, @y)
+  # end
 
   def [](i)
     case i
@@ -286,17 +288,19 @@ class Point
   end
 
   def to_s
-    "#{@x.round(12)} #{@y.round(12)}" % [@x, @y]
+    # "#{@x.round(12)} #{@y.round(12)}" % [@x, @y]
+    format("%f %f", @x, @y)
   end
 
   # def to_s; "#{x} #{y}" end
   def inspect
-    "(%f %f)" % [@x, @y]
+    format("(%f %f)", @x, @y)
   end
 
   def out
     puts "#{@x} #{@y}"
   end
+  # deprecate
 end
 
 # Line
@@ -1023,6 +1027,14 @@ class Circle
     # res -= (Triangle.new(@c, p1, p2).area + Triangle.new(other.c, p1, p2))
   end
 
+  def contain_point?(point)
+    @r * @r >= (point.x - c.x)**2 + (point.y - c.y)**2
+  end
+
+  def contain_polygon?(polygon)
+    polygon.points.all?{ |point| ontain_point?(point) }
+  end
+
   # def move(dx, dy)
   #   @c.x += dx
   #   @c.y += dy
@@ -1279,9 +1291,14 @@ def cgl4c
 end
 
 def cgl5a
+  # [TODO]
   n = gets.to_s.to_i
   x, y = Polygon.new(n){ Point.gets }.closest_pair
   puts x.dist(y)
+end
+
+def cgl6a
+  # [TODO]
 end
 
 def cgl7a
@@ -1339,6 +1356,10 @@ def cgl7g
   ans = lines.map{ |line| line.s }.sort
   # p ans.map{ |point| point.inspect }
   puts ans
+end
+
+def cgl7h
+  # [TODO]
 end
 
 def cgl7i

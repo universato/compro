@@ -14,6 +14,9 @@ class Facts
     setup_table(n) if @n_max < n
     @fact[n] * (@factinv[r] * @factinv[n - r] % @mod) % @mod
   end
+  alias binom cmb
+  alias nCk cmb
+  alias nCr cmb
 
   def factorial(n)
     setup_table(n) if @n_max < n
@@ -24,11 +27,13 @@ class Facts
   def hom(n, k)
     cmb(n + k - 1, k)
   end
+  alias nHk prm
 
   def prm(n, k)
     setup_table(n) if @n_max < n
     @fact[n] * @factinv[n - k] % @mod
   end
+  alias nPk prm
 
   def catalan_number(n)
     cmb(2 * n, n) * @inv[n + 1] % @mod
