@@ -15,6 +15,7 @@ class Array
         end
       end
     end
+    self
   end
 
   def simple_floyd_warshall!
@@ -26,6 +27,7 @@ class Array
         end
       end
     end
+    self
   end
 end
 

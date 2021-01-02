@@ -1,4 +1,8 @@
-class SegmentTree
+# [TODO] WIP
+# This library does't work.
+# 動かない気がする。作りかけかな。
+
+class LazySegmentTree
   @@inf = 2**31 - 1
 
   def initialize(n)
@@ -59,7 +63,7 @@ class SegmentTree
 
   def inspect
     t = 0
-    res = "SegmentTrree\n  "
+    res = "LazySegmentTrree\n  "
     @nodes.each_with_index do |e, i|
       res << e.to_s << " "
       if t == i && i < @n - 1
@@ -70,27 +74,3 @@ class SegmentTree
     res
   end
 end
-
-# DSL_2_A
-# 蟻本　python セグメント木　競技プログラミング　Atcoder - じゅっぴーダイアリー
-# https://juppy.hatenablog.com/entry/2019/05/02/%E8%9F%BB%E6%9C%AC_python_%E3%82%BB%E3%82%B0%E3%83%A1%E3%83%B3%E3%83%88%E6%9C%A8_%E7%AB%B6%E6%8A%80%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0_Atcoder
-
-n, q = gets.to_s.split.map(&:to_i)
-st = SegmentTree.new(n)
-# p st
-q.times do
-  c, x, y = gets.to_s.split
-  c, x, y = c.to_i, x.to_i, y.to_i
-
-  if c.zero?
-    st.update(x, x + 1, y)
-    # p st
-  else
-    puts st.getmin(x, y + 1)
-  end
-end
-
-# p 0.0.zero?
-# p 1.next
-# p 1.succ
-# p 1.pred #=> 1

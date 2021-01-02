@@ -5,6 +5,14 @@ class Clock
     @s = s
   end
 
+  def adjust
+    (m = @h - @h.to_i) != 0 and add_minute(m * 60)
+    (s = @m - @m.to_i) != 0 and add_second(s * 60)
+    m += s / 60 and s = % 60
+    h += m / 60 and m = % 60
+    h =% 60
+  end
+
   def radian_between_hour_hand_and_minute_hand
     r = (ratio_of_hour_hand - ratio_of_minute_hand).abs
     r = [1 - r, r].min
@@ -60,13 +68,17 @@ class Clock
   end
 end
 
-# a, b, h, m = gets.to_s.split.map(&:to_f)
+def abc168_c
+  # https://atcoder.jp/contests/abc168/tasks/abc168_c
 
-# clock = Clock.new(h, m)
-# r = clock.radian_of_between_hour_hand_and_minute_hand
-# ans = (a**2 + b**2 - 2 * a * b * Math.cos(r))**0.5
+  a, b, h, m = gets.to_s.split.map(&:to_f)
 
-# puts ans
+  clock = Clock.new(h, m)
+  r = clock.radian_between_hour_hand_and_minute_hand
+  ans = (a**2 + b**2 - 2 * a * b * Math.cos(r))**0.5
+
+  puts ans
+end
 
 # clock = Clock.new(12, 0o0)
 # clock.add_hour(10.5)

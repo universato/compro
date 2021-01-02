@@ -240,30 +240,32 @@ end
 
 # puts ""
 
-# ABC 157
-# n = gets.to_s.to_i
-# s = gets.to_s.chomp
-# q = gets.to_s.to_i
+def abc157
+  # ABC 157
+  n = gets.to_s.to_i
+  s = gets.to_s.chomp
+  q = gets.to_s.to_i
 
-# st = SegmentTree.new(n, 0)
+  st = SegmentTree.new(n, 0)
 
-# # p "a".ord #=> 97
-# s.bytes.each_with_index do |c, i|
-#   st.update_or(i, 1 << (c-97))
-# end
+  # p "a".ord #=> 97
+  s.bytes.each_with_index do |c, i|
+    st.update_or(i, 1 << (c-97))
+  end
 
-# q.times do
+  q.times do
 
-#   t, x, y = gets.to_s.split
+    t, x, y = gets.to_s.split
 
-#   if t == "1"
-#     i, c = x.to_i-1, y[0].ord
-#     st.update_or(i, 1 << (c-97))
-#   else
-#     l, r = x.to_i-1, y.to_i-1
-#     puts st.get_or(l, r+1).to_s(2).count('1')
-#   end
-# end
+    if t == "1"
+      i, c = x.to_i-1, y[0].ord
+      st.update_or(i, 1 << (c-97))
+    else
+      l, r = x.to_i-1, y.to_i-1
+      puts st.get_or(l, r+1).to_s(2).count('1')
+    end
+  end
+end
 
 #
 # n = gets.to_s.to_i
@@ -293,39 +295,43 @@ end
 #   end
 # end
 
-#  ABC125 C - GCD on Blackboard
-# n = gets.to_s.to_i
-# a = gets.to_s.split.map{|t| t.to_i }
+def abc125
+  # ABC125 C - GCD on Blackboard
 
-# st = a.to_st(:gcd)
-# ans = [st.get_gcd(1, n), st.get_gcd(0, n-1)].max
+  n = gets.to_s.to_i
+  a = gets.to_s.split.map{|t| t.to_i }
 
-# 1.upto(n-2) do |i|
-#   v = st.get_gcd(0, i).gcd st.get_gcd(i+1, n)
-#   ans = v if ans < v
-# end
+  st = a.to_st(:gcd)
+  ans = [st.get_gcd(1, n), st.get_gcd(0, n - 1)].max
 
-# puts ans
+  1.upto(n - 2) do |i|
+    v = st.get_gcd(0, i).gcd st.get_gcd(i + 1, n)
+    ans = v if ans < v
+  end
+
+  puts ans
+end
 
 # DSL_2_A
 # 蟻本　python セグメント木　競技プログラミング　Atcoder - じゅっぴーダイアリー
 # https://juppy.hatenablog.com/entry/2019/05/02/%E8%9F%BB%E6%9C%AC_python_%E3%82%BB%E3%82%B0%E3%83%A1%E3%83%B3%E3%83%88%E6%9C%A8_%E7%AB%B6%E6%8A%80%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0_Atcoder
+def dsl_2_a
+  # DSL_2_A
+  n, q = gets.to_s.split.map{|t|t.to_i}
+  st = SegmentTree.new(n)
 
-# DSL_2_A
-# n, q = gets.to_s.split.map{|t|t.to_i}
-# st = SegmentTree.new(n)
+  q.times do
 
-# q.times do
+    c, x, y = gets.to_s.split
+    c, x, y = c.to_i, x.to_i, y.to_i
 
-#   c, x, y = gets.to_s.split
-#   c, x, y = c.to_i, x.to_i, y.to_i
-
-#   if c.zero?
-#     st.update_min(x, y)
-#   else
-#     puts st.get_min(x, y+1)
-#   end
-# end
+    if c.zero?
+      st.update_min(x, y)
+    else
+      puts st.get_min(x, y+1)
+    end
+  end
+end
 
 require 'minitest/autorun'
 

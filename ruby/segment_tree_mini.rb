@@ -135,76 +135,82 @@ class Array
   end
 end
 
-n, q = gets.to_s.split.map(&:to_i)
-a    = gets.to_s.split.map(&:to_i)
+def i_dont_know_this_code
+  n, q = gets.to_s.split.map(&:to_i)
+  a    = gets.to_s.split.map(&:to_i)
 
-# inf = [n + 1, nil]
-# st = SegmentTree.new(n, inf)
-st = a.map.with_index{ |t, i| [t, i] }.to_st("min_with_index")
+  # inf = [n + 1, nil]
+  # st = SegmentTree.new(n, inf)
+  st = a.map.with_index{ |t, i| [t, i] }.to_st("min_with_index")
 
-q.times do
-  x, l, r = gets.to_s.split.map{ |t| t.to_i - 1 }
-  # p "aaa"
-  if x == 0
-    st.swap_with_index(l, r)
-  else
-    # puts "ans:"
-    p st.get(l, r + 1)[-1] + 1
+  q.times do
+    x, l, r = gets.to_s.split.map{ |t| t.to_i - 1 }
+    # p "aaa"
+    if x == 0
+      st.swap_with_index(l, r)
+    else
+      # puts "ans:"
+      p st.get(l, r + 1)[-1] + 1
+    end
   end
 end
 
-# ABC
-# n = gets.to_s.to_i
-# s = gets.to_s.chomp
-# q = gets.to_s.to_i
+def abc
+  # ABC
+  n = gets.to_s.to_i
+  s = gets.to_s.chomp
+  q = gets.to_s.to_i
 
-# # p "a".ord #=> 97
-# st = s.bytes.map{|c| 1 << (c-97) }.to_st("or")
+  # p "a".ord #=> 97
+  st = s.bytes.map{|c| 1 << (c-97) }.to_st("or")
 
-# ans = []
-# q.times do
+  ans = []
+  q.times do
 
-#   t, x, y = gets.to_s.split
+    t, x, y = gets.to_s.split
 
-#   if t == "1"
-#     i, c = x.to_i-1, y[0].ord
-#     st.update(i, 1 << (c-97))
-#   else
-#     l, r = x.to_i-1, y.to_i-1
-#     ans << st.get(l, r+1).to_s(2).count('1')
-#   end
-# end
-#
-# puts ans
+    if t == "1"
+      i, c = x.to_i-1, y[0].ord
+      st.update(i, 1 << (c-97))
+    else
+      l, r = x.to_i-1, y.to_i-1
+      ans << st.get(l, r+1).to_s(2).count('1')
+    end
+  end
 
-# yukicoder
-# n, q = gets.to_s.split.map{|t| t.to_i }
-# a    = gets.to_s.split.map{|t| t.to_i }
+  puts ans
+end
 
-# idx = Array.new(n+1)
-# a.each_with_index{ |t, i| idx[t] = i }
+def yukicoder
+  # yukicoder
+  n, q = gets.to_s.split.map{|t| t.to_i }
+  a    = gets.to_s.split.map{|t| t.to_i }
 
-# st = a.to_st("min")
+  idx = Array.new(n+1)
+  a.each_with_index{ |t, i| idx[t] = i }
 
-# ans = []
-# q.times do
-#   x, l, r = gets.to_s.split.map{|t| t.to_i }
-#   l -= 1
-#   r -= 1
+  st = a.to_st("min")
 
-#   if x == 1
-#     nl = st[l]
-#     nr = st[r]
-#     idx[nl] = r
-#     idx[nr] = l
-#     st.update(l, nr)
-#     st.update(r, nl)
-#   else
-#     ans << (idx[st.get(l, r+1)] + 1)
-#   end
-# end
+  ans = []
+  q.times do
+    x, l, r = gets.to_s.split.map{|t| t.to_i }
+    l -= 1
+    r -= 1
 
-# puts ans
+    if x == 1
+      nl = st[l]
+      nr = st[r]
+      idx[nl] = r
+      idx[nr] = l
+      st.update(l, nr)
+      st.update(r, nl)
+    else
+      ans << (idx[st.get(l, r+1)] + 1)
+    end
+  end
+
+  puts ans
+end
 
 require 'minitest/autorun'
 

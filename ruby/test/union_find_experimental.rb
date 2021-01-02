@@ -1,74 +1,9 @@
-class UnionFind
-  # attr_accessor :parents
-  def initialize(n)
-    @rank = Array.new(n, 0)
-    @size = Array.new(n, 0)
-    @parents = Array.new(n, -1)
-  end
-
-  def unite(a, b)
-    a = root(a)
-    b = root(b)
-
-    if a == b
-      return false
-    else
-      a, b = b, a if @rank[a] < @rank[b]
-      @rank[a] += 1 if @rank[a] == @rank[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @size[a] += @size[b]
-      @size[b] = @size[a]
-      @parents[b] = a
-      return true
-    end
-  end
-
-  def unite_by_size(a, b)
-    a = root(a)
-    b = root(b)
-
-    if a == b
-      return false
-    else
-      a, b = b, a if @size[a] < @size[b]
-      @size[a] += @size[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @parents[b] = a
-      return true
-    end
-  end
-
-  def unite_by_rank(a, b)
-    a = root(a)
-    b = root(b)
-
-    if a == b
-      return false
-    else
-      a, b = b, a if @rank[a] < @rank[b]
-      @rank[a] += 1 if @rank[a] == @rank[b]
-      @parents[a] += @parents[b] # if negative value means size
-      @parents[b] = a
-      return true
-    end
-  end
-
-  def root(a)
-    @parents[a] < 0 ? a : (@parents[a] = root(@parents[a]))
-  end
-
-  def same?(a, b)
-    root(a) == root(b)
-  end
-
-  def size(a)
-    -parents[root(a)]
-  end
-end
-
+require 'minitest'
 require 'minitest/autorun'
 
-class UnionFind_Test < Minitest::Test
+require_relative '../union_find_experimental.rb'
+
+class UnionFindTest < Minitest::Test
   def test_atcoder_typical_true
     uft = UnionFind.new(8)
     query = [[0, 1, 2], [0, 3, 2], [1, 1, 3], [0, 2, 4], [1, 4, 1], [0, 4, 2], [0, 0, 0], [1, 0, 0]]
@@ -139,16 +74,3 @@ class UnionFind_Test < Minitest::Test
     end
   end
 end
-
-# https://atc001.contest.atcoder.jp/tasks/unionfind_a
-# n,q=gets.split.map &:to_i
-# tr=UnionFind.new(n+1)
-#
-# q.times do
-#   qu,a,b=gets.split.map &:to_i
-#   if qu==0
-#     tr.unite(a,b)
-#   else
-#     puts tr.root(a) == tr.root(b) ? "Yes" : "No"
-#   end
-# end

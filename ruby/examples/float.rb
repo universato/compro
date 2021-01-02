@@ -1,3 +1,4 @@
+require 'prime'
 require_relative '../float.rb'
 
 s = "01111111111" + "1".ljust(52, '0')

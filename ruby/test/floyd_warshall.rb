@@ -4,6 +4,27 @@ require 'minitest'
 require 'minitest/autorun'
 
 # FloydWarshallTest
+class FloydWarshallTest < Minitest::Test
+  def test_floyd_warsha
+    inf = 10**2
+    d = [
+      [  0, inf, inf, inf],
+      [inf,   0,   3, inf],
+      [inf,   3,   0,   3],
+      [inf, inf,   3,   0],
+    ]
+
+    expected = [
+      [  0, inf, inf, inf],
+      [inf,   0,   3,   6],
+      [inf,   3,   0,   3],
+      [inf,   6,   3,   0],
+    ]
+    assert_equal expected, d.floyd_warshall
+  end
+end
+
+# FloydWarshallTest
 class SymetricFloydWarshallTest < Minitest::Test
   def test_abc143_e_sample1
     inf = 10**9 + 1

@@ -1,44 +1,7 @@
-# [TODO] WIP
-# This library does't work
-# 作りかけで動かないと思う。
-
-class UnionFind
-  def initialize(size)
-    @rank = Array.new(size, 0)
-    @parents = Array.new(size, -1)
-  end
-
-  # attr_accessor :parents
-
-  def unite(a, b, t)
-    a = root(a, t)
-    b = root(b, t)
-    return if a == b
-
-    if @rank[a] > @rank[b]
-      @parents[b] = a
-      @time[a] = t
-    else
-      @parents[a] = b
-      @time[b] = t
-      @rank[b] += 1 if @rank[a] == @rank[b]
-    end
-  end
-
-  def root(a, t)
-    if time[a] > t
-      a
-    else
-      @parents[a] < 0 ? a : (@parents[a] = root(@parents[a]))
-    end
-  end
-
-  def same?(a, b, t)
-    root(a, t) == root(b, t)
-  end
-end
-
+require 'minitest'
 require 'minitest/autorun'
+
+require_relative '../union_find_light.rb'
 
 class UnionFindTest < Minitest::Test
   def test_atcoder_typical_true
@@ -50,6 +13,7 @@ class UnionFindTest < Minitest::Test
       else
         assert uft.same?(a, b)
       end
+      assert_equal uft.size(a), uft.size(b)
     end
   end
 
@@ -59,6 +23,7 @@ class UnionFindTest < Minitest::Test
     query.each do |(q, a, b)|
       if q == 0
         uft.unite(a, b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert uft.same?(a, b)
       end
@@ -71,13 +36,14 @@ class UnionFindTest < Minitest::Test
     query.each do |(q, a, b)|
       if q == 0
         uft.unite(a, b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert !uft.same?(a, b)
       end
     end
   end
 
-  def test_rand
+  def test_rand_isoration
     n = 100
     uft = UnionFind.new(n)
     n.times do
@@ -86,23 +52,6 @@ class UnionFindTest < Minitest::Test
       next if a == b
 
       assert !uft.same?(a, b)
-    end
-  end
-end
-
-
-def atc001
-  # https://atc001.contest.atcoder.jp/tasks/unionfind_a
-
-  n, q = gets.split.map{ |e | e.to_i }
-  tr = UnionFind.new(n + 1)
-
-  q.times do
-    qu, a, b = gets.split.map &:to_i
-    if qu == 0
-      tr.unite(a, b)
-    else
-      puts tr.root(a) == tr.root(b) ? "Yes" : "No"
     end
   end
 end

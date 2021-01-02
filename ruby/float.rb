@@ -1,5 +1,3 @@
-require 'prime'
-
 class Float
   def self.f64(b64)
     raise ArgumentError if b64.bit_length > 64 && b64 < 0
