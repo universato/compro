@@ -10,7 +10,7 @@ end
 
 class WeightedUnionFind
   def initialize(n)
-    @nodes = (0...n).map{ Node.new }
+    @nodes = Array.new(n){ Node.new }
   end
 
   def find(x)
