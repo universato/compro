@@ -1,22 +1,21 @@
 # UnionFind(DSU)
 
 ac-library-rbのDSUライブラリの方がしっかりしている。
-そっちを使ってくれたら。
+そっちを使ったらよさそう。
 
-- union_find_experimental
+- 典型的なUnionFind
+  - union_find_light(最低限の軽量バージョン)
+  - union_find_experimental(実験バージョン)
+  - union_find_undo(巻き戻しつき)
+- weighte_union_find(重み付きUnionFind)
+
 - union_find_light
-- union_find_with_time
-- weighte_union_find
-
-何が違うんだ？ 自分でもよくわからない。
-
+  - 軽量版。無駄な物がない最低限でシンプルなバージョン。
 - union_find_experimental
   - unite_by_rankとunite_by_sizeを用意した。どっちが速いか試せる。
     rankの方が1つ動作が多いよね。
   - uniteもあるけど、rankもsizeも計算するので重たいかも。
   - rootにpath halvingという経路圧縮を使ってみた？
-- union_find_light
-  - 軽量版。これが真正かな。無駄な物がない感じ。
 
 重み付きUnionFind。ポテンシャル付きUnionFindTreeとも。
 - weighted_union_find_node

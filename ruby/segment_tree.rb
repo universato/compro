@@ -195,7 +195,10 @@ class SegmentTree
     res
   end
 end
+Segtree = SegmentTree
+SegTree = SegmentTree
 
+# Array
 class Array
   def to_st(form = :min)
     st = SegmentTree.new(size, form: form)

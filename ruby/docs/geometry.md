@@ -2,4 +2,4 @@
 
 gem化したいな〜
 
-exampleディレクトリに、AOJのCGLの答えがあるよ。
+examplesディレクトリに、AOJのCGLの答えがある。

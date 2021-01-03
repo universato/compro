@@ -210,6 +210,8 @@ class SegmentTree
     res
   end
 end
+Segtree = SegmentTree
+SegTree = SegmentTree
 
 class Array
   include Comparable

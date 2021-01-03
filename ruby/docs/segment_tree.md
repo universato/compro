@@ -6,12 +6,17 @@
 この2つは別物で、LazySegmentTreeは完成してない。
 ac-library-rbに一応あるので、そっちがよさそう。
 
+## 普通のSegmentTree
+
 - segment_tree_form
 - segment_tree_light
 - segment_tree_mini
 - segment_tree
 
 4ファイルあるけど、何が違うんだろう。
+これらのSegtreeは、どれも具体的なやつかな。
+ブロック指定するのは想定してない。
+ac-library-rbのは、初期化時にブロックで演算子を指定するけど、そういうのは入ってない。
 
 - segment_tree
   - new(size_or_ary, :form)

@@ -1,3 +1,5 @@
+# 浮動小数点数に勉強用に作ったもの。
+# Float.f64(b64): 64bit以内の整数を与え、64個の01のデータを浮動小数点数と解釈して浮動小数点数を返す。
 class Float
   def self.f64(b64)
     raise ArgumentError if b64.bit_length > 64 && b64 < 0
@@ -17,7 +19,7 @@ class Float
 
       # 2**52 #=> 4503599627370496
       (-1)**sign * (2**n_expo * n_frac).fdiv(2**52)
-    elsif expo == 2047
+    elsif expo == 2047 # 0b11111111111 # 2047.bit_length #=> 11
       if frac != 0
         Float::NAN
       else

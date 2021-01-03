@@ -3,11 +3,13 @@ class UnionFind
   def initialize(n)
     raise ArgumentError if n < 0
 
+    @n = n
     @rank = Array.new(n, 0)
     @size = Array.new(n, 0)
     @parents = Array.new(n, -1)
-    @n = n
+    @groups_size = n
   end
+  attr_accessor :n, :rank, :size, :parents, :grouos_size
 
   def unite(a, b)
     raise ArgumentError unless 0 <= a && a < @n
@@ -16,6 +18,7 @@ class UnionFind
     b = root(b)
     return false if a == b
 
+    @groups_size -= 1
     a, b = b, a if @rank[a] < @rank[b]
     @rank[a] += 1 if @rank[a] == @rank[b]
     @parents[a] += @parents[b] # negative value means size
@@ -31,6 +34,7 @@ class UnionFind
     b = root(b)
     return false if a == b
 
+    @groups_size -= 1
     a, b = b, a if @size[a] < @size[b]
     @size[a] += @size[b]
     @parents[a] += @parents[b] # negative value means size
@@ -44,6 +48,7 @@ class UnionFind
     b = root(b)
     return false if a == b
 
+    @groups_size -= 1
     a, b = b, a if @rank[a] < @rank[b]
     @rank[a] += 1 if @rank[a] == @rank[b]
     @parents[a] += @parents[b] # negative value means size

@@ -15,15 +15,12 @@ class String
         # p z[i]
       else
         # "aaaaaa"みたいなのは主にこっち
-        # ここで
         j = [0, z[c] - l].max
-        # p j
         # 上の判定式も、c + z[c] - iになるな。# jは最終的にいくつ一致してるかの個数
         j += 1 while i + j < n && s[j] == s[i + j] # 一致してるだけすすめる
         z[i] = j # 一致してた数
         c = i # 一致してた場所
       end
-      # p z
     end
     z[0] = n
     z
@@ -51,7 +48,7 @@ class Array
   end
 end
 
-def xxx
+def i_dont_this_code
   n = gets.to_s.to_i
   s = gets.to_s.chomp
 
