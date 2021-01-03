@@ -11,13 +11,8 @@ class Array
   end
 
   def cumgcd
-    res = self[0]
-    map{ |t| res = t.gcd(res) }
-  end
-
-  def cumgcd(s = nil)
-    s || (s = self[0])
-    map{ |t| s = s.gcd(t) }
+    s = 0
+    map{ |k| s = s.gcd(k) }
   end
 
   def cummax
@@ -36,6 +31,14 @@ class Array
 
   def diff
     (size - 1).times.map { |i| self[i + 1] - self[i] }.to_a
+  end
+
+  # 上より高速かも
+  def diff
+    t = 0
+    res = map{ |x| x, t = t, x; t - x }
+    res.shift
+    res
   end
 
   # def diff; s = self[0]; self[1...(self.size)].map{|k|d=k-s; s=k; d} end
@@ -129,6 +132,6 @@ class Array
 
       x = a
     end
-    return true
+    true
   end
 end

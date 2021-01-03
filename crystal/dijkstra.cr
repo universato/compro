@@ -1,5 +1,4 @@
 class PriorityQueue(T)
-
   @size : Int64
   @heap : Array(T)
   getter :size

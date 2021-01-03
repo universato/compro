@@ -1,7 +1,6 @@
 # これはセグメントツリー内に数値とインデックスをもたせてるけど、遅いのでよくない。
 # インデックスは別管理した方が良い。
 class SegmentTree
-
   @n : (Int64|Int32)
   @nodes : Array(Array(Int32))
   @identity_element : Array(Int32)
@@ -166,21 +165,23 @@ class Array
   end
 end
 
-# yukicoder No.875 Range Mindex Query
-n, q = gets.to_s.split.map{|t| t.to_i }
-a    = gets.to_s.split.map{|t| t.to_i }
+def yukicoder875
+  # yukicoder No.875 Range Mindex Query
+  n, q = gets.to_s.split.map{|t| t.to_i }
+  a    = gets.to_s.split.map{|t| t.to_i }
 
-inf = [n + 1, 0]
-# st = SegmentTree.new(n, inf)
-st = a.map_with_index{|t, i| [t, i] }.to_segment_tree_for_min(inf)
+  inf = [n + 1, 0]
+  # st = SegmentTree.new(n, inf)
+  st = a.map_with_index{|t, i| [t, i] }.to_segment_tree_for_min(inf)
 
-q.times do
-  x, l, r = gets.to_s.split.map{|t| t.to_i - 1 }
-  # p "aaa"
-  if x == 0
-    st.swap_min(l, r)
-  else
-    # puts "ans:"
-    p st.get_min(l, r+1)[-1] + 1
+  q.times do
+    x, l, r = gets.to_s.split.map{|t| t.to_i - 1 }
+    # p "aaa"
+    if x == 0
+      st.swap_min(l, r)
+    else
+      # puts "ans:"
+      p st.get_min(l, r+1)[-1] + 1
+    end
   end
 end

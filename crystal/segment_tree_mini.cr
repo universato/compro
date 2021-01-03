@@ -1,12 +1,10 @@
 class SegmentTree
-
   @n : (Int64|Int32)
   @n_1 : (Int64|Int32)
   @nodes : Array(Int64)
   @identity_element : Int64
 
   def initialize(n, form)
-
     @identity_element =  0_i64
     @func = Proc(Int64, Int64, Int64).new{|x, y| x + y }
     case form
@@ -21,7 +19,6 @@ class SegmentTree
       @identity_element =  0_i64
       @func = Proc(Int64, Int64, Int64).new{|x, y| x | y }
     end
-
 
     @n = 1
     while @n < n

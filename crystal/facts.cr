@@ -1,5 +1,4 @@
 class Facts
-
   def initialize(mod : (Int64|Int32) = 10**9+7, n_max : (Int64|Int32) = 1_i64 )
     @mod = mod
     @n_max = n_max

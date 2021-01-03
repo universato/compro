@@ -2,17 +2,17 @@ struct Int
 
   # O(min(n-k,k) log m)
   # combination: nPk / k! (mod p), note: m must be a prime number
-  def cmb(k, m=10**9+7)
+  def cmb(k, m = 10**9 + 7)
     n = self
     return 0 if k < 0 || n < k
     k = n - k if k > n - k
-    n.prm(k, m) * k.prm(k,m).modinv(m) % m
+    n.prm(k, m) * k.prm(k, m).modinv(m) % m
   end
 
   # mod must be a prime number
   # O(log m)
-  def modinv(mod = 10**9+7)
-    pow(mod-2, mod)
+  def modinv(mod = 10**9 + 7)
+    pow(mod - 2, mod)
   end
 
   # O(log n)
