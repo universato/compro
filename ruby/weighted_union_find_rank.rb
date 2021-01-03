@@ -1,9 +1,10 @@
 class WeightedUnionFind
   def initialize(n)
     @parents = Array.new(n, -1)
+    @ranks = Array.new(n, 0)
     @diffs = Array.new(n, 0)
   end
-  attr_accessor :parents, :diffs
+  attr_accessor :parents, :ranks, :diffs
 
   def root(x)
     if @parents[x] < 0
@@ -29,13 +30,14 @@ class WeightedUnionFind
       raise ArgumentError
     end
 
-    if -@parents[a] < -@parents[b]
+    if @ranks[a] < @ranks[b]
       @parents[b] += @parents[a]
       @parents[a] = b
       @diffs[a] = -w
     else
       @parents[a] += @parents[b]
       @parents[b] = a
+      @ranks[a] += 1 if @ranks[a] == @ranks[b]
       @diffs[b] = w
     end
   end
@@ -50,12 +52,14 @@ class WeightedUnionFind
   end
 
   def weight(x)
-    root(x) # path compression
+    root(x) # 経路圧縮
     @diffs[x]
   end
 
   def diff(x, y)
-    same?(x, y) ? weight(y) - weight(x) : nil
+    return nil unless same?(x, y) # つながってなければ距離を測れないのでnilを返す
+
+    weight(y) - weight(x)
   end
 end
 WeightedUnionFindTree = WeightedUnionFind
@@ -74,16 +78,15 @@ def dsl_1_b
   end
 end
 
-def arc090
-  # ABC087 - D, ARC090 - B
+def abc087_d
   n, m = gets.split.map(&:to_i)
   wuf = WeightedUnionFind.new(n)
   m.times do
     l, r, d = gets.split.map(&:to_i)
     l -= 1
     r -= 1
-    if (diff = wuf.diff(l, r))
-      next if d == diff
+    if wuf.same?(l, r)
+      next if d == wuf.diff(l, r)
 
       puts "No"
       exit

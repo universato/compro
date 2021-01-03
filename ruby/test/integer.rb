@@ -2,7 +2,7 @@
 require "minitest"
 require "minitest/autorun"
 
-require "../int.rb"
+require "../integer.rb"
 
 class IntegerTest < Minitest::Test
   def test_pow

@@ -3,10 +3,10 @@ class UnionFind
   def initialize(n)
     raise ArgumentError if n < 0
 
-    @n = n
     @rank = Array.new(n, 0)
     @size = Array.new(n, 0)
     @parents = Array.new(n, -1)
+    @n = n
   end
 
   def unite(a, b)
@@ -50,10 +50,24 @@ class UnionFind
     @parents[b] = a
   end
 
-  def root(a)
+  def leader(a)
     raise ArgumentError unless 0 <= a && a < @n
 
     @parents[a] < 0 ? a : (@parents[a] = root(@parents[a]))
+  end
+  alias find leader
+
+  def root(a)
+    raise ArgumentError unless 0 <= a && a < @n
+
+    # path halving
+    parent = @parents[a]
+    while parent >= 0
+      return parent if @parents[parent] < 0
+
+      @parents[a], a, parent = @parents[parent], @parents[parent], @parents[@parents[parent]]
+    end
+    a
   end
 
   def same?(a, b)
@@ -72,5 +86,10 @@ class UnionFind
 
   def each_group
     (0 ... @parent_or_size.size).group_by{ |i| leader(i) }.each_value
+  end
+
+  def empty?
+    @n == 0
+    # @parent_or_size.empty?
   end
 end

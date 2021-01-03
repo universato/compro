@@ -1,23 +1,57 @@
 require 'minitest'
 require 'minitest/autorun'
 
-require_relative '../union_find_experimental.rb'
+require_relative '../union_find_undo.rb'
 
 class UnionFindTest < Minitest::Test
-  def test_unite
-    uft = UnionFind.new(4)
-    uft.unite(2, 1)
-    uft.unite(3, 1)
-    assert uft.same?(1, 2)
-    assert uft.same?(2, 3)
-    assert uft.same?(3, 2)
+  def test_undo
+    uf = UnionFind.new(5)
+    uf.unite(0, 1)
+    uf.unite(0, 2)
+    assert 3, uf.size(2)
+    assert uf.same?(0, 1)
+    assert uf.same?(1, 2)
 
-    uft = UnionFind.new(3)
-    uft.unite(0, 1)
-    uft.unite(1, 2)
-    assert uft.same?(1, 2)
-    assert uft.same?(2, 0)
-    assert uft.same?(0, 2)
+    uf.undo
+    assert 1, uf.size(2)
+    assert uf.same?(0, 1)
+  end
+
+  def test_snapshot
+    uf = UnionFind.new(5)
+    uf.unite(0, 1)
+    uf.unite(0, 2)
+    assert uf.same?(0, 2)
+
+    uf.snapshot
+
+    uf.unite(0, 3)
+    assert uf.same?(0, 3)
+
+    uf.undo
+    assert_equal 3, uf.size(2)
+    assert uf.same?(0, 2)
+    assert !uf.same?(0, 3)
+  end
+
+  def test_rollback
+    uf = UnionFind.new(5)
+    uf.unite(0, 1)
+    uf.unite(0, 2)
+    uf.rollback
+    assert_equal [[0], [1], [2], [3], [4]], uf.groups
+
+    uf.unite(0, 1)
+    uf.unite(0, 2)
+    uf.snapshot
+
+    uf.unite(0, 3)
+    uf.unite(3, 4)
+    uf.rollback
+    assert uf.same?(0, 1)
+    assert uf.same?(1, 2)
+    assert !uf.same?(0, 3)
+    assert !uf.same?(3, 4)
   end
 
   def test_atcoder_typical_true
@@ -29,6 +63,7 @@ class UnionFindTest < Minitest::Test
       else
         assert uft.same?(a, b)
       end
+      assert_equal uft.size(a), uft.size(b)
     end
   end
 
@@ -38,6 +73,7 @@ class UnionFindTest < Minitest::Test
     query.each do |(q, a, b)|
       if q == 0
         uft.unite(a, b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert uft.same?(a, b)
       end
@@ -50,6 +86,7 @@ class UnionFindTest < Minitest::Test
     query.each do |(q, a, b)|
       if q == 0
         uft.unite(a, b)
+        assert_equal uft.size(a), uft.size(b)
       else
         assert !uft.same?(a, b)
       end
@@ -65,28 +102,6 @@ class UnionFindTest < Minitest::Test
       next if a == b
 
       assert !uft.same?(a, b)
-    end
-  end
-
-  def test_unite_by_size
-    n = 100
-    uf0 = UnionFind.new(n)
-    uf1 = UnionFind.new(n)
-    uf2 = UnionFind.new(n)
-    n.times do
-      a = rand(n)
-      b = rand(n)
-      uf0.unite(a, b)
-      uf1.unite_by_size(a, b)
-      uf2.unite_by_rank(a, b)
-      assert uf0.same?(a, b)
-      assert uf1.same?(a, b)
-    end
-    n.times do
-      a = rand(n)
-      b = rand(n)
-      assert_equal uf0.same?(a, b), uf1.same?(a, b)
-      assert_equal uf0.same?(a, b), uf2.same?(a, b)
     end
   end
 end
