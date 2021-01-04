@@ -47,8 +47,8 @@ struct Int
 
   # 素因数分解
   def prime_factor : Hash(Int64, Int64)
-    #return Hash{1_i64 => 1_i64} if 1 == self
-    return Hash(Int64, Int64).new if 1 == self
+    return Hash{1_i64 => 1_i64} if 1 == self
+    # return Hash(Int64, Int64).new if 1 == self
     n = self.to_i64
     res = Hash(Int64, Int64).new(0_i64)
     (2_i64).upto((self**0.5).to_i64) do |i|
@@ -78,6 +78,16 @@ struct Int
     res.push({n, 1_i64}) if n != 1_i64
     res
   end
+
+  def bit_length
+    n = self
+    res = 0
+    while n > 0
+      res += 1
+      n //= 2
+    end
+    res
+  end
 end
 
 require "spec"
@@ -95,6 +105,7 @@ describe Int do
       10.cmb(10).should eq 1
     end
   end
+
   describe "#modinv" do
     it "modular multiplicative inverse an integer" do
       5.modinv(13).should eq 8
@@ -105,12 +116,14 @@ describe Int do
       7.modinv(11).should eq 8
     end
   end
+
   describe "#pow" do
     it "is power of an integer" do
       2.pow(10).should eq 1024
       2.pow(10, 1_000_000_007).should eq 1024
     end
   end
+
   describe "#prime?" do
     it "is true if an integer is a prime number" do
       1.prime?.should be_false
@@ -123,14 +136,16 @@ describe Int do
       121.prime?.should be_false
     end
   end
+
   describe "#prime_factor" do
     it "is a prime factorization of an integer" do
       1.prime_factor.should eq Hash{1 => 1}
       25.prime_factor.should eq Hash{5 => 2}
       36.prime_factor.should eq Hash{2_i64 => 2, 3_i64 => 2}
-      # 1_000_000_007.prime_factor.should eq Hash{1_000_000_007 => 1}
+      1_000_000_007.prime_factor.should eq Hash{1_000_000_007 => 1}
     end
   end
+
   describe "#prm" do
     it "is permutation of an integer" do
       2.prm(1).should eq 2
@@ -139,6 +154,19 @@ describe Int do
       5.prm(2).should eq 20
       5.prm(3).should eq 60
       5.prm(4).should eq 120
+    end
+  end
+
+  describe "#bit_length" do
+    it "bit_length" do
+      0.bit_length.should eq 0
+      1.bit_length.should eq 1
+      2.bit_length.should eq 2
+      3.bit_length.should eq 2
+      4.bit_length.should eq 3
+      5.bit_length.should eq 3
+      7.bit_length.should eq 3
+      8.bit_length.should eq 4
     end
   end
 end

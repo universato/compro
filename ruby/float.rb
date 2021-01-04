@@ -31,6 +31,20 @@ class Float
       raise ArgumentError
     end
   end
+
+  def radian_to_degree
+    self * 180 / Math::PI
+  end
+
+  def degree_to_radian
+    self * Math::PI / 180
+  end
+end
+
+class Rational
+  def degree_to_radian
+    self / 180 * Matt::PI
+  end
 end
 
 def put_pow(x, y)

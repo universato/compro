@@ -18,7 +18,7 @@ class SegmentTree
       @n *= 2
     end
 
-    @nodes = Array(Int64).new(@n*2-1, @identity_element)
+    @nodes = Array(Int64).new(@n * 2 - 1, @identity_element)
   end
 
   def update_or(i, val)
