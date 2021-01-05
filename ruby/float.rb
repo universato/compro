@@ -1,3 +1,5 @@
+Math::TAU = 2 * Math::PI
+
 # 浮動小数点数に勉強用に作ったもの。
 # Float.f64(b64): 64bit以内の整数を与え、64個の01のデータを浮動小数点数と解釈して浮動小数点数を返す。
 class Float
@@ -33,17 +35,17 @@ class Float
   end
 
   def radian_to_degree
-    self * 180 / Math::PI
+    self * 360 / Math::TAU
   end
 
   def degree_to_radian
-    self * Math::PI / 180
+    self * Math::TAU / 360
   end
 end
 
 class Rational
   def degree_to_radian
-    self / 180 * Matt::PI
+    self / 360 * Matt::TAU
   end
 end
 

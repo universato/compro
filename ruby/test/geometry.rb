@@ -106,10 +106,12 @@ class PointTest < Minitest::Test
     assert_equal point(-1.0, 1.0), point(1.0, -1.0).reflect(line45)
   end
 
+  include Math
+
   def test_polar
-    assert_equal [Math.sqrt(2), Math::PI / 4], point(1.0, 1.0).polar
+    assert_equal [sqrt(2), TAU / 8], point(1.0, 1.0).polar
     assert_equal [1, 0], point(1.0, 0.0).polar
-    assert_equal [1, Math::PI / 2], point(0.0, 1.0).polar
+    assert_equal [1, TAU / 4], point(0.0, 1.0).polar
   end
 end
 
@@ -197,6 +199,12 @@ class CircleTest < Minitest::Test
     assert_equal PI, circle(0, 0, 1).area
     assert_equal PI, circle(9, 9, 1).area
     assert_equal 4 * PI, circle(0, 0, 2).area
+  end
+
+  def test_length
+    assert_equal TAU, circle(0, 0, 1).length
+    assert_equal TAU, circle(9, 9, 1).length
+    assert_equal TAU * 10, circle(0, 0, 10).length
   end
 
   def test_area_of_intersection

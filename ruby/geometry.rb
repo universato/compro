@@ -8,7 +8,7 @@ ONLINE_FRONT = -2
 ON_SEGMENT   =  0
 POINTS_POSITION = { COUNTER_CLOCKWISE: 1, CLOCKWISE: -1, ONLINE_BACK: 2, ONLINE_FRONT: -2, ON_SEGMENT: 0 }.invert
 
-Math::TAU = MATH::PI * 2
+Math::TAU = Math::PI * 2
 
 # Numeric
 class Numeric
@@ -1000,7 +1000,7 @@ class Circle
     return [] if g.abs < EPS
 
     u = (c2.c - c1.c) / Math.sqrt(g)
-    v = u.rot(Math::PI * 0.5)
+    v = u.rot(Math::TAU / 4)
 
     [-1, 1].each do |s|
       h = (c1.r + s * c2.r) / Math.sqrt(g)
@@ -1012,7 +1012,6 @@ class Circle
         vv = v * Math.sqrt(1 - h * h)
         tangents.push(line(c1.c + (uu + vv) * c1.r, c2.c - (uu + vv) * c2.r * s))
         tangents.push(line(c1.c + (uu - vv) * c1.r, c2.c - (uu - vv) * c2.r * s))
-        # p [c1.c + (uu + vv) * c1.r, c2.c - (uu + vv) * c2.r * s, c1.c + (uu - vv) * c1.r, c2.c - (uu - vv) * c2.r * s] # xoxo # xoxo
       end
     end
     tangents
