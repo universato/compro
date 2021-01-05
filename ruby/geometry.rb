@@ -8,6 +8,8 @@ ONLINE_FRONT = -2
 ON_SEGMENT   =  0
 POINTS_POSITION = { COUNTER_CLOCKWISE: 1, CLOCKWISE: -1, ONLINE_BACK: 2, ONLINE_FRONT: -2, ON_SEGMENT: 0 }.invert
 
+Math::TAU = MATH::PI * 2
+
 # Numeric
 class Numeric
   def equals(other)
@@ -571,6 +573,7 @@ class Polygon
     @points.sort == other.points.sort
   end
 
+  # deprecate because this is slow
   def closest_pair
     # http://www.prefield.com/algorithm/geometry/closest_pair.html
     # pair<P,P> closestPair(vector<P> p) {
@@ -583,6 +586,8 @@ class Polygon
     #   }
     #   return make_pair( p[s], p[t] );
     # }
+
+
     n = @points.size
     s = 0
     t = 1
@@ -610,6 +615,25 @@ class Polygon
 
     [@points[s], @points[t]]
   end
+
+  def closest_pair(n = @points.size)
+    return Float::INFINITY if n <= 1
+    m = n / 2
+    x = a[m].x
+    d = [closest_pair(a, m), closest_pair(a + m, n - m)]
+    a.sort!
+
+    n.times do |i|
+
+    end
+
+
+
+  end
+
+  # private def implace_merge
+
+  # end
 
   def andrew_scan
     g = Polygon.new
@@ -842,7 +866,7 @@ class Circle
   end
 
   def length
-    2 * @r * Math::PI
+    @r * Math::TAU
   end
   alias circumference length
 
@@ -910,7 +934,7 @@ class Circle
   end
 
   def intersection_to_circle(other)
-    # 途中、螺旋本p.397
+    # 途中?、螺旋本p.397
     d = @c.dist(other.c)
 
     lr, sr = @r, other.r
@@ -1045,7 +1069,7 @@ class Circle
   end
 
   def to_s
-    "%f %f %f" % [@c.x, @c.y, @r]
+    format("%f %f %f", @c.x, @c.y, @r)
   end
 end
 

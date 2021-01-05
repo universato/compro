@@ -1,3 +1,5 @@
+Math::TAU = Math::PI * 2
+
 class Clock
   def initialize(h = 0, m = 0, s = 0)
     @h = h
@@ -8,21 +10,19 @@ class Clock
   def adjust
     (m = @h - @h.to_i) != 0 and add_minute(m * 60)
     (s = @m - @m.to_i) != 0 and add_second(s * 60)
-    m += s / 60 and s = % 60
-    h += m / 60 and m = % 60
-    h =% 60
+    @m += @s / 60 and @s %= 60
+    @h += @m / 60 and @m %= 60
+    @h %= 24
   end
 
   def radian_between_hour_hand_and_minute_hand
     r = (ratio_of_hour_hand - ratio_of_minute_hand).abs
-    r = [1 - r, r].min
-    2 * Math::PI * r
+    Math::TAU * [1 - r, r].min
   end
 
   def degrees_between_hour_hand_and_minute_hand
     r = (ratio_of_hour_hand - ratio_of_minute_hand).abs
-    r = [1 - r, r].min
-    (360 * r)
+    360 * [1 - r, r].min
   end
 
   def how_many_minutes_to_wait_for_coincidence_of_hour_hand_and_minute_hand
