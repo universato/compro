@@ -8,7 +8,10 @@ ONLINE_FRONT = -2
 ON_SEGMENT   =  0
 POINTS_POSITION = { COUNTER_CLOCKWISE: 1, CLOCKWISE: -1, ONLINE_BACK: 2, ONLINE_FRONT: -2, ON_SEGMENT: 0 }.invert
 
-Math::TAU = Math::PI * 2
+Math::HALF_PI   = Math::PI / 2
+Math::QUATER_PI = Math::PI / 4
+Math::TAU       = Math::PI * 2
+Math::TWO_PI    = Math::PI * 2
 
 # Numeric
 class Numeric
@@ -1109,15 +1112,25 @@ def triangle(a, b = nil, c = nil, d = nil, e = nil, f = nil)
   res
 end
 
-def rect(x, y, w, h)
+def quad(x1, y1, x2, y2, x3, y3, x4, y4)
   res = Polygon.new
-  res.push(x, y)
-  res.push(x + h, y)
-  res.push(x + w, y + h)
-  res.push(x, y + h)
+  res.push(Point.new(x1, y1), Point.new(x2, y2), Point.new(x3, y3), Point.new(x4, y4))
+end
+
+def rect(sx, sy, w, h)
+  gx = sx + w
+  gy = sy + h
+  res = Polygon.new
+  res.push(Point.new(sx, sy))
+  res.push(Point.new(gx, gy))
+  res.push(Point.new(gx, gy))
+  res.push(Point.new(sx, gy))
+end
+
+def square(x, y, extent)
+  rect(x, y, extent, extent)
 end
 
 def polar(r, θ)
-  # Point.new((Math.cos(θ) * r).round(13), (Math.sin(θ) * r).round(13))
   Point.new(Math.cos(θ) * r, Math.sin(θ) * r)
 end

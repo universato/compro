@@ -1,14 +1,5 @@
 class MaxFlow
   class Edge
-    #getter from : Int64
-    #getter to : Int64
-    #property cap : Int64
-    #property flow : Int64
-    #def initialize(@from, @to, @cap, @flow)
-    #end
-  end
-
-  class Edge2
     getter to : Int32
     property rev : Int32
     property cap : Int64
@@ -20,10 +11,10 @@ class MaxFlow
   end
 
   getter n : Int32
-  getter g : Array(Array(Edge2))
+  getter g : Array(Array(Edge))
   getter pos : Array(Tuple(Int32, Int32))
   def initialize(@n)
-    @g = Array.new(@n){ [] of Edge2 }
+    @g = Array.new(@n){ [] of Edge }
     @pos = [] of Tuple(Int32, Int32)
   end
 
@@ -33,8 +24,8 @@ class MaxFlow
     from_id = @g[from].size
     to_id   = @g[to].size
     to_id += 1 if from == to
-    @g[from].push(Edge2.new(to, to_id, cap))
-    @g[to].push(Edge2.new(from, from_id, 0i64))
+    @g[from].push(Edge.new(to, to_id, cap))
+    @g[to].push(Edge.new(from, from_id, 0i64))
     m
   end
 
@@ -130,12 +121,6 @@ class MaxFlow
     end
   end
 
-  # ac-library auto dfs = [&](auto self, int v, Cap up) {
-  #                 f = dfs(dfs, t, flow_limit - flow);
-  # ac-library-rb dfs(v, up, s, level, iter)
-  # ac-library.cr private def dfs(node, target, flow))
-  #               flowed = dfs(start, target, Int64::MAX)
-  # 蟻本 dfs(v, t, f) dfs(s, t, INF)
   private def dfs(v, t, up, level, iter)
     return up if v == t
 

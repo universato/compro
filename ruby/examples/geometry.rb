@@ -197,6 +197,12 @@ def cgl5a
   puts x.dist(y)
 end
 
+def cgl5a
+  n = gets.to_s.to_i
+  @a = Array.new(n){ x, y = gets.split.map{ |e| e.to_f }; Point.new(x, y) }.sort_by{ |point| point.x }
+  puts "%.10f\n" % closest_pair(0, n)
+end
+
 def cgl6a
   # [TODO]
 end
