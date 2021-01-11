@@ -57,12 +57,9 @@ class Array
   def partial_sort(i, n)
     t = pop(size - n)
     s = shift(i)
-    # p [s, t, self]
-    # p self
     sort_by!{ |e| yield(e) }
     unshift(*s)
     concat(t)
-    # p self
     self
   end
   def brute_force(idx, n)
@@ -101,11 +98,9 @@ class Array
     d = [closest_pair(idx, m), closest_pair(idx + m, n - m)].min
     # partial_sort(idx, n){ |point| point.y }
     inplace_merge(idx, idx + m, idx + n)
-    # p [idx, self[idx], m, n, d, self[idx, n]]
 
     b = []
     n.times do |i|
-      # p [@a[i], x, d]
       i += idx
       point_i = self[i]
       next if (point_i.x - x).abs >= d
@@ -113,16 +108,12 @@ class Array
       1.upto(b.size) do |j|
         dx = point_i.x - b[-j].x
         dy = point_i.y - b[-j].y
-        # p [b.size, j, dx, dy]
         break if dy >= d
 
-        # p [d, Math.sqrt(dx * dx + dy * dy)]
         d = [d, Math.sqrt(dx * dx + dy * dy)].min
       end
       b.push(point_i)
-      # p b
     end
-    # p [idx, self[idx], m, n, d, self[idx, n]]
     d
   end
 end
@@ -172,4 +163,4 @@ def cgl5a
 end
 
 # arihon
-cgl5a
+# cgl5a
