@@ -25,7 +25,7 @@ double closest_pair(point *a, int n){
   double d = min(closest_pair(a, m), closest_pair(a + m, n - m));
   inplace_merge(a, a + m, a + n, compare_y);
 
-  vector<point> b;
+  std::vector<point> b;
   for (int i = 0; i < n; i++){
     if (fabs(a[i].first - x) >= d) continue;
 

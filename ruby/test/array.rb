@@ -221,6 +221,9 @@ class ArrayTest < Minitest::Test
     assert_equal [3, 0, 0, 6], [3, -4, -5, 6].soko_age(0)
   end
 
+  def test_test
+  end
+
   def test_uniq?
     assert_equal(true, [].uniq?)
     assert_equal(true, [1].uniq?)

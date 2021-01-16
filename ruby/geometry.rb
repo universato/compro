@@ -101,6 +101,10 @@ class Point
     Point.new(@x - other.x, @y - other.y)
   end
 
+  def +@
+    Point.new(@x, @y)
+  end
+
   def -@
     Point.new(-@x, -@y)
   end
@@ -129,7 +133,7 @@ class Point
   alias ss abs2
 
   def abs
-    sqrt(@x * @x + @y * @y)
+    Math.sqrt(@x * @x + @y * @y)
   end
   # alias length abs
 

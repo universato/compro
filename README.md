@@ -14,3 +14,15 @@ For competitive programming 2020-
 有用なライブラリは、geometry, facts, 対称隣接行列用のfloyd_warshallかな。
 
 ac-library-rbにあるやつは、そっちを見た方がいいはず。
+
+# test
+
+コマンドラインで以下を叩いて、テストできる。
+
+```sh
+rb ruby/test/union_find.rb
+```
+
+```sh
+crystal crystal/test/union_find.rb
+```
