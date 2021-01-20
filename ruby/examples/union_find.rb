@@ -15,3 +15,8 @@ def atc001
     end
   end
 end
+
+uf = UnionFind.new(5)
+uf.unite(3, 4)
+uf.root(3)
+uf.same?(3, 4)

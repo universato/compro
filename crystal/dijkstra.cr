@@ -86,7 +86,6 @@ class Array
 end
 
 class Node
-
   @to : Int64
   @cost : Int64
 
@@ -99,9 +98,7 @@ end
 
 # with PriorityQueue O(|E|log|V|)
 def dijkstra(g, s)
-
   inf = 1_000_000_000_000
-  #inf = Float::INFINITY
   dist = Array.new(g.size, inf)
   dist[s] = 0_i64
 
@@ -126,14 +123,14 @@ def dijkstra(g, s)
   #dist.map!{|d| d == inf ? "INF" : d }
 end
 
-v, e, r = gets.to_s.split.map{|t|t.to_i64}
+def aoj_agl1a
+  v, e, r = gets.to_s.split.map{|t|t.to_i64}
 
-g = Array.new(v){ [] of Node }
-e.times do
-  s, t, d = gets.to_s.split.map{|t|t.to_i64}
-  g[s] << Node.new(t, d.to_i64)
-  # g[t] << Node.new(s, d)
+  g = Array.new(v){ [] of Node }
+  e.times do
+    s, t, d = gets.to_s.split.map{|t|t.to_i64}
+    g[s] << Node.new(t, d.to_i64)
+  end
+
+  puts dijkstra(g, r)
 end
-# pp g
-
-puts dijkstra(g, r)

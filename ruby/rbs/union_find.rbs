@@ -1,0 +1,12 @@
+# Classes
+class UnionFind
+  @parents: Array[Integer]
+
+  def initialize: (Integer n) -> Array[Integer]
+  def unite: (Integer a, Integer b) -> (Integer | false)
+  def root: (Integer a) -> Integer
+  def same?: (Integer a, Integer b) -> bool
+  def size: (Integer a) -> Integer
+  def groups: -> Array[Array[Integer]]
+  def each_group: -> Enumerator[Array[Integer]]
+end

@@ -1,0 +1,31 @@
+# Classes
+class Array
+  include Comparable
+
+  def abs: -> Array[Numeric]
+  def abs!: -> Array[Numeric]
+  def cumgcd: -> Array[Integer]
+  def cummax: -> Array[untyped]
+  def cummin: -> Array[untyped]
+  def cumsum: -> Array[untyped]
+  def dot: (untyped other) -> untyped
+  def times: (untyped other) -> Array[untyped]
+  def deru_kui: (untyped m) -> Array[untyped]
+  def diff: -> Array[Integer]
+          | -> Array[untyped]
+  def fd: (?nil n) -> Array[Integer]
+  def gcd: -> Integer
+  def gcd?: -> untyped
+  def is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to: (untyped x) -> Integer
+  def lcm: -> Integer
+  def lcm?: -> untyped
+  def mean: -> untyped
+  def med: -> untyped
+  def mod: (Integer m) -> Array[Integer]
+  def modsum: (Integer m) -> Integer
+  def number_greater_than: (untyped x) -> Integer?
+  def prod: -> untyped
+  def soko_age: (untyped m) -> Array[untyped]
+  def uniq?: -> bool
+  def test: (untyped other) -> nil
+end

@@ -325,6 +325,18 @@ int main()
 
 自分の気持ちとしては、`int main()`と`void Main()`があるのは変な感じがする。`void solve()`などにしたい。
 
+```cpp
+int main()
+{
+	std::cin.tie(nullptr);
+	std::ios_base::sync_with_stdio(false);
+	Main();
+}
+```
+
+この2つのおまじないをつけたら、Union Find(yosupo)で、158ms -> 44msとなった。
+UnionFindは、エラーチェックを除いたら、もっと速くなったりするのだろうか。
+
 ### マルチプルテストケース
 
 https://twitter.com/fairly_lettuce/status/1346749511390040064

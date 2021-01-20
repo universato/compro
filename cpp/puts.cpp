@@ -52,6 +52,15 @@ void puts(std::vector<char>& a) {
   for(auto& c : a) std::cout << c << '\n';
 }
 
+void pp(std::vector<char>& graph) {
+  for(auto& list : graph){
+    for(auto& node : list){
+      cout << node << " ";
+    }
+    cout << "\n";
+  }
+}
+
 int main() {
   std::vector<int> a = {1, 2, 3};
   put(a);

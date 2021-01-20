@@ -1,3 +1,8 @@
+# 時計の針の角度をだすの面倒だし、バグりやすい気がしたので暇つぶしに作ってみた。
+# Math::TAUとは、真の円周率で、2πのことである。
+# 基本的にはnewでインスタンス作って、radian_between_hour_hand_and_minute_handなどで角度をだす。
+# radianが弧度法で、degreeが度数法。
+
 Math::TAU = Math::PI * 2
 
 class Clock

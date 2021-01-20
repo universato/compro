@@ -1,3 +1,5 @@
+# graph_list.rbに新しくdikstraを作った。
+
 class PriorityQueue
   def initialize(heap = [])
     @size = heap.size
@@ -93,43 +95,55 @@ end
 def dijkstra(g, s)
   # inf = 10 ** 12
   inf = Float::INFINITY
-  dist = Array.new(g.size, inf)
-  dist[s] = 0
+  dists = Array.new(g.size, inf)
+  dists[s] = 0
 
   que = PriorityQueue.new
   que.push([0, s])
 
-  while que.any?
+  while (d, v = que.pop)
+    next if dists[v] < d
 
-    d, v = que.pop
-    next if dist[v] < d
-
-    # p g[v]
     g[v].each do |e|
-      if dist[e.to] > dist[v] + e.cost
-        dist[e.to] = dist[v] + e.cost
-        que.push([dist[e.to], e.to ])
+      if dists[e.to] > dists[v] + e.cost
+        dists[e.to] = dists[v] + e.cost
+        que.push([dists[e.to], e.to])
       end
     end
-    # p que
   end
 
-  # dist
   dist.map!{ |d| d == inf ? "INF" : d }
 end
 
-v, e, r = gets.to_s.split.map(&:to_i)
+def test_agl1a
+  v, e, r = gets.to_s.split.map(&:to_i)
 
-G = Array.new(v){ [] }
-e.times do
-  s, t, d = gets.to_s.split.map(&:to_i)
-  G[s] << Node.new(t, d)
-  # G[t] << Node.new(s, d)
+  g = Array.new(v){ [] }
+  e.times do
+    s, t, d = gets.to_s.split.map(&:to_i)
+    g[s] << Node.new(t, d)
+    # g[t] << Node.new(s, d)
+  end
+
+  puts dijkstra(g, r)
 end
-# pp G
-
-puts dijkstra(G, r)
 
 # judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_A
 # http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_1_A
 # http://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=4445328
+
+
+# 作りかけ
+# graph_list.rbを見た方がよさそう。
+def test_yosupo
+  v, e, r = gets.to_s.split.map(&:to_i)
+
+  g = Array.new(v){ [] }
+  e.times do
+    s, t, d = gets.to_s.split.map(&:to_i)
+    g[s] << Node.new(t, d)
+    # g[t] << Node.new(s, d)
+  end
+
+  puts dijkstra(g, r)
+end

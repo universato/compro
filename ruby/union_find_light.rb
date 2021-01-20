@@ -26,10 +26,10 @@ class UnionFind
   end
 
   def groups
-    (0 ... @parent_or_size.size).group_by{ |i| leader(i) }.values
+    (0 ... @parents.size).group_by{ |i| leader(i) }.values
   end
 
   def each_group
-    (0 ... @parent_or_size.size).group_by{ |i| leader(i) }.each_value
+    (0 ... @parents.size).group_by{ |i| leader(i) }.each_value
   end
 end

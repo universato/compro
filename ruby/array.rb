@@ -1,6 +1,20 @@
 class Array
   include Comparable
 
+  class << self
+    def infs(n, inf = Float::INFINITY)
+      Array.new(n, inf)
+    end
+
+    def ones(n)
+      Array.new(n, 1)
+    end
+
+    def zeros(n)
+      Array.new(n, 0)
+    end
+  end
+
   def abs
     map(&:abs)
   end
@@ -29,6 +43,8 @@ class Array
     s = 0
     map{ |k| s += k }
   end
+
+
 
   def dot(other)
     zip(other).sum{ |x, y| x * y }
@@ -129,6 +145,10 @@ class Array
 
   def prod
     inject(:*)
+  end
+
+  def slices(n)
+    each_slice.map(n)
   end
 
   def soko_age(m)

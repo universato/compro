@@ -1,0 +1,25 @@
+# Classes
+class Array
+  include Comparable
+
+  def to_pq: -> PriorityQueue
+  alias to_priority_queue to_pq
+  def -@: -> Array[untyped]
+end
+
+class PriorityQueue
+  extend Forwardable
+
+  def initialize: (?Array[bot] heap) -> Array[bot]
+  attr_accessor heap: Array[untyped]
+  alias all heap
+  def push: (untyped x) -> PriorityQueue
+  alias << push
+  alias append push
+  def pop: -> untyped
+  def top: -> untyped
+  alias get top
+  def any?: -> bool
+  def second: -> nil
+  def third: -> nil
+end

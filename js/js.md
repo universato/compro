@@ -1,4 +1,9 @@
-##
+## Array
+
+配列の重複を削除して各要素がユニークとなった配列を返す。(Rubyでいう`Array#uniq`。distinct)
+```js
+function uniq(numbers) { return Array.from(new Set(numbers)); }
+```
 
 ## 高速入力
 
