@@ -3,6 +3,8 @@ using namespace std;
 
 #define rep(i,n) for (int i = 0; i < (n); ++i)
 #define times(n) for (int i = 0; i < (n); ++i)
+#define ALL(x) (x).begin(),(x).end()
+#define all(x) (x).begin(),(x).end()
 using lint = long long;
 using ll = long long;
 using int64 = long long;

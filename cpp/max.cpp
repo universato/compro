@@ -1,41 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <limits>
-using namespace std;
+// using namespace std;
 
-long long max(std::vector<long long> &a){
-  long long res = std::numeric_limits<long long>::min();
-  for (auto k : a) { res = (res > k ? res : k); }
+template <typename T> T max(std::vector<T> &a){
+  T res = std::numeric_limits<T>::min(); // #include <limits>
+  for (auto& k : a) { res = (res > k ? res : k); }
   return res;
 }
 
-int max(std::vector<int> &a){
-  long long res = std::numeric_limits<int>::min();
-  for (auto k : a) { res = (res > k ? res : k); }
-  return res;
-}
-
-long long min(std::vector<long long> &a){
-  long long res = std::numeric_limits<long long>::max();
-  for (auto k : a) { res = (res < k ? res : k); }
-  return res;
-}
-
-int min(std::vector<int> &a){
-  long long res = std::numeric_limits<int>::max();
-  for (auto k : a) { res = (res < k ? res : k); }
-  return res;
-}
-
-double max(std::vector<double> &a){
-  double res = std::numeric_limits<double>::min();
-  for (auto k : a) { res = (res > k ? res : k); }
-  return res;
-}
-
-double min(std::vector<double> &a){
-  double res = std::numeric_limits<double>::max();
-  for (auto k : a) { res = (res < k ? res : k); }
+template <typename T> T min(std::vector<T> &a){
+  T res = std::numeric_limits<T>::max();
+  for (auto& k : a) { res = (res < k ? res : k); }
   return res;
 }
 
@@ -53,7 +29,7 @@ int main(){
   std::cout << max(b) << std::endl;
   std::cout << min(b) << std::endl;
 
-  std::vector<double> c = {0.0, 1.0, 2.0};
+  std::vector<double> c = {0.0, 0.1, 0.2, 0.15};
   std::cout << max(c) << std::endl;
   std::cout << min(c) << std::endl;
 }

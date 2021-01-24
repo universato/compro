@@ -97,6 +97,7 @@ KUPC2015より
 ```
 
 vectorやstringだと、`(x).begin(), (x).end()`となるのだろう。
+なお、Ruby, Python, MATLABなどの`all()`は、全要素が`trthy`かみたいなことをする。
 
 関数派、メソッド派、小文字派、大文字派
 

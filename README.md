@@ -20,7 +20,7 @@ ac-library-rbにあるやつは、そっちを見た方がいいはず。
 コマンドラインで以下を叩いて、テストできる。
 
 ```sh
-rb ruby/test/union_find.rb
+ruby ruby/test/union_find.rb
 ```
 
 ```sh

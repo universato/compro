@@ -261,6 +261,6 @@ long long floor_sum(long long n, long long m, long long a, long long b) {
 }
 
 int main(){
-  cout << pow_mod(2, 3, 9) << endl;
-  cout << pow_mod(2, 4, 9) << endl;
+    std::cout << pow_mod(2, 3, 9) << '\n';
+    std::cout << pow_mod(2, 4, 9) << '\n';
 }

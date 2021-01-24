@@ -2,7 +2,7 @@ class Array
   def abs; map{|k| k.abs } end
   def cumgcd; res = self[0]; map{|t| res = t.gcd(res) } end
   def cummax; res = self[0]; map{|t| res > t ? res : (res = t) } end
-  def cumsum; s = 0; map{|k| s += k } end
+  def cumsum; s = 0i64; map{|k| s += k } end
   def deru_kui(m); map{|t| t>m ? m : t } end
   def diff; (size-1).times.map { |i| self[i + 1] - self[i] }.to_a end
   def fd(n=nil); n = self.max if n.nil?; res = Array.new(n+1,0);self.map{|e| res[e]+=1 };res;end
