@@ -44,8 +44,6 @@ class Array
     map{ |k| s += k }
   end
 
-
-
   def dot(other)
     zip(other).sum{ |x, y| x * y }
   end
@@ -86,6 +84,14 @@ class Array
 
   def gcd?
     inject(:gcd)
+  end
+
+  # https://yukicoder.me/problems/no/1366
+  def kadomatsu?
+    return nil unless size == 3
+    return false unless uniq.size == 3
+
+    self[1] == min || self[1] == max
   end
 
   # Array#is_sorted_and_number_of_pairs_that_prod_is_less_than_or_equal_to

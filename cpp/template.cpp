@@ -25,8 +25,8 @@ void run() {
 
 int main() {
   // std::cin.tie(nullptr);
-	// std::ios_base::sync_with_stdio(false);
-  constexpr char endl = '\n';
-  std::cout << std::fixed << std::setprecision(15);
+	std::ios_base::sync_with_stdio(false);
+  // constexpr char endl = '\n';
+  std::cout << std::fixed << std::setprecision(15); // #include <iomanip>
 	run();
 }

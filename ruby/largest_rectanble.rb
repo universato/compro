@@ -1,4 +1,8 @@
+# https://github.com/magurofly/shed/blob/master/misc/max-rect.rb
 # https://ei1333.github.io/luzhiled/snippets/dp/largest-rectangle.html
+# うしさんライブラリを写経した感じ
+
+# 計算の都合で引数の最後の要素を0にする必要があって、メソッド内で破壊的に追加している。
 
 def largest_rectangle(heights)
   st = []

@@ -18,6 +18,11 @@ std::string capitalize(std::string &s){
 }
 
 std::string swapcase(std::string &s){
+  for(auto &c : s){ c ^= 32; }
+  return s;
+}
+
+std::string swapcase2(std::string &s){
   for(auto &c : s){
     if ('a' <= c && c <= 'z'){ c -= 32; }
     else if('A' <= c && c <= 'Z'){ c += 32; }

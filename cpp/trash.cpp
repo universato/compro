@@ -2,9 +2,35 @@
 // ゴミ箱
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <limits>
 using namespace std;
+
+// 254ms - 307ms
+// これが速かった。
+std::vector<char> chars(string s){
+  int n = s.size();
+  std::vector<char> res(n);
+  for (int i = 0; i < n; i++) { res[i] = s[i]; }
+  return res;
+}
+
+// push_backを使ったcharsの配列の作成は遅かった。
+// 486ms - 490ms
+std::vector<char> chars1(string s){
+  int n = s.size();
+  std::vector<char> res;
+  for (int i = 0; i < n; i++) { res.push_back(s[i]); }
+  return res;
+}
+
+// 421ms - 445ms
+std::vector<char> chars2(string s){
+  std::vector<char> res;
+  for (auto c : s) { res.push_back(c); }
+  return res;
+}
 
 // template関数で、まとめたので不要。
 long long max(std::vector<long long> &a){

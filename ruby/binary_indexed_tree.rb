@@ -1,3 +1,4 @@
+# Fenwick Tree or BIT(BinaryIndexedTree)
 class BinaryIndexedTree
   attr_accessor :bit
 

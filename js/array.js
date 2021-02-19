@@ -15,3 +15,5 @@ module.exports = {
   sum,
   uniq,
 }
+
+// Dont't forget `return` to use sum function;s

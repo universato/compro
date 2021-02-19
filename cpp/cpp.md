@@ -324,6 +324,8 @@ int main()
 }
 ```
 
+`std::setprecision(15)`は15桁表示だろう。
+`std::fixed`は、指数表記の抑制と思われる。
 自分の気持ちとしては、`int main()`と`void Main()`があるのは変な感じがする。`void solve()`などにしたい。
 
 ```cpp
@@ -337,6 +339,10 @@ int main()
 
 この2つのおまじないをつけたら、Union Find(yosupo)で、158ms -> 44msとなった。
 UnionFindは、エラーチェックを除いたら、もっと速くなったりするのだろうか。
+
+過去の自分のテンプレートを見てると、
+`cout << setiosflags(ios::scientific)`
+がある。`ios::scientific`は実数値を浮動小数点数表示らしい。
 
 ### マルチプルテストケース
 
@@ -356,3 +362,6 @@ void run() {
 
 [競技プログラミングにおける個人的 C\+\+ コーディングスタイル \(2020\) \- うさぎ小屋](https://kimiyuki.net/blog/2020/10/25/coding-style-for-competitive-programming/#fnref:remaining)
 > main 関数の中などで`constexpr char endl = '\n';`と書いて、`endl`と書けば単なる`char`型のローカル変数が使われるように shadowing しておいてもよいでしょう。
+
+この`cnstexpr`は、比較的新しい機能ぽい。
+縄文土器の中3女子氏のだっけ。
