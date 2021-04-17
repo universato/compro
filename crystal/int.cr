@@ -173,3 +173,6 @@ end
 
 p 5.divisors
 p 100.divisors
+
+# pow
+# https://atcoder.jp/contests/jsc2021/tasks/jsc2021_d

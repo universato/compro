@@ -57,15 +57,8 @@ class Array
   end
 
   def diff
-    (size - 1).times.map { |i| self[i + 1] - self[i] }.to_a
-  end
-
-  # 上より高速かも
-  def diff
     t = 0
-    res = map{ |x| x, t = t, x; t - x }
-    res.shift
-    res
+    map{ |x| x, t = t, x; t - x  }[1..-1]
   end
 
   # def diff; s = self[0]; self[1...(self.size)].map{|k|d=k-s; s=k; d} end
