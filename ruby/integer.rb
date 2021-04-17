@@ -53,6 +53,7 @@ class Integer
   def divisible_by?(num)
     self % num == 0
   end
+  alias has_divisor divisible_by?
 
   def divisor_of?(num)
     num % self == 0

@@ -170,3 +170,6 @@ describe Int do
     end
   end
 end
+
+p 5.divisors
+p 100.divisors

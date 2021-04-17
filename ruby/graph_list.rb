@@ -10,7 +10,7 @@ class PriorityQueue
     @size += 1
     while i > 0
       par = (i - 1) / 2
-      break if @heap[par] <= x
+      break if @heap[par][0] <= x[0]
 
       @heap[i] = @heap[par]
       i = par
@@ -26,9 +26,9 @@ class PriorityQueue
 
     i = 0
     while (child = i * 2 + 1) < @size
-      child_1 = i * 2 + 2
-      child = child_1 if child_1 < @size && @heap[child_1] < @heap[child]
-      break if @heap[child] >= x
+      child1 = i * 2 + 2
+      child = child1 if child1 < @size && @heap[child1][0] < @heap[child][0]
+      break if @heap[child][0] >= x[0]
 
       @heap[i] = @heap[child]
       i = child
