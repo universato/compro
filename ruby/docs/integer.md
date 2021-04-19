@@ -9,14 +9,15 @@
 ```
 
 ```rb
-p 2.divisible_by?(1) # => true
-p 1.divisible_by?(2) # => false
-p 0.divisible_by?(3) # => true
-p 0.divisible_by?(1) # => true
+p 2.divisible_by?(1) # => true   2 は 1 で割れる。1は、2の約数。
+p 1.divisible_by?(2) # => false  1 は 2 で割れない。2は、1の約数ではない。
+p 0.divisible_by?(3) # => true   0 は 3 で割れる。3は、0の約数。
+p 0.divisible_by?(1) # => true   0 は 1 で割れる。1は、0の約数。
 p 2.divisible_by?(0) # Unhandled exception: Division by 0 (DivisionByZeroError)
 ```
+
 引数に0は取れない。0は約数にならないけど、エラーになる。
-一般として、0の約数は、全ての0でない整数であり、無限個あると考えられている。
+逆に、一般として、0の約数は、全ての0でない整数であり、無限個あると考えられている。
 
 Rails [Active Support コア拡張機能 \- Railsガイド](https://railsguides.jp/active_support_core_extensions.html#multiple-of-questionmark)
 ```rb
@@ -49,3 +50,36 @@ end
 
 引数が0でもエラーにならない。引数が0のときは、0どうしのときのみ`true`になる。
 0は0の倍数となる。
+
+
+# 二項係数
+
+TeXだと`\binom{n}{r}`らしい。
+`cmb`は一般的じゃなくて、`comb`を使っている人が多いかもしれない。
+
+
+nCk mod2(`comb_mod2(k)`)
+これは、123 triangleで出題された。
+
+nCk mod3
+ARC117 C問題で出題された。
+
+
+# Division
+
+床関数とガウス記号って同じか。
+「を超えない最大の整数」という言い方は、「以下の最大の整数」でよくないかと思った。
+「未満の最大の整数」の呼び方がなさそうで困った。
+
+「a / b 以下の最大の整数」は、「integer floor division」でいいと思う。
+「a / b 以上の最小の整数」は、「integer ceil division」でいいと思う。
+「a / b 未満の最大の整数」は、なんだろう。
+
+ceil divisionは「a / b 以上の最小の整数で」、「a / b 未満の最大の整数」と対になっている。ちょうど答えが 1 ずれる。
+```rb
+# ceil dividsion
+(a + b - 1) / b
+# ↓
+((a + b - 1) / b) - 1
+(a - 1) / b
+```

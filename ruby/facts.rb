@@ -8,16 +8,17 @@ class Facts
     setup_table(n_max) if 1 < @n_max
   end
 
-  def cmb(n, r)
+  def comb(n, r)
     return 0 if r < 0 || n < r
 
     setup_table(n) if @n_max < n
     @fact[n] * (@factinv[r] * @factinv[n - r] % @mod) % @mod
   end
-  alias binom cmb # LaTex
-  alias nCk cmb
-  alias nCr cmb
-  # alias nchoosek cmb # MATLAB
+  alias binom comb # LaTex
+  alias nCk comb
+  alias nCr comb
+  alias cmb comb
+  # alias nchoosek comb # MATLAB
 
   def factorial(n)
     setup_table(n) if @n_max < n
@@ -26,9 +27,9 @@ class Facts
 
   # nHk
   def hom(n, k)
-    cmb(n + k - 1, k)
+    comb(n + k - 1, k)
   end
-  alias nHk prm
+  alias nHk hom
 
   def prm(n, k)
     setup_table(n) if @n_max < n
@@ -37,7 +38,7 @@ class Facts
   alias nPk prm
 
   def catalan_number(n)
-    cmb(2 * n, n) * @inv[n + 1] % @mod
+    comb(2 * n, n) * @inv[n + 1] % @mod
   end
 
   private
