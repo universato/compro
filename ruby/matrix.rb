@@ -1,10 +1,32 @@
+# Matrix
+#
+# Matrix.new(1, 2, 3, 4)
+#   [[1, 2],
+#    [3, 4]]
+#
 class Matrix
   class << self
     def rotation(theta)
       c = Math.cos(theta)
-      s = Math.cos(theta)
+      s = Math.sin(theta)
       Matrix.new(c, -s, s, c)
     end
+
+    def I(n)
+      Matrix.new(1, 0, 0, 1)
+    end
+    alias identity I
+    alias unit I
+    alias eyes I
+
+    def diagonal(x, w = x)
+      Matrix.new(x, 0, 0, w)
+    end
+
+    def zeros
+      Matrix.new(0, 0, 0, 0)
+    end
+    alias zeros zero
 
     def rot90
       Matrix.new(0, -1, 1, 0)
@@ -12,6 +34,10 @@ class Matrix
 
     def clock90
       Matrix.new(0, 1, -1, 0)
+    end
+
+    def [](x, y, z, w)
+      Matrix.new(x, y, z, w)
     end
   end
 
@@ -22,6 +48,25 @@ class Matrix
 
   def *(v)
     Vector.new(x * v.x + y * v.y, z * v.x + w * v.y)
+  end
+
+  def diagonal?
+    x == 0 && z == 0
+  end
+
+  def transpose
+    Matrix.new(@x, @z, @y, @W)
+  end
+
+  def map
+    Matrix.new(yield(x), yield(y), yield(z), yield(w))
+  end
+
+  def map!
+    @x = yield(x)
+    @y = yield(y)
+    @z = yield(z)
+    @w = yield(w)
   end
 end
 
@@ -48,12 +93,33 @@ class Vector
     Vector.new(x / k, y / k)
   end
 
+  def ==(other)
+    x == other.x && y == other.y
+  end
+
+  def map
+    Vector.new(yield(x), yield(y))
+  end
+
+  def map!
+    @x = yield(@x)
+    @y = yield(@y)
+  end
+
+  def to_a
+    block_given? ? [yield(x), yield(y)] : [x, y]
+  end
+
   def rot90
     Vector.new(-y, x)
   end
 
   def clock90
     Vector.new(y, -x)
+  end
+
+  def rot(θ)
+    Vector.new(@x * Math.cos(θ) - @y * Math.sin(θ), @x * Math.sin(θ) + @y * Math.cos(θ))
   end
 
   def reflect_x(s)
@@ -63,7 +129,21 @@ class Vector
   def reflect_y(s)
     Vector.new(@x, 2 * s - @y)
   end
+
+  class << self
+    def geti
+      x, y = gets.split.map{ |e| e.to_i }
+      Vector.new(x, y)
+    end
+
+    def getf
+      x, y = gets.split.map{ |e| e.to_f }
+      Vector.new(x, y)
+    end
+  end
 end
+
+Math::TAU = Math::PI * 2
 
 def abc189
   n = gets.to_s.to_i

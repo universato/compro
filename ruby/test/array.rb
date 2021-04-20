@@ -42,6 +42,16 @@ class ArrayTest < Minitest::Test
     assert_equal([24, 12, 3], [24, 36, 9].cumgcd)
   end
 
+  def test_rcumgcd
+    assert_equal([], [].rcumgcd)
+    assert_equal([1], [1].rcumgcd)
+    assert_equal([1, 1, 3], [1, 2, 3].rcumgcd)
+    assert_equal([1, 1, 1], [3, 2, 1].rcumgcd)
+    assert_equal([3, 3, 3], [3, 3, 3].rcumgcd)
+    assert_equal([2, 2, 2], [12, 6, 2].rcumgcd)
+    assert_equal([3, 9, 9], [24, 36, 9].rcumgcd)
+  end
+
   def test_cummax
     assert_equal([], [].cummax)
     assert_equal([1], [1].cummax)
@@ -51,6 +61,28 @@ class ArrayTest < Minitest::Test
     assert_equal([12, 12, 12], [12, 6, 2].cummax)
     assert_equal([24, 36, 36], [24, 36, 9].cummax)
     assert_equal([-6, -2, 10, 10], [-6, -2, 10, -5].cummax)
+  end
+
+  def test_cummin
+    assert_equal([], [].cummin)
+    assert_equal([1], [1].cummin)
+    assert_equal([1, 1, 1], [1, 2, 3].cummin)
+    assert_equal([3, 2, 1], [3, 2, 1].cummin)
+    assert_equal([3, 3, 3], [3, 3, 3].cummin)
+    assert_equal([12, 6, 2], [12, 6, 2].cummin)
+    assert_equal([24, 24, 9], [24, 36, 9].cummin)
+    assert_equal([-6, -6, -6, -6], [-6, -2, 10, -5].cummin)
+  end
+
+  def test_rcummax
+    assert_equal([], [].rcummax)
+    assert_equal([1], [1].rcummax)
+    assert_equal([3, 3, 3], [1, 2, 3].rcummax)
+    assert_equal([3, 2, 1], [3, 2, 1].rcummax)
+    assert_equal([3, 3, 3], [3, 3, 3].rcummax)
+    assert_equal([12, 6, 2], [12, 6, 2].rcummax)
+    assert_equal([36, 36, 9], [24, 36, 9].rcummax)
+    assert_equal([10, 10, 10, -5], [-6, -2, 10, -5].rcummax)
   end
 
   def test_cumsum
@@ -64,6 +96,17 @@ class ArrayTest < Minitest::Test
     assert_equal([-1, 0, -1, 0], [-1, 1, -1, 1].cumsum)
   end
 
+  def test_rcumsum
+    assert_equal([], [].rcumsum)
+    assert_equal([1], [1].rcumsum)
+    assert_equal([6, 5, 3], [1, 2, 3].rcumsum)
+    assert_equal([6, 3, 1], [3, 2, 1].rcumsum)
+    assert_equal([9, 6, 3], [3, 3, 3].rcumsum)
+    assert_equal([20, 8, 2], [12, 6, 2].rcumsum)
+    assert_equal([69, 45, 9], [24, 36, 9].rcumsum)
+    assert_equal([0, 1, 0, 1], [-1, 1, -1, 1].rcumsum)
+  end
+
   def test_deru_kui
     assert_equal [], [].deru_kui(100)
     assert_equal [], [].deru_kui(-100)
@@ -74,12 +117,15 @@ class ArrayTest < Minitest::Test
   end
 
   def test_diff
-    assert_equal [], [].diff
+    # assert_equal nil, [].diff
+    assert_equal [], [].diff  # ここ悩ましい
     assert_equal [], [1].diff
     assert_equal [10, 10, 80], [0, 10, 20, 100].diff
     assert_equal [8, 7, 90], [-5, 3, 10, 100].diff
     assert_equal [-7, -1, 11], [3, -4, -5, 6].diff
   end
+  # [].diff #=> []   drop(1)
+  # [].diff #=> nil  [1..-1]
 
   def test_fd
     assert_equal [0] * 6, [].fd(5)

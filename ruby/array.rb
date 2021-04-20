@@ -29,9 +29,17 @@ class Array
     map{ |k| s = s.gcd(k) }
   end
 
+  def rcumgcd
+    reverse.cumgcd.reverse
+  end
+
   def cummax
     m = self[0]
     map{ |t| m > t ? m : m = t }
+  end
+
+  def rcummax
+    reverse.cummax.reverse
   end
 
   def cummin
@@ -39,9 +47,18 @@ class Array
     map{ |t| m < t ? m : m = t }
   end
 
+  def rcummin
+    reverse.cummin.reverse
+  end
+
   def cumsum
     s = 0
     map{ |k| s += k }
+  end
+
+  # (1..4).to_a.rcumsum # => [10, 9, 7, 4]
+  def rcumsum
+    reverse.cumsum.reverse
   end
 
   def dot(other)
@@ -58,7 +75,7 @@ class Array
 
   def diff
     t = 0
-    map{ |x| x, t = t, x; t - x  }[1..-1]
+    map{ |x| x, t = t, x; t - x  }.drop(1)
   end
 
   # def diff; s = self[0]; self[1...(self.size)].map{|k|d=k-s; s=k; d} end
