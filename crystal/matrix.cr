@@ -8,7 +8,7 @@ class Matrix(T)
   def initialize(@x, @y, @z, @w)
   end
 
-  def *(v)
+  def *(v : Vector)
     Vector(T).new(x * v.x + y * v.y, z * v.x + w * v.y)
   end
 end
@@ -18,10 +18,10 @@ class Vector(T)
   property y : T
   def initialize(@x, @y)
   end
-  def +(other)
+  def +(other : Vector)
     Vector(T).new(x + other.x, y + other.y)
   end
-  def -(other)
+  def -(other : Vector)
     Vector(T).new(x - other.x, y - other.y)
   end
   def *(k)
@@ -31,7 +31,7 @@ class Vector(T)
     Vector(T).new(x / k, y / k)
   end
   def //(k)
-    Vector(T).new(x / k, y / k)
+    Vector(T).new(x // k, y // k)
   end
   def rot90
     Vector(T).new(-y, x)
