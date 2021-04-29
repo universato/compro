@@ -32,6 +32,7 @@ class Integer
   def modinv(mod = 10**9 + 7)
     pow(mod - 2, mod)
   end
+  alias inv modinv
 
   # O(log n)
   # before Ruby 2.3

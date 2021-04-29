@@ -41,6 +41,11 @@ class Matrix
       Matrix.new(0, 1, -1, 0)
     end
 
+    def rot180
+      Matrix.new(-1, 0, 0, -1)
+    end
+    alias clock180 rot180
+
     def [](x, y, z, w)
       Matrix.new(x, y, z, w)
     end
@@ -59,8 +64,44 @@ class Matrix
     Matrix[x - m.x, y - m.y, z - m.z, w - m.w]
   end
 
-  def *(v)
-    Vector.new(x * v.x + y * v.y, z * v.x + w * v.y)
+  def *(other)
+    case other
+    when Vector
+      v = other
+      Vector.new(x * v.x + y * v.y, z * v.x + w * v.y)
+    when Matrix
+      m = other
+      Matrix.new(
+        @x * m.x + @y * m.z, @x * m.y + @y * m.w,
+        @z * m.x + @w * m.z, @z * m.y + @w * m.w,
+      )
+    end
+  end
+
+  def mod_add(m, mod)
+    Matrix.new(
+      (x + m.x) % mod, (y + m.y) % mod,
+      (z + m.z) % mod, (w + m.w) % mod
+    )
+  end
+
+  def mod_mul(other, mod)
+    case other
+    when Vector
+      v = other
+      Vector.new(
+        (x * v.x + y * v.y) % mod,
+        (z * v.x + w * v.y) % mod
+      )
+    when Matrix
+      m = other
+      Matrix.new(
+        (@x * m.x + @y * m.z) % mod,
+        (@x * m.y + @y * m.w) % mod,
+        (@z * m.x + @w * m.z) % mod,
+        (@z * m.y + @w * m.w) % mod
+      )
+    end
   end
 
   def ==(m)
@@ -69,11 +110,11 @@ class Matrix
   alias eql? ==
 
   def diagonal?
-    x == 0 && z == 0
+    y == 0 && z == 0
   end
 
   def transpose
-    Matrix.new(@x, @z, @y, @W)
+    Matrix.new(@x, @z, @y, @w)
   end
   alias t transpose
 
@@ -149,7 +190,13 @@ class Matrix
   end
 
   def singular?
+    # det == 0 # det.abs < EPS
     @x * @w - @y * @z == 0
+  end
+
+  def regular?
+    # not singular?
+    @x * @w - @y * @z != 0
   end
 
   def symmetric?
@@ -171,6 +218,8 @@ class Matrix
       end
     end
   end
+  alias element []
+  # alias component []
 
   def real
     Matrix.new(@x.real, @y.real, @z.real, @w.real)
@@ -203,6 +252,27 @@ class Matrix
     nnz
   end
   alias nnz number_of_nonzero
+
+  def hadamard_product(m)
+    Matrix.new(x * m.x, y * m.y, z * m.z, w * m.w)
+  end
+  alias entrywise_product hadamard_product
+
+  # def first_minor(i, j)
+  #   if i == 0 || i == -2
+  #     if j == 0 || j == -2
+  #       @w
+  #     elsif j == 1 || j == -1
+  #       @z
+  #     end
+  #   elsif i == 1 || i == -1
+  #     if j == 0 || j == -2
+  #       @y
+  #     elsif j == 1 || j == -1
+  #       @x
+  #     end
+  #   end
+  # end
 
   include Enumerable
   def each
@@ -240,6 +310,14 @@ class Vector
     Vector.new(x / k, y / k)
   end
 
+  def fdiv(k)
+    Vector.new(x.fdiv(k), y.fdiv(k))
+  end
+
+  def quo(k)
+    Vector.new(x.quo(k), y.quo(k))
+  end
+
   def dot(other)
     @x * other.x + @y * other.y
   end
@@ -258,7 +336,7 @@ class Vector
 
   EPS = 1e-10
   def ==(other)
-    x == other.x && y == other.y
+    @x == other.x && @y == other.y
     (@x - other.x).abs < EPS && (@y - other.y).abs < EPS
   end
   alias eql? ==
@@ -328,7 +406,7 @@ class Vector
   end
 
   def diff
-    @x - @y
+    @y - @x
   end
 
   def last
@@ -365,6 +443,16 @@ class Vector
     def [](x, y)
       Vector.new(x, y)
     end
+
+    def ex
+      Vector.new(1, 0)
+    end
+    alias e0 ex
+
+    def ey
+      Vector.new(0, 1)
+    end
+    alias e1 ey
 
     def geti
       x, y = gets.split.map{ |e| e.to_i }

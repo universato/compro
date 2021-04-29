@@ -215,3 +215,24 @@ class Array
     puts res
   end
 end
+
+class Array
+  def squeeze2
+    res = []
+    prev = nil
+    renzoku = true
+    each do |e|
+      if e == prev && renzoku
+        renzoku = !renzoku
+        next
+      end
+      prev = e
+      res << e
+      renzoku = true
+    end
+    res
+  end
+end
+
+a = [1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2]
+p a.squeeze2
