@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+ac_library_gem = proc{ gem "ac-library" }
+# ex)
+# export AC_LIBRARY_PATH="~/ac-library-rb"
+ac_library_path = ENV['AC_LIBRARY_PATH']
+if File.directory?(ac_library_path)
+  path ac_library_path, &ac_library_gem
+else
+  gem 'ac-library', :github => 'universato/ac-library-rb'
+end
+
+gem_proc = proc{ gem "networkx" }
+# ex)
+# export NETWORKX_RB_PATH="~/networkx.rb"
+networkx_rb_path = ENV['NETWORKX_RB_PATH']
+if File.directory?(ac_library_path)
+  path networkx_rb_path, &gem_proc
+else
+  gem 'networkx'
+end
