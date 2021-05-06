@@ -1,11 +1,4 @@
 PATH
-  remote: ../../oss/networkx.rb
-  specs:
-    networkx (0.1.1)
-      nmatrix
-      rb_heap
-
-PATH
   remote: /Users/uni/rubybook/ac-library-rb
   specs:
     ac-library (0.5.0)
@@ -13,12 +6,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    backports (3.21.0)
-    nmatrix (0.2.4)
-      packable (~> 1.3, >= 1.3.5)
-    packable (1.3.14)
-      backports
-    rb_heap (1.1.0)
 
 PLATFORMS
   ruby
@@ -26,7 +13,6 @@ PLATFORMS
 
 DEPENDENCIES
   ac-library!
-  networkx!
 
 BUNDLED WITH
    2.2.16
