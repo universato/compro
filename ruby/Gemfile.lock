@@ -1,10 +1,4 @@
-PATH
-  remote: /Users/uni/rubybook/ac-library-rb
-  specs:
-    ac-library (0.5.0)
-
 GEM
-  remote: https://rubygems.org/
   specs:
 
 PLATFORMS
@@ -12,7 +6,6 @@ PLATFORMS
   x86_64-darwin-19
 
 DEPENDENCIES
-  ac-library!
 
 BUNDLED WITH
    2.2.16

@@ -1,8 +1,10 @@
-require 'ac-library/dsu'
+# bundle exec ruby ruby/examples/ac-library-rb/dsu-exap
 
-d = AcLibrary::DSU.new(5)
+require 'ac-library-rb/dsu'
 
-include AcLibrary
+d = AcLibraryRb::DSU.new(5)
+
+include AcLibraryRb
 d = DSU.new(5)
 
 p d.groups      # => [[0], [1], [2], [3], [4]]

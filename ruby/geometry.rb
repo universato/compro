@@ -179,6 +179,11 @@ class Point
   def ==(other)
     (@x - other.x).abs < EPS && (@y - other.y).abs < EPS
   end
+  alias eql? ==
+
+  def hash
+
+  end
 
   def dot(other)
     @x * other.x + @y * other.y
@@ -432,6 +437,7 @@ class Line
   def ==(other)
     @s == other.s && @t == other.t
   end
+  def eql? ==
 
   def length
     Float::INFINITY
