@@ -437,7 +437,7 @@ class Line
   def ==(other)
     @s == other.s && @t == other.t
   end
-  def eql? ==
+  alias eql? ==
 
   def length
     Float::INFINITY
