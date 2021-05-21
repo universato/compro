@@ -10,6 +10,8 @@ class Deque
     @buf = ary + [nil] * (@n - ary.size)
     @head = 0
     @tail = ary.size
+    # @reversed = false
+    @reverse_count = 0
   end
 
   def empty?
@@ -22,11 +24,11 @@ class Deque
   alias length size
 
   def <<(x)
-    __extend if __full?
-    @buf[@tail] = x
-    @tail += 1
-    @tail %= @n
-    self
+    if reversed?
+      __unshift(x)
+    else
+      __push(x)
+    end
   end
 
   def push(*args)
@@ -36,28 +38,28 @@ class Deque
   alias append push
 
   def unshift(x)
-    __extend() if __full?
-    @buf[(@head - 1) % @n] = x
-    @head -= 1
-    @head %= @n
-    self
+    if reversed?
+      __push(x)
+    else
+      __unshift(x)
+    end
   end
   alias prepend unshift
 
   def pop
-    return nil if empty?
-    ret = @buf[(@tail - 1) % @n]
-    @tail -= 1
-    @tail %= @n
-    ret
+    if reversed?
+      __shift
+    else
+      __pop
+    end
   end
 
   def shift
-    return nil if empty?
-    ret = @buf[@head]
-    @head += 1
-    @head %= @n
-    ret
+    if reversed?
+      __pop
+    else
+      __shift
+    end
   end
 
   def [](idx)
@@ -80,15 +82,14 @@ class Deque
   end
 
   def reverse!
-    if @head <= @tail
-      @buf[@head...@tail] = @buf[@head...@tail].reverse
-    else
-      sz = size
-      @buf[0...sz] = @buf[@head..-1].concat(@buf[0...@tail]).reverse
-      @head = 0
-      @tail = sz
-    end
+    # @reversed = !@reversed
+    @reverse_count += 1
     self
+  end
+
+  def reversed?
+    # @reversed
+    @reverse_count & 1 == 1
   end
 
   def dig(*args)
@@ -115,7 +116,8 @@ class Deque
   end
 
   def to_a
-    @head <= @tail ? @buf[@head...@tail] : @buf[@head..-1].concat(@buf[0...@tail])
+    res = @head <= @tail ? @buf[@head...@tail] : @buf[@head..-1].concat(@buf[0...@tail])
+    reversed? ? res.reverse : res
   end
 
   def to_s
@@ -127,6 +129,38 @@ class Deque
     "Deque#{to_a}(@n=#{@n}, @buf=#{@buf}, @head=#{@head}, @tail=#{@tail}, size #{size}#{" full" if __full?})"
   end
 
+  private def __push(x)
+    __extend if __full?
+    @buf[@tail] = x
+    @tail += 1
+    @tail %= @n
+    self
+  end
+
+  private def __unshift(x)
+    __extend() if __full?
+    @buf[(@head - 1) % @n] = x
+    @head -= 1
+    @head %= @n
+    self
+  end
+
+  private def __pop
+    return nil if empty?
+    ret = @buf[(@tail - 1) % @n]
+    @tail -= 1
+    @tail %= @n
+    ret
+  end
+
+  private def __shift
+    return nil if empty?
+    ret = @buf[@head]
+    @head += 1
+    @head %= @n
+    ret
+  end
+
   private def __full?
     size >= @n - 1
   end
@@ -134,6 +168,7 @@ class Deque
   private def __index(i)
     l = size
     raise IndexError, "index out of range: #{i}" unless -l <= i && i < l
+    i = -(i + 1) if reversed?
     i += l if i < 0
     (@head + i) % @n
   end
