@@ -17,7 +17,8 @@ ac-library-rbのDSUライブラリの方がしっかりしている。
   - uniteもあるけど、rankもsizeも計算するので重たいかも。
   - rootにpath halvingという経路圧縮を使ってみた？
 
-重み付きUnionFind。ポテンシャル付きUnionFindTreeとも。
+重み付きUnionFind。ポテンシャル付きUnionFindTreeとも。  
+これは、ACLに存在しない。
 - weighted_union_find_node
   最初に作ったやつ。Nodeクラスを組み込んで実装。
   コードが無駄に長くなる感じあるし、ほんの少し重たい。

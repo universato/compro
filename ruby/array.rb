@@ -78,6 +78,11 @@ class Array
     map{ |x| x, t = t, x; t - x  }.drop(1)
   end
 
+  def diff1(other)
+    sz = size
+    (0...sz).map{ |i| self[i] - other[i] }
+  end
+
   # def diff; s = self[0]; self[1...(self.size)].map{|k|d=k-s; s=k; d} end
   # Frequency Distribution
   # 非負整数の度数分布を返す。0 ~ max(or 引数)の配列を返す。#tallyメソッドの配列版。

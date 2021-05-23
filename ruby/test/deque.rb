@@ -151,7 +151,7 @@ class DequeTest < Minitest::Test
     assert_nil d.shift
   end
 
-  def test_slice
+  def test_slice1
     d = Deque[:a, :b, :c, :d]
     assert_equal :d, d[-1]
     assert_equal :a, d[-4]
@@ -166,8 +166,23 @@ class DequeTest < Minitest::Test
     d = Deque[]
     assert_nil d[0]
     assert_nil d[-1]
-    # assert_raises(IndexError){ d[0] }
-    # assert_raises(IndexError){ d[-1] }
+  end
+
+  def test_slice2
+    d = Deque[:a, :b, :c, :d]
+    assert_equal Deque[:b, :c], d[1, 2]
+    assert_equal Deque[:d], d[-1, 1]
+    d.shift
+    assert_equal Deque[:c, :d], d[-2, 2]
+  end
+
+  def test_slice_range
+    d = Deque[:a, :b, :c, :d]
+    assert_equal Deque[:b, :c], d[1..2]
+    assert_equal Deque[:b, :c], d[1...3]
+    assert_equal Deque[:d], d[-1..-1]
+    d.shift
+    assert_equal Deque[:c, :d], d[-2..-1]
   end
 
   def test_slice_assignment
@@ -225,6 +240,25 @@ class DequeTest < Minitest::Test
     assert_equal Deque[2, 1], Deque[1, 2].reverse!
   end
 
+  # def test_rotate
+  #   d = Deque[ "a", "b", "c", "d" ]
+  #   assert_equal Deque["b", "c", "d", "a"], d.rotate
+  #   assert_equal Deque["a", "b", "c", "d"], d
+  #   assert_equal Deque["c", "d", "a", "b"], d.rotate(2)
+  #   assert_equal Deque["d", "a", "b", "c"], d.rotate(-1)
+  #   assert_equal Deque["b", "c", "d", "a"], d.rotate(-3)
+  # end
+
+  def test_replace
+    d = Deque[ "a", "b", "c", "d" ]
+    a = Deque["a", "b", "c"]
+    b = Deque[:a, :b]
+    c = Deque[1, 2, 3]
+    assert_equal a, d.replace(a)
+    assert_equal b, d.replace(b)
+    assert_equal c, d.replace(c)
+  end
+
   def test_reverse_push
     d = Deque[2, 1]
     d.reverse!
@@ -270,6 +304,31 @@ class DequeTest < Minitest::Test
     assert_equal 30, d[-1]
     d.reverse!
     assert_equal 0, d[-1]
+  end
+
+  def test_reverse_each
+    d = Deque[20, 10, 0]
+    d.reverse!
+    assert_equal [0, 10, 20], d.each.to_a
+  end
+
+  def test_slice2
+    d = Deque[:a, :b, :c, :d]
+    d.reverse!
+    assert_equal Deque[:c, :b], d[1, 2]
+    assert_equal Deque[:a], d[-1, 1]
+    d.shift
+    assert_equal Deque[:b, :a], d[-2, 2]
+  end
+
+  def test_range
+    d = Deque[:a, :b, :c, :d]
+    d.reverse!
+    assert_equal Deque[:c, :b], d[1..2]
+    assert_equal Deque[:c, :b], d[1...3]
+    assert_equal Deque[:a], d[-1..-1]
+    d.shift
+    assert_equal Deque[:b, :a], d[-2..-1]
   end
 end
 

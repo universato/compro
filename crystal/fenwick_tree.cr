@@ -25,16 +25,26 @@ class FenwickTree(T)
     end
   end
 
-  def sum(l : Int, r : Int)
-    sum(r) - sum(l)
+  def sum(range : Range(Int, Int))
+    left = range.begin
+    right = range.exclusive? ? range.end : range.end + 1
+    sum(left, right)
   end
 
-  def sum(i : Int)
+  def sum(l : Int, r : Int)
+    _sum(r) - _sum(l)
+  end
+
+  def _sum(i : Int)
     res = T.zero
     while i > 0
       res += @data[i]
       i &= i - 1
     end
     res
+  end
+
+  def [](i : Int)
+    sum(i + 1) - sum(i)
   end
 end

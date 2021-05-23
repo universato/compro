@@ -29,7 +29,7 @@ class FenwickTree
     end
   end
 
-  def sum(l, r)
+  def sum(l = 0, r)
     _sum(r) - _sum(l)
   end
 
@@ -40,6 +40,29 @@ class FenwickTree
       i &= i - 1
     end
     res
+  end
+
+  def to_a
+    res = @data.dup
+    (@size - 1).downto(1) do |i|
+      up = i + (i & -i)
+      next if up > @size
+
+      res[up] -= res[i]
+    end
+    res.drop(1)
+  end
+
+  def to_s
+    "#{self.class}#{to_a}"
+  end
+
+  def inspect
+    "#<#{self.class} @size=#{@size} @data=#{data}}"
+  end
+
+  def ==(other)
+    @data == other.data
   end
 end
 

@@ -60,10 +60,51 @@ class Deque
     ret
   end
 
-  def [](idx)
+  def last
+    self[-1]
+  end
+
+  def [](a, b = nil)
+    if b
+      slice2(a, b)
+    elsif a.is_a?(Range)
+      s = a.begin
+      t = a.end
+      t -= 1 if a.exclude_end?
+      slice2(s, t - s + 1)
+    else
+      slice1(a)
+    end
+  end
+  alias slice []
+
+  def at(idx)
+    slice1(idx)
+  end
+
+  private def slice1(idx)
     sz = size
     return nil if idx < -sz || sz <= idx
     @buf[__index(idx)]
+  end
+
+  private def slice2(i, cnt)
+    sz = size
+    i += sz if i < 0
+    return nil if cnt < 0 || i > sz
+
+    if i == sz
+      Deque[]
+    else
+      j = [i + cnt - 1, sz].min
+      slice_indexes(i, j)
+    end
+  end
+
+  private def slice_indexes(i, j)
+    s = __index(i)
+    t = __index(j) + 1
+    Deque.new(__to_a(s, t))
   end
 
   def []=(idx, value)
@@ -77,6 +118,10 @@ class Deque
 
   def hash
     to_a.hash
+  end
+
+  def reverse
+    dup.reverse!
   end
 
   def reverse!
@@ -114,8 +159,91 @@ class Deque
     end
   end
 
+  def clear
+    sz = size
+    @head = 0
+    @tail = 0
+    self
+  end
+
+  def join(sep = $,)
+    to_a.join(sep)
+  end
+
+  # def rotate(cnt = 1)
+  #   sz = size
+  #   h, t = @head, @tail
+  #   # p [sz, h, t]
+  #   hh = __index(0)
+  #   tt = __index((sz - cnt) % sz) + 1
+  #   # if (@head <= @tail) == (h <= t)
+  #   #   @head, @tail = @tail, @head
+  #   # end
+  #   p [sz, h, t, hh, tt]
+  #   @head = 1
+  #   @tail = 1
+  #   self
+  # end
+
+  def replace(other)
+    ary = other.to_a
+    @n = ary.size + 1
+    @buf = ary + [nil] * (@n - ary.size)
+    @head = 0
+    @tail = ary.size
+    self
+  end
+
+  private def __build(other)
+    ary = other.to_a
+    @n = ary.size + 1
+    @buf = ary + [nil] * (@n - ary.size)
+    @head = 0
+    @tail = ary.size
+    self
+  end
+
+  def self.to_a_to_deque(name, args = 0)
+    args = (0...args).map{ |i| "a#{i}" }.join(", ")
+    code = "def #{name}(#{args})
+              Deque.new(to_a.#{name}(#{args}))
+            end"
+    class_eval(code)
+  end
+
+  to_a_to_deque(:compact)
+
+  def rotate(cnt = 0)
+    Deque.new(to_a.rotate(cnt))
+  end
+
+  def rotate!(cnt = 0)
+    replace(to_a.rotate!(cnt))
+  end
+
+  def map!(&blk)
+    replace(to_a.map!(&blk))
+  end
+
+  def sample(n = 1)
+    Deque.new(to_a.shuffle)
+  end
+
+  def shuffle(n = nil)
+    Deque.new(to_a.shuffle(n))
+  end
+
+  def shuffle!(n = nil)
+    replace(to_a.shuffle!(n))
+  end
+
   def to_a
-    @head <= @tail ? @buf[@head...@tail] : @buf[@head..-1].concat(@buf[0...@tail])
+    __to_a
+  end
+  # alias to_ary to_a
+
+  private def __to_a(s = @head, t = @tail)
+    s <= t ? @buf[s...t] : @buf[s..-1].concat(@buf[0...t])
   end
 
   def to_s
@@ -131,7 +259,7 @@ class Deque
     size >= @n - 1
   end
 
-  private def __index(i)
+  def __index(i)
     l = size
     raise IndexError, "index out of range: #{i}" unless -l <= i && i < l
     i += l if i < 0

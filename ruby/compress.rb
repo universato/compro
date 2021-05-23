@@ -6,6 +6,19 @@ def compress(a)
   h
 end
 
+def compress!(a)
+  s = a.sort
+  h = {}
+  s.each{ |e| h[e] || h[e] = h.size }
+  h.keys
+  a.map!{ |e| h[e] }
+  h
+end
+
+b = [10, 6, 8, 10, 8, 6]
+p compress!(b)
+p b
+
 # 第2回日本学生コンテスト? F問題
 def compress1(a)
   s = a.sort

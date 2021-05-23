@@ -37,12 +37,13 @@ class Deque
   end
   alias append push
 
-  def unshift(x)
+  def unshift(*args)
     if reversed?
-      __push(x)
+      args.reverse_each{ |e|  __push(e) }
     else
-      __unshift(x)
+      args.reverse_each{ |e| __unshift(e) }
     end
+    self
   end
   alias prepend unshift
 
@@ -62,10 +63,56 @@ class Deque
     end
   end
 
+  def last
+    self[-1]
+  end
+
   def [](idx)
     sz = size
     return nil if idx < -sz || sz <= idx
     @buf[__index(idx)]
+  end
+  alias slice []
+
+  def [](a, b = nil)
+    if b
+      slice2(a, b)
+    elsif a.is_a?(Range)
+      s = a.begin
+      t = a.end
+      t -= 1 if a.exclude_end?
+      slice2(s, t - s + 1)
+    else
+      slice1(a)
+    end
+  end
+
+  def at(idx)
+    slice1(idx)
+  end
+
+  private def slice1(idx)
+    sz = size
+    return nil if idx < -sz || sz <= idx
+    @buf[__index(idx)]
+  end
+
+  private def slice2(i, t)
+    sz = size
+    return nil if t < 0 || i > sz
+    if i == sz
+      Deque[]
+    else
+      j = [i + t - 1, sz].min
+      slice_indexes(i, j)
+    end
+  end
+
+  private def slice_indexes(i, j)
+    i, j = j, i if reversed?
+    s = __index(i)
+    t = __index(j) + 1
+    Deque.new(__to_a(s, t))
   end
 
   def []=(idx, value)
@@ -79,6 +126,10 @@ class Deque
 
   def hash
     to_a.hash
+  end
+
+  def reverse
+    dup.reverse!
   end
 
   def reverse!
@@ -108,15 +159,67 @@ class Deque
     return enum_for(:each) unless block_given?
 
     if @head <= @tail
-      @buf[@head...@tail].each{ |e| yield e }
+      if reversed?
+        @buf[@head...@tail].reverse_each{ |e| yield e }
+      else
+        @buf[@head...@tail].each{ |e| yield e }
+      end
     else
-      @buf[@head..-1].each{ |e| yield e }
-      @buf[0...@tail].each{ |e| yield e }
+      if reversed?
+        @buf[0...@tail].reverse_each{ |e| yield e }
+        @buf[@head..-1].reverse_each{ |e| yield e }
+      else
+        @buf[@head..-1].each{ |e| yield e }
+        @buf[0...@tail].each{ |e| yield e }
+      end
     end
   end
 
+  def clear
+    sz = size
+    @reverse_count = 0
+    @head = 0
+    @tail = 0
+    self
+  end
+
+  def join(sep = $,)
+    to_a.join(sep)
+  end
+
+  def self.to_a_to_deque(name, args = 0)
+    args = (0...args).map{ |i| "a#{i}" }.join(", ")
+    code = "def #{name}(#{args})
+              Deque.new(to_a.#{name}(#{args}))
+            end"
+    class_eval(code)
+  end
+
+  def sample(n = nil)
+    Deque.new(to_a.shuffle)
+  end
+
+  def shuffle(n = nil)
+    Deque.new(to_a.shuffle)
+  end
+
+  def replace(other)
+    ary = other.to_a
+    @n = ary.size + 1
+    @buf = ary + [nil] * (@n - ary.size)
+    @head = 0
+    @tail = ary.size
+    @reverse_count = 0
+    self
+  end
+
   def to_a
-    res = @head <= @tail ? @buf[@head...@tail] : @buf[@head..-1].concat(@buf[0...@tail])
+    __to_a
+  end
+  # alias to_ary to_a
+
+  private def __to_a(s = @head, t = @tail)
+    res = s <= t ? @buf[s...t] : @buf[s..-1].concat(@buf[0...t])
     reversed? ? res.reverse : res
   end
 
@@ -165,6 +268,12 @@ class Deque
     size >= @n - 1
   end
 
+  private def __slice1(idx)
+    sz = size
+    return nil if idx < -sz || sz <= idx
+    @buf[__index(idx)]
+  end
+
   private def __index(i)
     l = size
     raise IndexError, "index out of range: #{i}" unless -l <= i && i < l
@@ -208,3 +317,10 @@ def typical90_044
 end
 
 # [Pythonで各要素にO\(1\)でランダムアクセスできるdeque\(両端キュー\)を書いてみた \- 30歳で競プロに目覚めた霊長類のブログ](https://prd-xxx.hateblo.jp/entry/2020/02/07/114818)
+
+# <<, pop, unshfit, shift を逆にする。
+# self[], self[]= でも、逆にする。
+# each, to_a
+# to_s は、to_a に依存する。
+# pushは、<< に依存。
+# digは、self[]に依存。

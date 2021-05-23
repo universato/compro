@@ -62,6 +62,15 @@ class FenwickTreeTest < Minitest::Test
     assert_equal 0, ft.sum(0, 10)
   end
 
+  def test_slice
+    fw = FenwickTree.new([0, 10, 20, 30, 40])
+    assert_equal 0, fw[0]
+    assert_equal 10, fw[1]
+    assert_equal 20, fw[2]
+    assert_equal 30, fw[3]
+    assert_equal 40, fw[4]
+  end
+
   def test_init
     n = 10
     a = Array.new(n) { |i| i }

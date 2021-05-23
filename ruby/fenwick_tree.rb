@@ -30,6 +30,10 @@ class FenwickTree
     end
   end
 
+  def [](idx)
+    _sum(idx + 1) - _sum(idx)
+  end
+
   def sum(l, r)
     _sum(r) - _sum(l)
   end
@@ -42,6 +46,7 @@ class FenwickTree
     end
     res
   end
+  alias left_sum _sum
 end
 
 FeTree            = FenwickTree
