@@ -32,6 +32,20 @@ end
 
 p convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
 
+def alpc
+  n, m  = gets.to_s.split.map{ |e| e.to_i }
+  a = gets.to_s.split.map{ |e| e.to_i }
+  b = gets.to_s.split.map{ |e| e.to_i }
+  puts convolution(a, b, 20)
+end
+
+def typical
+  n = gets.to_s.to_i
+  a, b = Array.new(n){ gets.to_s.split.map{ |e| e.to_i } }.transpose
+  puts 0
+  puts convolution(a, b)
+end
+
 
 def convolution_naive(a, b, mod)
   n = a.size
