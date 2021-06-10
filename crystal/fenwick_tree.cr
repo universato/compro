@@ -32,7 +32,7 @@ class FenwickTree(T)
   end
 
   def sum(l : Int, r : Int)
-    _sum(r) - _sum(l)
+    sum(r) - sum(l)
   end
 
   def _sum(i : Int)

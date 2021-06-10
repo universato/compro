@@ -1,4 +1,4 @@
-# graph_list.rbに新しくdikstraを作った。
+# graph_list.rbに新しくdijkstraを作った。
 
 class PriorityQueue
   def initialize(heap = [])

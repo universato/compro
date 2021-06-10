@@ -71,12 +71,16 @@ class Segtree
       r /= 2
     end
 
-    if sml.nil?
-      smr
-    elsif smr.nil?
-      sml
+    __op(sml, smr)
+  end
+
+  private def __op(l, r)
+    if l.nil?
+      r
+    elsif r.nil?
+      l
     else
-      @op.call(sml, smr)
+      @op.call(l, r)
     end
   end
 
@@ -93,11 +97,11 @@ class Segtree
     sm = @e
     loop do
       l /= 2 while l.even?
-      unless f.call(@op.call(sm, @d[l]))
+      unless f.call(__op(sm, @d[l]))
         while l < @leaf_size
           l *= 2
-          if f.call(@op.call(sm, @d[l]))
-            sm = @op.call(sm, @d[l])
+          if f.call(__op(sm, @d[l]))
+            sm = __op(sm, @d[l])
             l += 1
           end
         end
@@ -105,7 +109,7 @@ class Segtree
         return l - @leaf_size
       end
 
-      sm = @op.call(sm, @d[l])
+      sm = __op(sm, @d[l])
       l += 1
       break if (l & -l) == l
     end
@@ -123,11 +127,11 @@ class Segtree
     loop do
       r -= 1
       r /= 2 while r > 1 && r.odd?
-      unless f.call(@op.call(@d[r], sm))
+      unless f.call(__op(@d[r], sm))
         while r < @leaf_size
           r = r * 2 + 1
-          if f.call(@op.call(@d[r], sm))
-            sm = @op.call(@d[r], sm)
+          if f.call(__op(@d[r], sm))
+            sm = __op(@d[r], sm)
             r -= 1
           end
         end
@@ -135,7 +139,7 @@ class Segtree
         return r + 1 - @leaf_size
       end
 
-      sm = @op.call(@d[r], sm)
+      sm = __op(@d[r], sm)
       break if (r & -r) == r
     end
 
@@ -153,66 +157,58 @@ class Segtree
   end
 
   # WIP
-  def inspect
-    t = 0
-    res = "SegmentTree @e = #{@e}, @n = #{@n}, @leaf_size = #{@leaf_size} \n  "
-    a = @d[1, @d.size - 1]
-    a.each_with_index do |e, i|
-      res << e.to_s.rjust(2) << ' '
-      if t == i && i < @leaf_size
-        res << "\n  "
-        t = t * 2 + 2
-      end
-    end
-    res
-  end
+  # def inspect
+  #   t = 0
+  #   res = "SegmentTree @e = #{@e}, @n = #{@n}, @leaf_size = #{@leaf_size} \n  "
+  #   a = @d[1, @d.size - 1]
+  #   a.each_with_index do |e, i|
+  #     res << e.to_s.rjust(2) << ' '
+  #     if t == i && i < @leaf_size
+  #       res << "\n  "
+  #       t = t * 2 + 2
+  #     end
+  #   end
+  #   res
+  # end
 
   # [TODO]
-  def inspect2
-    t = 0
-    head = "SegmentTree @e = #{@e}, @n = #{@n}, @leaf_size = #{@leaf_size} \n"
-    base = Math.log2(@leaf_size * 2).to_i
+  # def inspect2
+  #   t = 0
+  #   head = "SegmentTree @e = #{@e}, @n = #{@n}, @leaf_size = #{@leaf_size} \n"
+  #   base = Math.log2(@leaf_size * 2).to_i
 
-    ls = Array.new(@leaf_size)
-    bodies = []
-    (baes..base).each do |rank|
-      s = 2**(rank - 1)
-      t = 2**rank - 1
-      tmp = []
-      tmp_len = 0
-      (s..t).each do |i|
-        k = @d[i].inspect
-        tmp << k
-        tmp << ' '
-        if i.even?
-          tmp_len += k.to_s
-        else
-          tmp_len + tmp[]
-        end
-      end
-    end
-    bodies << tmp
+  #   ls = Array.new(@leaf_size)
+  #   bodies = []
+  #   (baes..base).each do |rank|
+  #     s = 2**(rank - 1)
+  #     t = 2**rank - 1
+  #     tmp = []
+  #     tmp_len = 0
+  #     (s..t).each do |i|
+  #       k = @d[i].inspect
+  #       tmp << k
+  #       tmp << ' '
+  #       if i.even?
+  #         tmp_len += k.to_s
+  #       else
+  #         tmp_len + tmp[]
+  #       end
+  #     end
+  #   end
+  #   bodies << tmp
 
-    (base - 1).downto(1) do |rank|
-      s = 2**(rank - 1)
-      t = 2**rank - 1
-      tmp = ""
-      ls = (s..t).map do |i|
-        k = @d[i].inspect
-        tmp << k
-        k.size
-      end
-    end
-    # a = @d[1, @d.size - 1]
-    # a.each_with_index do |e, i|
-    #   res << e.to_s << ' '
-    #   if t == i && i < @leaf_size
-    #     res << "\n  "
-    #     t = t * 2 + 2
-    #   end
-    # end
-    res
-  end
+  #   (base - 1).downto(1) do |rank|
+  #     s = 2**(rank - 1)
+  #     t = 2**rank - 1
+  #     tmp = ""
+  #     ls = (s..t).map do |i|
+  #       k = @d[i].inspect
+  #       tmp << k
+  #       k.size
+  #     end
+  #   end
+  #   res
+  # end
 end
 
 SegTree     = Segtree

@@ -27,7 +27,9 @@ function xArray(v){var a=arguments,l=a.length,r="Array(a["+--l+"]).fill().map(x=
 なぜ`var`なのか。
 `next()`は数値1つ。
 `nexts(n, a)`は、引数の数で変わる。
-`nexts(n)`なら、n個とる。`a`がfalsyになって、`.map(k => +k)`で数値に変換される。引数の`a`があると、何もしない。何をとるんだろう。
+`nexts(n)`なら、n個とる。`a`がfalsyになって、`.map(k => +k)`で数値に変換される。引数の`a`があると、何もしない。
+`a`にtruthyを入れると、数値変換をしないっぽい。
+`nextssort`。これも、デフォルトだと昇順ソートだが、第2引数の`a`にtrueを入れると降順ソートになるみたい。
 
 ```js
 "use strict";

@@ -58,3 +58,7 @@ path halvingの実装の参考にした。
 
 [\[Ruby\] UnionFind木の実装 \| このコードわからん](https://hai3.net/blog/ruby-union-find-tree/)
 nodeを入れたときの実装の参考にした。
+
+# UnionFindのエラー検知
+
+`leader`(`root`)にエラー検知があれば、すぐわかりそう。

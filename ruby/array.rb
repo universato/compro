@@ -61,6 +61,20 @@ class Array
     reverse.cumsum.reverse
   end
 
+  def cumsum2d
+    h = size
+    w = self[0].size
+    res = Array.new(h){ [0] * w }
+    s = 0; first_row = self[0].map{ |k| s += k }; res[0] = first_row;
+    s = 0; (1...h).each{ |i| res[i][0] = self[i][0] + res[i - 1][0] }
+    (1...h).each do |i|
+      (1...w).each do |j|
+        res[i][j] = self[i][j] + res[i][j - 1] + res[i - 1][j] - res[i - 1][j - 1]
+      end
+    end
+    res
+  end
+
   def dot(other)
     zip(other).sum{ |x, y| x * y }
   end
@@ -236,6 +250,23 @@ class Array
       renzoku = true
     end
     res
+  end
+end
+
+# 2次元配列(行列の形)の周りに破壊的に壁を作る。
+# levelが壁を何重にするか。デフォルトは1.
+# https://atcoder.jp/contests/abc176/submissions/23195501 1618ms <- 1607ms 特に遅くならなかった。
+# 囲いの壁を破壊しないというのもある。
+class Array
+  def build_walls(wall = -1, level = 1)
+    h = self.size
+    w = self[0].size
+    left_side = [wall] * level
+    right_side = left_side.dup
+    map!{ |r| left_side + r + right_side }
+    row = [wall] * (w + level * 2)
+    level.times{ prepend(row) }
+    level.times{ push(row) }
   end
 end
 

@@ -5,8 +5,16 @@ class Deque
     new(args)
   end
 
-  def initialize(ary = [], max_size: 0)
-    @n = [max_size, ary.size].max + 1
+  def initialize(arg = [], value = nil, initial_capacity: 0, &block)
+    ary = arg
+    if arg.is_a?(Integer)
+      if block_given?
+        ary = Array.new(arg, &block)
+      else
+        ary = Array.new(arg, value)
+      end
+    end
+    @n = [initial_capacity, ary.size].max + 1
     @buf = ary + [nil] * (@n - ary.size)
     @head = 0
     @tail = ary.size
@@ -210,6 +218,13 @@ class Deque
     @head = 0
     @tail = ary.size
     @reverse_count = 0
+    self
+  end
+
+  def swap(i, j)
+    i = __index(i)
+    j = __index(j)
+    @buf[i], @buf[j] = @buf[j], @buf[i]
     self
   end
 

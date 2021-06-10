@@ -1,4 +1,5 @@
-
+# [WIP] [TOD]
+# RubyからCrystalに変換するためのツール。
 # シングルクォートの文字列をダブルクォートに変換する。
 # prepend や unshift を使っている Array は、Deque に変換する。
 # 文字列中の中のものは、どうする？
@@ -32,6 +33,7 @@ different_names = {
   "attr_accessor" => "property",
   "attr_writer" => "setter",
   "attr_reader" => "getter",
+  "exclude_end?" => "exclusive?"
 }
 
 aliases = {

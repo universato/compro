@@ -34,10 +34,23 @@ class FenwickTree
     _sum(idx + 1) - _sum(idx)
   end
 
-  def sum(l, r)
-    _sum(r) - _sum(l)
+  #  sum(r)      # [0, r)
+  #  sum(l, r)   # [l, r)
+  #  sum(l...r)  # [l, r)
+  #  sum(l..r)   # [l, r]
+  def sum(a, b = nil)
+    if b
+      _sum(b) - _sum(a)
+    elsif a.is_a?(Range)
+      l = a.begin
+      r = a.exclude_end? ? a.end : a.end + 1
+      _sum(r) - _sum(l)
+    else
+      _sum(a)
+    end
   end
 
+  # [0, i)
   def _sum(i)
     res = 0
     while i > 0
@@ -52,15 +65,3 @@ end
 FeTree            = FenwickTree
 Fetree            = FenwickTree
 BinaryIndexedTree = FenwickTree
-
-# 転倒数
-def inversion_number(a)
-  n = a.size
-  ft = FenwickTree.new(n)
-  res = 0
-  (0...n).each do |i|
-    res += i - ft._sum(a[i])
-    ft.add(a[i], 1)
-  end
-  res
-end

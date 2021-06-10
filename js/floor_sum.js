@@ -15,3 +15,7 @@ function floor_sum(n, m, a, b) {
   ans += floor_sum(y_max, a, m, (a - x_max % a) % a);
   return ans;
 }
+
+module.exports = floor_sum;
+
+// console.log(floor_sum(4n, 10n, 6n, 3n));

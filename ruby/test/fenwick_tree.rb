@@ -62,6 +62,29 @@ class FenwickTreeTest < Minitest::Test
     assert_equal 0, ft.sum(0, 10)
   end
 
+  def test_syntax_sugar_of_sum
+    ft = FenwickTree.new(10)
+    assert_equal 0, ft.sum(0)
+    assert_equal 0, ft.sum(1)
+    assert_equal 0, ft.sum(2)
+    assert_equal 0, ft.sum(3)
+    assert_equal 0, ft.sum(4)
+    assert_equal 0, ft.sum(5)
+    assert_equal 0, ft.sum(9)
+    assert_equal 0, ft.sum(10)
+
+    assert_equal 0, ft.sum(1..4)
+    assert_equal 0, ft.sum(5..7)
+    assert_equal 0, ft.sum(9...10)
+    assert_equal 0, ft.sum(0...10)
+
+    ft = FenwickTree.new([*0..10])
+    assert_equal 45, ft.sum(10)
+    assert_equal 55, ft.sum(11)
+    assert_equal 55, ft.sum(0..10)
+    assert_equal 55, ft.sum(1...11)
+  end
+
   def test_slice
     fw = FenwickTree.new([0, 10, 20, 30, 40])
     assert_equal 0, fw[0]

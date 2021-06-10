@@ -9,11 +9,11 @@ class SegtreeNaive
   def initialize(arg, e, &op)
     case arg
     when Integer
-      @d = Array.new(arg) { e }
+      @d = Array.new(arg)
     end
 
     @n = @d.size
-    @e = e
+    # @e = e
     @op = proc(&op)
   end
 
@@ -28,7 +28,7 @@ class SegtreeNaive
   def prod(l, r)
     res = @e
     (l ... r).each do |i|
-      res = @op.call(res, @d[i])
+      res = __op(res, @d[i])
     end
     res
   end
@@ -40,7 +40,7 @@ class SegtreeNaive
   def max_right(l, &f)
     res = @e
     (l ... @n).each do |i|
-      res = @op.call(res, @d[i])
+      res = __op(res, @d[i])
       return i unless f.call(res)
     end
     @n
@@ -49,10 +49,16 @@ class SegtreeNaive
   def min_left(r, &f)
     res = @e
     (r - 1).downto(0) do |i|
-      res = @op.call(@d[i], res)
+      res = __op(@d[i], res)
       return i + 1 unless f.call(res)
     end
     0
+  end
+
+  def __op(x, y)
+    return y if x.nil?
+    return x if y.nil?
+    @op.call(x, y)
   end
 end
 
@@ -110,7 +116,7 @@ class SegtreeTest < Minitest::Test
 
     (0..20).each do |n|
       seg0 = SegtreeNaive.new(n, '$', &op)
-      seg1 = Segtree.new(n, '$', &op)
+      seg1 = Segtree.new(n, &op)
 
       assert_equal seg0.all_prod, seg1.all_prod
 

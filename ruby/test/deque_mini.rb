@@ -1,4 +1,4 @@
-require_relative '../deque.rb'
+require_relative '../deque_mini.rb'
 # require_relative '../deque_reversible.rb'
 
 require 'minitest'
@@ -109,14 +109,14 @@ class DequeTest < Minitest::Test
   def test_push
     d = Deque[]
     assert_equal Deque[1], d.push(1)
-    assert_equal Deque[1, 2, 3], d.push(2, 3)
+    # assert_equal Deque[1, 2, 3], d.push(2, 3)
   end
 
   def test_unshift
     d = Deque[]
     assert_equal Deque[1], d.unshift(1)
     assert_equal Deque[2, 1], d.unshift(2)
-    assert_equal Deque[3, 2, 1], d.prepend(3)
+    # assert_equal Deque[3, 2, 1], d.prepend(3)
   end
 
   def test_pop
@@ -164,25 +164,8 @@ class DequeTest < Minitest::Test
 
   def test_slice_out_of_range
     d = Deque[]
-    assert_nil d[0]
-    assert_nil d[-1]
-  end
-
-  def test_slice2
-    d = Deque[:a, :b, :c, :d]
-    assert_equal Deque[:b, :c], d[1, 2]
-    assert_equal Deque[:d], d[-1, 1]
-    d.shift
-    assert_equal Deque[:c, :d], d[-2, 2]
-  end
-
-  def test_slice_range
-    d = Deque[:a, :b, :c, :d]
-    assert_equal Deque[:b, :c], d[1..2]
-    assert_equal Deque[:b, :c], d[1...3]
-    assert_equal Deque[:d], d[-1..-1]
-    d.shift
-    assert_equal Deque[:c, :d], d[-2..-1]
+    # assert_nil d[0]
+    # assert_nil d[-1]
   end
 
   def test_slice_assignment
@@ -195,22 +178,6 @@ class DequeTest < Minitest::Test
     d[-1] = 30
     d.push(:x)
     assert_equal Deque[10, :b, 30, :x], d
-  end
-
-  def test_count
-    assert_equal 0, Deque[].count
-    assert_equal 1, Deque[nil].count
-    assert_equal 1, Deque[1, 2].count{ |e| e >= 2 }
-  end
-
-  def test_map
-    assert_equal [], Deque[].map{  }
-    assert_equal [2], Deque[1].map{ |e| e * 2 }
-  end
-
-  def test_dig
-    assert_nil Deque[].dig(1, 2, 3)
-    assert_equal :b, Deque[:a, :b].dig(1)
   end
 
   def test_to_a
@@ -233,112 +200,6 @@ class DequeTest < Minitest::Test
     assert_output("Deque[1, 2, 3]\n"){ puts Deque[1, 2, 3] }
     # assert_output("Deque[1, 2, 3]\n"){ p Deque[1, 2, 3] }
     # assert_output("Deque[1, 2, 3]\n"){ pp Deque[1, 2, 3] }
-  end
-
-  def test_reverse!
-    assert_equal Deque[], Deque[].reverse!
-    assert_equal Deque[2, 1], Deque[1, 2].reverse!
-  end
-
-  # def test_rotate
-  #   d = Deque[ "a", "b", "c", "d" ]
-  #   assert_equal Deque["b", "c", "d", "a"], d.rotate
-  #   assert_equal Deque["a", "b", "c", "d"], d
-  #   assert_equal Deque["c", "d", "a", "b"], d.rotate(2)
-  #   assert_equal Deque["d", "a", "b", "c"], d.rotate(-1)
-  #   assert_equal Deque["b", "c", "d", "a"], d.rotate(-3)
-  # end
-
-  def test_swap
-    d = Deque["a", "b", "c", "d"]
-    assert_equal Deque["a", "c", "b", "d"], d.swap(1, 2)
-    assert_equal Deque["a", "d", "b", "c"], d.swap(1, 3)
-    assert_equal Deque["c", "d", "b", "a"], d.swap(-4, -1)
-    d.push("e")
-    d.unshift("f")
-    assert_equal Deque["e", "c", "d", "b", "a", "f"], d.swap(0, -1)
-  end
-
-  def test_replace
-    d = Deque[ "a", "b", "c", "d" ]
-    a = Deque["a", "b", "c"]
-    b = Deque[:a, :b]
-    c = Deque[1, 2, 3]
-    assert_equal a, d.replace(a)
-    assert_equal b, d.replace(b)
-    assert_equal c, d.replace(c)
-  end
-
-  def test_reverse_push
-    d = Deque[2, 1]
-    d.reverse!
-    d.push(3)
-    assert_equal Deque[1, 2, 3], d
-  end
-
-  def test_reverse_unshift
-    d = Deque[2, 1]
-    d.reverse!
-    d.unshift(0)
-    assert_equal Deque[0, 1, 2], d
-  end
-
-  def test_reverse_pop
-    d = Deque[2, 1]
-    d.reverse!
-    assert_equal 2, d.pop
-    assert_equal Deque[1], d
-  end
-
-  def test_reverse_shift
-    d = Deque[2, 1]
-    d.reverse!
-    assert_equal 1, d.shift
-    assert_equal Deque[2], d
-  end
-
-  def test_reverse_slice
-    d = Deque[2, 1]
-    d.reverse!
-    d[1] = 20
-    assert_equal d[1, 20], d
-    d.reverse!
-    assert_equal d[20, 1], d
-  end
-
-  def test_reverse_slice
-    d = Deque[30, 20, 10, 0]
-    d.reverse!
-    assert_equal 0, d[0]
-    assert_equal 20, d[2]
-    assert_equal 30, d[-1]
-    d.reverse!
-    assert_equal 0, d[-1]
-  end
-
-  def test_reverse_each
-    d = Deque[20, 10, 0]
-    d.reverse!
-    assert_equal [0, 10, 20], d.each.to_a
-  end
-
-  def test_slice2
-    d = Deque[:a, :b, :c, :d]
-    d.reverse!
-    assert_equal Deque[:c, :b], d[1, 2]
-    assert_equal Deque[:a], d[-1, 1]
-    d.shift
-    assert_equal Deque[:b, :a], d[-2, 2]
-  end
-
-  def test_range
-    d = Deque[:a, :b, :c, :d]
-    d.reverse!
-    assert_equal Deque[:c, :b], d[1..2]
-    assert_equal Deque[:c, :b], d[1...3]
-    assert_equal Deque[:a], d[-1..-1]
-    d.shift
-    assert_equal Deque[:b, :a], d[-2..-1]
   end
 end
 

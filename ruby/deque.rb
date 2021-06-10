@@ -36,24 +36,23 @@ class Deque
   alias append push
 
   def unshift(x)
-    __extend() if __full?
-    @buf[(@head - 1) % @n] = x
+    __extend if __full?
     @head -= 1
     @head %= @n
+    @buf[@head] = x
     self
   end
   alias prepend unshift
 
   def pop
-    return nil if empty?
-    ret = @buf[(@tail - 1) % @n]
+    return nil if size == 0
     @tail -= 1
     @tail %= @n
-    ret
+    @buf[@tail]
   end
 
   def shift
-    return nil if empty?
+    return nil if size == 0
     ret = @buf[@head]
     @head += 1
     @head %= @n
@@ -61,7 +60,7 @@ class Deque
   end
 
   def last
-    self[-1]
+    @buf[@tail - 1] # self[-1]
   end
 
   def [](a, b = nil)
@@ -237,6 +236,13 @@ class Deque
     replace(to_a.shuffle!(n))
   end
 
+  def swap(i, j)
+    i = __index(i)
+    j = __index(j)
+    @buf[i], @buf[j] = @buf[j], @buf[i]
+    self
+  end
+
   def to_a
     __to_a
   end
@@ -256,7 +262,8 @@ class Deque
   end
 
   private def __full?
-    size >= @n - 1
+    raise if size > @n - 1
+    size == @n - 1
   end
 
   def __index(i)
@@ -273,7 +280,6 @@ class Deque
       @head = 0
       @tail = @n - 1
       @n = @buf.size
-      return
     else
       @buf[(@tail + 1)..(@tail + 1)] = [nil] * @n
       @n = @buf.size

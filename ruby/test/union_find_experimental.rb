@@ -89,4 +89,16 @@ class UnionFindTest < Minitest::Test
       assert_equal uf0.same?(a, b), uf2.same?(a, b)
     end
   end
+
+  def test_sizes
+    uf = UnionFind.new(5)
+    assert_equal [1, 1, 1, 1, 1], uf.sizes
+    uf.unite(0, 4)
+    uf.unite(4, 1)
+
+    assert_equal 3, uf.size(0)
+    assert_equal 3, uf.size(1)
+    assert_equal 3, uf.size(4)
+    assert_equal [3, 3, 1, 1, 3], uf.sizes
+  end
 end
