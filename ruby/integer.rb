@@ -91,11 +91,13 @@ class Integer
 
     s = Integer.sqrt(self)
     big_divisors = []
-    (1..s).each do |i|
+    i = 1
+    while i <= s
       if self % i == 0
         yield(i)
         big_divisors.unshift(self / i)
       end
+      i += 1
     end
     big_divisors.shift if s * s == self
     big_divisors.each{ |d| yield(d) }
@@ -173,8 +175,9 @@ class Integer
   end
 end
 
-if $0 == __FILE__ && true
+if $0 == __FILE__ && false
   # ミスった。これはあまり意味がない配列の実験。
+  s = 1
   p Array.new(10){ s *= (_1 + 1) } # => [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800]
   p [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800].map{ _1 % 2 } #=> [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   p [1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800].map{ _1 % 3 } #=> [1, 2, 0, 0, 0, 0, 0, 0, 0, 0]

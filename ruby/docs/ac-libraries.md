@@ -1,3 +1,16 @@
+# 最初に
+
+AtCoder Library(ac-library, ACL)の各言語の表記について、まとめたものです。
+
+C++とCのクラス名は、Snake case. すべて小文字で、アンダースコア区切り。  
+それ以外の言語は、クラス名はキャメルケース。大文字始まり。  
+
+Java、Crystal、C#は、クラス名とファイル名が完全一致の傾向あり。  
+これが1番わかりやすいと思う。  
+
+Rubyは、クラス名はキャメルケースで、ファイル名はスネークケース。Railsの傾向?  
+
+
 # DSU
 
 |lang   |class      |file |     |
@@ -13,9 +26,9 @@
 |Ruby   |DSU        |dsu|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/dsu.rb)|
 |Crystal|DSU        |DSU|[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/DSU.cr#L27)|
 
-Goの異色さが目立つ。  
-C++とC言語は、dsu。  
-それら以外の言語は、DSUかDsu。  
+Goだけ正式名称で異色さが目立つ。  
+C++とC言語は全て小文字でdsu。  
+それら以外の言語のクラス名は、DSUかDsu。  
 - DSU派 C#, Python, Java, Ruby, Crystal
 - Dsu派 Rust, D
 
@@ -44,6 +57,9 @@ Rubyは`UnionFind`のエイリアスあり。
 - SccGraph派 Rust, Go, D
 - SCC派 Java, Kotlin, Ruby, Crystal
 
+SccGraphなのかSCCGraphなのかわからなくなりそうなので、SCCが好み。  
+あと、SCCGraphは、区切りがわかりにくい。
+
 # mf_graph
 |lang   |class   |file    |     |
 |:---   |:---    |:---    |:--- |
@@ -57,6 +73,7 @@ Rubyは`UnionFind`のエイリアスあり。
 |Ruby   |MaxFlow |max_flow|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/max_flow.rb)|
 |Crystal|MaxFlow |MaxFlow |[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/MaxFlow.cr#L28)|
 
+本家のフローは俗っぽい略語を使っていて、他のライブラリでも混乱を感じる。  
 mfは頭字語(アクロニム)なので、mf_grphをcamel caseにするときにMFと大文字にしたい気持ちわかる。  
 本家を除くと、MFGrahp, MfGraph, MaxFlowの3派閥。
 
@@ -87,7 +104,8 @@ C#は、「MFGraph」vs「McfGraph」。
 - McfGraph C#, D
 - MinCostFlow Java, Ruby, Crystal
 
-Crystalに実装がなかったが、あるとしたら`MinCostFlow`だろう。
+Pythonは大文字が連続していても全く構わないという気概を感じる。  
+Crystalに実装がなかったが、あるとしたら`MinCostFlow`。
 
 # segtree
 |lang   |class   |file|    |
@@ -106,7 +124,8 @@ Crystalに実装がなかったが、あるとしたら`MinCostFlow`だろう。
 segtreeで1単語とみなすか、segとtreeで2単語とみなすかの流派がありそう。  
 個人的にはSegment Treeは2単語だが、Segtreeは1単語の愛称だと思う。  
 - 1単語の愛称派 …… 本家、C#, Rust, Ruby
-- 2単語の由来派 …… C, Python, Java, Crystal
+- 2単語の由来派 …… C, Python, Java, Crystal  
+
 Rubyは、`Segtree`と`SegTree`のエイリアスがある。
 
 # lazy_segtree
@@ -125,9 +144,11 @@ LazySegtree
 |Ruby   |LazySegtree |lazy_segtree|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/lazy_segtree.rb)|
 |Crystal|LazySegTree |LazySegTree |[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/LazySegTree.cr#L37)|
 
-C言語、seg_treeとlazy_segtreeで一貫してる感じがしない。 
+C言語、seg_treeとlazy_segtreeで一貫してる感じがしない。
+Segment Treeの部分について、語源から2語に区切る派と愛称で1単語にする派がある。  
 - 1単語の愛称派 …… 本家、C, C#, Rust, Ruby
 - 2単語の由来派 …… Python, Java, Crystal   
+
 Rubyは、`LazySegtree`と`LazySegTree`のエイリアスがある。
 
 # two_sat
@@ -154,20 +175,54 @@ CrystalとJavaはクラス名とファイル名が同じなイメージだった
 
 Rubyは、`TwoSAT`と`TwoSat`のエイリアスあり。
 
-# テンプレート
+# ModInt
+
+|lang   |class   |file |     |
+|:---   |:---    |:--- |:--- |
+|C++    |modint|modint|[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/modint.hpp)|
+|C      |---|---|[---]()|
+|C#     |ModInt|ModInt|[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/Math/ModInt.cs#L72)|
+|Python |Modint|modint|[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/modint.py#L26)
+|Rust   |ModInt|modint|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/modint.rs)|
+|Go     |---|---|[---]()|
+|D      |---|---|[---]()|
+|Java   |ModInt|ModInt|[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/ModInt)|
+|Ruby   |ModInt|modint|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/modint.rb)|
+|Crystal|---|ModInt|[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/ModInt.cr)|
+
+PythonがModIntじゃなくて、Modintにしていた。愛称っぽい。  
+Rubyはクラス名をModIntにしているが、それならファイル名はmod_intではという気がしている。  
+
+
+# テンプレート1
 
 |lang   |class   |file |     |
 |:---   |:---    |:--- |:--- |
 |C++    |||[URL]()|
-|C    |||[URL]()|
+|C      |---|---|[---]()|
 |C#     |||[URL]()|
 |Python |||[URL]()
 |Rust   |||[URL]()|
-|Go     |||[URL]()|
-|D      |||[URL]()|
+|Go     |---|---|[---]()|
+|D      |---|---|[---]()|
 |Java   |||[URL]()|
 |Ruby   |||[URL]()|
 |Crystal|||[URL]()|
 
-NimはPythonの影響が強いので記載してない。 
-KotlinはJavaの影響が強いので記載してない。
+PyPyとNimは、Pythonのポートだったと思うので記載してない。  
+Kotlinは、基本的にJavaからconvertしているものなので記載してない。  
+
+# Rust
+
+|lang   |class   |file |     |
+|:---   |:---    |:--- |:--- |
+|Rust   |Dsu        |dsu|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/dsu.rs)|
+|Rust   |SccGraph |scc     |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/scc.rs)|
+|Rust   |MfGraph |maxflow |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7)|
+|Rust|MinCostFlowGraph|mincostflow  |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|
+|Rust   |Segtree |segtree|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/segtree.rs#L71)|
+|Rust   |LazySegtree |lazysegtree |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/lazysegtree.rs#L22)|
+|Rust   |TwoSat |twosat |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/twosat.rs)|
+|Rust   |ModInt|modint|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/modint.rs)|
+
+クラス名はアクロニムでも、イニシャルだけ大文字。

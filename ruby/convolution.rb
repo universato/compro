@@ -1,4 +1,4 @@
-def convolution(a, b, k = 24, mod: 998244353)
+def convolution(a, b, k = 35, mod: 998244353, z: 99, r: 3)
   n = a.size
   m = b.size
   return [] if n == 0 || m == 0
@@ -10,15 +10,18 @@ def convolution(a, b, k = 24, mod: 998244353)
     raise ArgumentError
   end
 
-  format = "%#{k.to_s.rjust(5, '0')}x".freeze # "%020x"
+  format = "%#{k.to_s.rjust(r, '0')}x".freeze # "%024x"
   sa = ""
   sb = ""
-  a.reverse_each{ |x| sa << (format % x) }
-  b.reverse_each{ |x| sb << (format % x) }
+  a.each{ |x| sa << (format % x) }
+  b.each{ |x| sb << (format % x) }
 
-  s = ("%x" % (sa.hex * sb.hex)).reverse
+  zero = '0'.freeze
+  s = zero * z + ("%x" % (sa.hex * sb.hex))
+  i = -(n + m - 1) * k - 1
+  return Array.new(n + m - 1){ (s[i + 1..i += k] || zero).hex % mod }
+
   s_size = s.size
-
   res = []
   i = 0
   t = n + m - 1
@@ -30,7 +33,8 @@ def convolution(a, b, k = 24, mod: 998244353)
   res
 end
 
-p convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
+
+#p convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
 
 def alpc
   n, m  = gets.to_s.split.map{ |e| e.to_i }
@@ -43,9 +47,8 @@ def typical
   n = gets.to_s.to_i
   a, b = Array.new(n){ gets.to_s.split.map{ |e| e.to_i } }.transpose
   puts 0
-  puts convolution(a, b)
+  puts convolution(a, b, 8)
 end
-
 
 def convolution_naive(a, b, mod)
   n = a.size
@@ -60,7 +63,7 @@ def convolution_naive(a, b, mod)
 end
 
 require "minitest"
-# require "minitest/autorun"
+require "minitest/autorun"
 class ConvolutionTest < Minitest::Test
   def test_typical_contest
     assert_equal [5, 16, 34, 60, 70, 70, 59, 36], convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
