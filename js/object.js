@@ -10,6 +10,22 @@ function hasKey(obj, key){ return obj.hasOwnProperty(key); }
 const keysOf = keys;
 const valuesOf = values;
 
+Object.prototype.hasKey = function(key) {
+  return this.hasOwnProperty(key);
+}
+
+Object.prototype.isEmpty = function() {
+  return !Object.keys(this).length;
+}
+
+Object.prototype.keys = function() {
+  return Object.keys(this);
+}
+
+Object.prototype.values = function() {
+  return Object.values(this);
+}
+
 module.exports = {
   keys,
   values,

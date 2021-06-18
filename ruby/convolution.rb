@@ -1,4 +1,4 @@
-def convolution(a, b, k = 35, mod: 998244353, z: 99, r: 3)
+def convolution(a, b, k: 35, mod: 998244353, z: 99, r: 3)
   n = a.size
   m = b.size
   return [] if n == 0 || m == 0
@@ -33,21 +33,18 @@ def convolution(a, b, k = 35, mod: 998244353, z: 99, r: 3)
   res
 end
 
-
-#p convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
-
 def alpc
   n, m  = gets.to_s.split.map{ |e| e.to_i }
   a = gets.to_s.split.map{ |e| e.to_i }
   b = gets.to_s.split.map{ |e| e.to_i }
-  puts convolution(a, b, 20)
+  puts convolution(a, b, k: 20)
 end
 
 def typical
   n = gets.to_s.to_i
   a, b = Array.new(n){ gets.to_s.split.map{ |e| e.to_i } }.transpose
   puts 0
-  puts convolution(a, b, 8)
+  puts convolution(a, b, k: 8)
 end
 
 def convolution_naive(a, b, mod)
@@ -64,7 +61,9 @@ end
 
 require "minitest"
 require "minitest/autorun"
-class ConvolutionTest < Minitest::Test
+
+# [EXPERIMENTAL]
+class ConvolutionMethodTest < Minitest::Test
   def test_typical_contest
     assert_equal [5, 16, 34, 60, 70, 70, 59, 36], convolution([1, 2, 3, 4], [5, 6, 7, 8, 9])
     assert_equal [871938225], convolution([10000000], [10000000])
@@ -79,13 +78,10 @@ class ConvolutionTest < Minitest::Test
 
   def test_random_array_modulo_default
     max_num = 10**18
-    # conv = Convolution.new
     20.times{
-      # a = (0 .. 20).map{ rand(-max_num .. max_num) }
-      # b = (0 .. 20).map{ rand(-max_num .. max_num) }
       a = (0 .. 20).map{ rand(0 .. max_num) }
       b = (0 .. 20).map{ rand(0.. max_num) }
-      assert_equal convolution_naive(a, b, 998_244_353), convolution(a, b, 50)
+      assert_equal convolution_naive(a, b, 998_244_353), convolution(a, b)
     }
   end
 
@@ -98,13 +94,10 @@ class ConvolutionTest < Minitest::Test
      [1_012_924_417, 1_012_924_412],
      [  924_844_033,             5],
      [  924_844_033,   924_844_028]].each{ |mod, proot|
-      # conv = Convolution.new(mod, proot)
       20.times{
-        a = (0 ... 20).map{ rand(-max_num .. max_num) }
-        b = (0 ... 20).map{ rand(-max_num .. max_num) }
         a = (0 ... 20).map{ rand(0 .. max_num) }
         b = (0 ... 20).map{ rand(0 .. max_num) }
-        assert_equal convolution_naive(a, b, mod), convolution(a, b, 50, mod: mod)
+        assert_equal convolution_naive(a, b, mod), convolution(a, b, mod: mod)
       }
     }
   end
@@ -113,11 +106,9 @@ class ConvolutionTest < Minitest::Test
     max_num = 10**18
     [998_244_353, 1_012_924_417, 924_844_033].each{ |mod|
       20.times{
-        a = (0 ... 20).map{ rand(-max_num .. max_num) }
-        b = (0 ... 20).map{ rand(-max_num .. max_num) }
         a = (0 ... 20).map{ rand(0 .. max_num) }
         b = (0 ... 20).map{ rand(0 .. max_num) }
-        assert_equal convolution_naive(a, b, mod), convolution(a, b, 35, mod: mod)
+        assert_equal convolution_naive(a, b, mod), convolution(a, b, mod: mod)
       }
     }
   end
@@ -135,7 +126,7 @@ class ConvolutionTest < Minitest::Test
         b = (0 ... len_b).map{ rand(-max_num .. max_num) }
         a = (0 ... len_a).map{ rand(0 .. max_num) }
         b = (0 ... len_b).map{ rand(0 .. max_num) }
-        assert_equal convolution_naive(a, b, mod), convolution(a, b, 35, mod: mod)
+        assert_equal convolution_naive(a, b, mod), convolution(a, b, mod: mod)
       }
     }
   end
@@ -145,17 +136,7 @@ class ConvolutionTest < Minitest::Test
       limlen = 1
       limlen *= 2 while (mod - 1) % limlen == 0
       limlen /= 2
-      # a.size + b.size - 1 == limlen + 1 > limlen
-      # assert_raises(ArgumentError){ convolution([*0 ... limlen], [0, 0], mod: mod) }
-      # assert_raises(ArgumentError){ convolution([0, 0], [*0 ... limlen], mod: mod) }
-      # assert_raises(ArgumentError){ convolution([*0 .. limlen / 2], [*0 .. limlen / 2], mod: mod) }
     }
-  end
-
-  def test_empty_array
-    assert_equal [], convolution([], [])
-    assert_equal [], convolution([], [*0 ... 2**19])
-    assert_equal [], convolution([*0 ... 2**19], [])
   end
 end
 

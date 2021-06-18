@@ -15,16 +15,16 @@ Rubyは、クラス名はキャメルケースで、ファイル名はスネー�
 
 |lang   |class      |file |     |
 |:---   |:---       |:--- |:--- |
-|C++    |dsu        |dsu|[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/dsu.hpp)|
-|C      |dsu        |dsu|[URL](https://github.com/siumai1223/ac-library-c/blob/master/atcoder/dsu.h#L25)|
-|C#     |DSU        |DSU|[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/DSU.cs)|
-|Python |DSU        |dsu|[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/dsu.py#L4)
-|Rust   |Dsu        |dsu|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/dsu.rs)|
-|Go|DisjointSetUnion|dsu|[URL](https://github.com/monkukui/ac-library-go/blob/master/dsu/dsu.go#L3)|
-|D      |Dsu        |dsu|[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/dsu.d#L7)|
-|Java   |DSU        |DSU|[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/DSU)|
-|Ruby   |DSU        |dsu|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/dsu.rb)|
-|Crystal|DSU        |DSU|[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/DSU.cr#L27)|
+|C++    |fenwick_tree|fenwicktree|[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/fenwicktree.hpp#L12)|
+|C      |---        |---|[---]()|
+|C#     |FenwickTree|FenwickTree|[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/FenwickTree.cs#L95)|
+|Python |FenwickTree|fenwicktree|[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/fenwicktree.py#L4)
+|Rust   |FenwickTree|fenwicktree|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/fenwicktree.rs)|
+|Go|int|int|[URL](https://github.com/monkukui/ac-library-go/blob/master/fenwicktree/int.go#L1)|
+|D      |FenwickTree|fenwicktree|[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/fenwicktree.d#L4)|
+|Java   |FenwickTree|FenwickTree|[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/FenwickTree)|
+|Ruby   |FenwickTree|fenwick_tree|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/fenwick_tree.rb)|
+|Crystal|FenwickTree|FenwickTre|[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/FenwickTree.cr#L27)|
 
 Goだけ正式名称で異色さが目立つ。  
 C++とC言語は全て小文字でdsu。  
@@ -34,16 +34,30 @@ C++とC言語は全て小文字でdsu。
 
 Rubyは`UnionFind`のエイリアスあり。
 
+# FenwickTree
+
+|lang   |class   |file |     |
+|:---   |:---    |:--- |:--- |
+|C++    |||[URL]()|
+|C      |---|---|[---]()|
+|C#     |||[URL]()|
+|Python |||[URL]()
+|Rust   |||[URL]()|
+|Go     |---|---|[---]()|
+|D      |---|---|[---]()|
+|Java   |||[URL]()|
+|Ruby   |||[URL]()|
+|Crystal|||[URL]()|
+
 
 # SCC
 
-|lang   |class    |file    |     |
+|lang   |struct   |file    |     |
 |:---   |:---     |:---    |:--- | 
 |C++    |scc_graph|scc     |[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/scc.hpp#L12)|
 |C      |---      |---     |[---]()|
 |C#     |SCCGraph |SCCGraph|[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/SCCGraph.cs)|
 |Python |SCCGprah |scc     |[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/scc.py)|
-|Nim    |SCCGraph |scc     |[URL](https://github.com/zer0-star/Nim-ACL/blob/master/src/atcoder/scc.nim)|
 |Rust   |SccGraph |scc     |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/scc.rs)|
 |Go     |SccGraph |scc     |[URL](https://github.com/monkukui/ac-library-go/blob/master/scc/scc.go#L6-L8)|
 |D      |SccGraph |scc     |[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/scc.d#L7)|
@@ -61,6 +75,7 @@ SccGraphなのかSCCGraphなのかわからなくなりそうなので、SCCが�
 あと、SCCGraphは、区切りがわかりにくい。
 
 # mf_graph
+
 |lang   |class   |file    |     |
 |:---   |:---    |:---    |:--- |
 |C++    |mf_graph|maxflow |[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/maxflow.hpp#L14)|
@@ -70,6 +85,7 @@ SccGraphなのかSCCGraphなのかわからなくなりそうなので、SCCが�
 |Go     |---     |---     |[---]()|
 |D      |MfGraph |maxflow |[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/maxflow.d#L7)|
 |Java   |MaxFlow |MaxFlow |[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MaxFlow)|
+|Kotlin |MaxFlow |MaxFlow |[URL](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/maxFlow/MaxFlow.kt#L6)|
 |Ruby   |MaxFlow |max_flow|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/max_flow.rb)|
 |Crystal|MaxFlow |MaxFlow |[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/MaxFlow.cr#L28)|
 
@@ -92,6 +108,7 @@ mfは頭字語(アクロニム)なので、mf_grphをcamel caseにするとき�
 |Go     |---          |             |[---]()|
 |D      |McfGraph     |mincostflow  |[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/mincostflow.d#L7)|
 |Java   |MinCostFlow  |MinCostFlow  |[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MinCostFlow)|
+|Java   |MinCostFlow  |MinCostFlow  |[URL](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/minCostFlow/MinCostFlow.kt#L6)|
 |Ruby   |MinCostFlow  |min_cost_flow|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/min_cost_flow.rb)|
 |Crystal|(MinCostFlow)|(MinCostFlow)|[---](https://github.com/google/ac-library.cr/blob/master/atcoder/MinCostFlow.cr)|
 
@@ -212,17 +229,85 @@ Rubyはクラス名をModIntにしているが、それならファイル名はm
 PyPyとNimは、Pythonのポートだったと思うので記載してない。  
 Kotlinは、基本的にJavaからconvertしているものなので記載してない。  
 
+Nim https://github.com/zer0-star/Nim-ACL/
+
+# C#
+
+最大流はMFGraph、最小費用流はMcfGraphというクラス名になっています。  
+他のDSUやSCCGraphを考えると、最小費用流をMCFGraphに変更するとスタイルが整合します。  
+
+なお、本家AtCoderのC++ライブラリの命名の影響でMFGraphのような名称になっていると思いますが、  
+本家のC++と異なり、アンダースコアのないキャメルケースは区切りがわかりにくく、略語が何なのかもわかりにくいです。  
+また、「MFGraph」なのか「MfGraph」なのか、どっちを使うべきだったか知っておく必要があるように思います。  
+以上を踏まえて、いっそクラス名とファイル名をSCC, MaxFlow, MinCostFlowに統一してしまえば、わかりやすいだろうと思います。  
+
+|lang|class       |file           |     |
+|:---|:---        |:---           |:--- |
+|C#  |DSU         |DSU            |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/DSU.cs)|
+|C#  |**SCCGraph**|**SCCGraph**   |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/SCCGraph.cs)|
+|C#  |**MFGraph** |**MaxFlow**    |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MaxFlow.cs#L29)|
+|C#  |**McfGraph**|**MinCostFlow**|[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MinCostFlow.cs#L58)|
+|C#  |Segtree     |Segtree        |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/Segtree.cs#L38)|
+|C#  |LazySegtree |LazySegtree    |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/LazySegtree.cs#L51)|
+|C#  |TwoSat      |TwoSat         |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/TwoSat.cs#L12)|
+|C#  |ModInt      |ModInt         |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/Math/ModInt.cs#L72)|
+
 # Rust
 
-|lang   |class   |file |     |
+|lang   |struct, impl   |file |     |
 |:---   |:---    |:--- |:--- |
 |Rust   |Dsu        |dsu|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/dsu.rs)|
-|Rust   |SccGraph |scc     |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/scc.rs)|
-|Rust   |MfGraph |maxflow |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7)|
-|Rust|MinCostFlowGraph|mincostflow  |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|
+|Rust   |**SccGraph** |scc     |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/scc.rs)|
+|Rust   |**MfGraph** |maxflow |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7)|
+|Rust|**MinCostFlowGraph**|mincostflow  |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|
 |Rust   |Segtree |segtree|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/segtree.rs#L71)|
 |Rust   |LazySegtree |lazysegtree |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/lazysegtree.rs#L22)|
 |Rust   |TwoSat |twosat |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/twosat.rs)|
 |Rust   |ModInt|modint|[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/modint.rs)|
 
 クラス名はアクロニムでも、イニシャルだけ大文字。
+
+# Graph
+
+|Lang   |SCC   |MaxFlow    |MinCostFlow     |
+|:---   |:---     |:---    |:--- | 
+|C++    |[scc_graph](https://github.com/atcoder/ac-library/blob/master/atcoder/scc.hpp#L12)|[mf_graph](https://github.com/atcoder/ac-library/blob/master/atcoder/maxflow.hpp#L14)     |[mcf_graph](https://github.com/atcoder/ac-library/blob/master/atcoder/mincostflow.hpp#L17) |
+|C#     |[SCCGraph](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/SCCGraph.cs) |[MFGraph](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MaxFlow.cs#L29)|[McfGraph](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MinCostFlow.cs#L58) |
+|Python |[SCCGprah](https://github.com/not522/ac-library-python/blob/master/atcoder/scc.py) |[MFGraph](https://github.com/not522/ac-library-python/blob/master/atcoder/maxflow.py#L4) |[MCFGraph](https://github.com/not522/ac-library-python/blob/master/atcoder/mincostflow.py#L5)|
+|Rust   |[SccGraph](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/scc.rs) |[MfGraph](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7)     |[MinCostFlowGraph](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|
+|Go     |[SccGraph](https://github.com/monkukui/ac-library-go/blob/master/scc/scc.go#L6-L8) |---     |---|
+|D      |[SccGraph](https://github.com/arkark/ac-library-d/blob/master/src/acl/scc.d#L7) |[MfGraph](https://github.com/arkark/ac-library-d/blob/master/src/acl/maxflow.d#L7)     |[McfGraph](https://github.com/arkark/ac-library-d/blob/master/src/acl/mincostflow.d#L7) |
+|Java   |[SCC](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/SCC)      |[MaxFlow](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MaxFlow)      |[MinCostFlow](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MinCostFlow)|
+|Kotolin|[SCC](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/scc/SCC.kt#L6)      |[MaxFlow](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/maxFlow/MaxFlow.kt#L6)     |[MinCostFlow](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/minCostFlow/MinCostFlow.kt#L6) |
+|Ruby   |[SCC](https://github.com/universato/ac-library-rb/blob/main/lib/scc.rb)      |[MaxFlow](https://github.com/universato/ac-library-rb/blob/main/lib/max_flow.rb)     |[MinCostFlow](https://github.com/universato/ac-library-rb/blob/main/lib/min_cost_flow.rb)|
+|Crystal|[SCC](https://github.com/google/ac-library.cr/blob/master/atcoder/SCC.cr#L27)      |[MaxFlow](https://github.com/google/ac-library.cr/blob/master/atcoder/MaxFlow.cr#L28)     |(MinCostFlow)|
+
+# MinCostFlow
+
+|lang   |class        |file         |     |
+|:---   |:---         |:---         |:--- |
+|C++    |[mcf_graph](https://github.com/atcoder/ac-library/blob/master/atcoder/mincostflow.hpp#L17)    |mincostflow  |[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/mincostflow.hpp#L17)|
+|C#     |[McfGraph](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MinCostFlow.cs#L58)     |MinCostFlow  |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MinCostFlow.cs#L58)|
+|Python |[MCFGraph](https://github.com/not522/ac-library-python/blob/master/atcoder/mincostflow.py#L5)     |mincostflow  |[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/mincostflow.py#L5)
+|Rust|[MinCostFlowGraph](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|mincostflow  |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/mincostflow.rs#L16)|
+|Go     |---          |             |[---]()|
+|D      |[McfGraph](https://github.com/arkark/ac-library-d/blob/master/src/acl/mincostflow.d#L7)     |mincostflow  |[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/mincostflow.d#L7)|
+|Java   |[MinCostFlow](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MinCostFlow)  |MinCostFlow  |[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MinCostFlow)|
+|Kotlin   |[MinCostFlow](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/minCostFlow/MinCostFlow.kt#L6)  |MinCostFlow  |[URL](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/minCostFlow/MinCostFlow.kt#L6)|
+|Ruby   |[MinCostFlow](https://github.com/universato/ac-library-rb/blob/main/lib/min_cost_flow.rb)  |min_cost_flow|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/min_cost_flow.rb)|
+|Crystal|(MinCostFlow)|(MinCostFlow)|[---](https://github.com/google/ac-library.cr/blob/master/atcoder/MinCostFlow.cr)|
+
+# MaxFlow
+
+|lang   |class   |file    |     |
+|:---   |:---    |:---    |:--- |
+|C++    |[mf_graph](https://github.com/atcoder/ac-library/blob/master/atcoder/maxflow.hpp#L14)|maxflow |[URL](https://github.com/atcoder/ac-library/blob/master/atcoder/maxflow.hpp#L14)|
+|C#     |[MFGraph](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MaxFlow.cs#L29) |MaxFlow |[URL](https://github.com/key-moon/ac-library-cs/blob/master/AtCoderLibrary/MaxFlow.cs#L29)|
+|Python |[MFGraph](https://github.com/not522/ac-library-python/blob/master/atcoder/maxflow.py#L4) |maxflow |[URL](https://github.com/not522/ac-library-python/blob/master/atcoder/maxflow.py#L4)
+|Rust   |[MfGraph](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7) |maxflow |[URL](https://github.com/rust-lang-ja/ac-library-rs/blob/master/src/maxflow.rs#L7)|
+|Go     |---     |---     |[---]()|
+|D      |[MfGraph](https://github.com/arkark/ac-library-d/blob/master/src/acl/maxflow.d#L7) |maxflow |[URL](https://github.com/arkark/ac-library-d/blob/master/src/acl/maxflow.d#L7)|
+|Java   |[MaxFlow](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MaxFlow) |MaxFlow |[URL](https://github.com/NASU41/AtCoderLibraryForJava/tree/master/MaxFlow)|
+|Kotlin |[MaxFlow](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/maxFlow/MaxFlow.kt#L6) |MaxFlow |[URL](https://github.com/da-louis/ac-library-kt/blob/master/src/main/kotlin/jp/atcoder/library/kotlin/maxFlow/MaxFlow.kt#L6)|
+|Ruby   |[MaxFlow](https://github.com/universato/ac-library-rb/blob/main/lib/max_flow.rb) |max_flow|[URL](https://github.com/universato/ac-library-rb/blob/main/lib/max_flow.rb)|
+|Crystal|[MaxFlow](https://github.com/google/ac-library.cr/blob/master/atcoder/MaxFlow.cr#L28) |MaxFlow |[URL](https://github.com/google/ac-library.cr/blob/master/atcoder/MaxFlow.cr#L28)|
