@@ -2,6 +2,7 @@ class Array
   def abs; map{|k| k.abs } end
   def cumgcd; res = self[0]; map{|t| res = t.gcd(res) } end
   def cummax; res = self[0]; map{|t| res > t ? res : (res = t) } end
+  def cummin; res = self[0]; map{|t| res < t ? res : (res = t) } end
   def cumsum; s = 0i64; map{|k| s += k } end
   def deru_kui(m); map{|t| t>m ? m : t } end
   def diff; (size-1).times.map { |i| self[i + 1] - self[i] }.to_a end
@@ -14,6 +15,19 @@ class Array
     self[x+1]
   end
   def soko_age(m); map{|t| t<m ? m : t } end
+
+  def uniq?
+    return true if size <= 1
+
+    s = sort
+    x = s[-1]
+    s.each do |a|
+      return false if x == a
+
+      x = a
+    end
+    true
+  end
 end
 
 require "spec"
@@ -74,6 +88,15 @@ describe Array do
       [2,3,6].soko_age(3).should eq [3,3,6]
       [12,3,4].soko_age(4).should eq [12,4,4]
       [24,36,4].soko_age(5).should eq [24,36,5]
+    end
+  end
+  describe "#uniq?" do
+    it "is uniq?" do
+      # [].uniq?.should eq true
+      [2,2].uniq?.should eq false
+      [2,3,6].uniq?.should eq true
+      [12,3,4].uniq?.should eq true
+      [24,36,4].uniq?.should eq true
     end
   end
 end

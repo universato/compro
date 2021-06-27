@@ -339,3 +339,7 @@ end
 # to_s は、to_a に依存する。
 # pushは、<< に依存。
 # digは、self[]に依存。
+
+# [061 \- Deck（★2）](https://atcoder.jp/contests/typical90/tasks/typical90_bi)
+# https://atcoder.jp/contests/typical90/submissions/me Ruby 2.7.1 216ms
+# https://atcoder.jp/contests/typical90/submissions/23555208 Crystal 45ms

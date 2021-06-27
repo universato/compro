@@ -26,3 +26,11 @@ ruby ruby/test/union_find.rb
 ```sh
 crystal crystal/test/union_find.rb
 ```
+
+# .gitignore
+
+```.gitignore
+rust/*
+!rust/*.*
+```
+Rustの拡張子のない実行ファイルだけ除く。

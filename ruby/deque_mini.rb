@@ -15,7 +15,7 @@ class Deque
   end
   alias length size
 
-  def empty?()
+  def empty?
     size == 0
   end
 
