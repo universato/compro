@@ -62,6 +62,14 @@ Array.prototype.sortNumbers = function() {
   return this.sort((x, y) => x - y);
 }
 
+Array.prototype.tally = function() {
+  let res = {};
+  for(let key of this){
+    res.hasOwnProperty(key) ? (res[key] += 1) : (res[key] = 1)
+  }
+  return res;
+}
+
 Array.prototype.uniq = function() {
   return Array.from(new Set(this));
 }

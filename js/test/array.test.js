@@ -21,6 +21,13 @@ test('sum', () => {
   expect(sum([1, 2, 3, 4, 5])).toBe(15);
 });
 
+test('tally', () => {
+  expect([].tally()).toMatchObject({});
+  expect([5, 4, 5, 4, 4].tally()).toMatchObject({'4': 3, '5': 2});
+  expect(['ab', 'a', 'a', 'ab'].tally()).toMatchObject({'a': 2, 'ab': 2});
+  expect([1, '1', 1.0, 1n].tally()).toMatchObject({'1': 4});
+});
+
 
 test('prod', () => {
   expect(prod([])).toBe(1);
