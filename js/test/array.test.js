@@ -1,5 +1,11 @@
 const { sum, prod, isArray, isEmptyArray } = require('../array');
 
+test('delete', () => {
+  let a = [0, 10, 20, 30, 40]
+  expect(a.delete_at(2)).toMatchObject([20]);
+  expect(a).toMatchObject([0, 10, 30, 40]);
+});
+
 test('max', () => {
   expect([1, 10, 20, 5].max()).toBe(20);
   expect([-1, -10, -20, -5].max()).toBe(-1);

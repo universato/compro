@@ -1,12 +1,14 @@
 "use strict";
 
-// function duplicateArray(ary){ return ary.slice(); }
-function duplicateArray(ary){ return ary.concat(); }
 function isArray(obj){ return Array.isArray(obj); }
 function isEmptyArray(ary) { return ary.length === 0; }
 function prod(numbers) { return numbers.reduce((res, num) => { return res * num; }, 1); }
 function sum(numbers) { return numbers.reduce((total, num) => { return total + num; }, 0); }
 function uniq(numbers) { return Array.from(new Set(numbers)); }
+
+Array.prototype.delete_at = function(index) {
+  return this.splice(index, 1);
+}
 
 Array.prototype.dup = function() {
   return this.concat();
@@ -35,6 +37,10 @@ Array.prototype.min = function() {
 Array.prototype.prod = function() {
   return this.reduce((res, num) => res * num);
   return this.reduce((res, num) => { return res * num; }, 1);
+}
+
+Array.prototype.sample = function() {
+  return this[Math.floor(Math.random() * this.length)];
 }
 
 Array.prototype.sum = function(init) {
