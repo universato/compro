@@ -1,9 +1,21 @@
-const { sum, prod, isArray, isEmptyArray } = require('../array');
+const { sum, prod, isArray, isEmptyArray } = require('../Array');
 
 test('delete', () => {
   let a = [0, 10, 20, 30, 40]
   expect(a.delete_at(2)).toMatchObject([20]);
   expect(a).toMatchObject([0, 10, 30, 40]);
+});
+
+test('first', () => {
+  expect([].first()).toBe(undefined);
+  expect([10].first()).toBe(10);
+  expect([10, 20, 30].first()).toBe(10);
+});
+
+test('last', () => {
+  expect([].last()).toBe(undefined);
+  expect([10].last()).toBe(10);
+  expect([10, 20, 30].last()).toBe(30);
 });
 
 test('max', () => {
@@ -18,6 +30,7 @@ test('min', () => {
 
 test('sortNumbers', () => {
   expect([1, 10, 20, 5].sortNumbers()).toMatchObject([1, 5, 10, 20]);
+  expect([5, 2, 3, 1, 4].sortNumbers()).toMatchObject([1, 2, 3, 4, 5]);
 });
 
 test('sum', () => {

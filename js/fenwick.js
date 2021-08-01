@@ -1,5 +1,5 @@
 class FenwickTree {
-  constructor(n = 0) {
+  constructor(n) {
     this.n = n
     this.data = new Array(n + 1).fill(0);
   }

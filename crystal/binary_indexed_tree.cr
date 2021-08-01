@@ -7,7 +7,7 @@ class BinaryIndexedTree
 
   def initialize(n)
     @n    = n
-    @bit  = Array.new(n+1, 0_i64)
+    @bit  = Array.new(n + 1, 0_i64)
   end
 
   # i : 1-indexed

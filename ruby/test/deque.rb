@@ -1,5 +1,5 @@
-require_relative '../deque.rb'
-# require_relative '../deque_reversible.rb'
+# require_relative '../deque.rb'
+require_relative '../deque_reversible.rb'
 
 require 'minitest'
 require 'minitest/autorun'
@@ -117,6 +117,15 @@ class DequeTest < Minitest::Test
     assert_equal Deque[1], d.unshift(1)
     assert_equal Deque[2, 1], d.unshift(2)
     assert_equal Deque[3, 2, 1], d.prepend(3)
+  end
+
+  def test_push
+    d = Deque[1, 2, 3]
+    d.push(4)
+    d.push(5)
+    d.unshift(99)
+    d.unshift(98)
+    assert_equal Deque[98, 99, 1, 2, 3, 4, 5], d
   end
 
   def test_pop

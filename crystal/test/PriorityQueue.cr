@@ -1,5 +1,5 @@
 require "spec"
-require "../priority_queue.cr"
+require "../PriorityQueue.cr"
 
 describe PriorityQueue do
   describe "priorityque" do

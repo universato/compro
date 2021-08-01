@@ -20,7 +20,9 @@ eaches = [
 syntaxes = {
   "&:to_i" => "&.to_i",
   "&:to_f" => "&.to_f",
-  "&:to_s" => "&.to_s"
+  "&:to_s" => "&.to_s",
+  "&:" => "&.",
+  "[]" => "of Int64",
 }
 
 verb_conjugations = {
@@ -56,4 +58,6 @@ aliases = {
   "include?" => "has_key?",
   "value" => "has_value?",
   "update" => "merge!",
+  "hex" => "to_i(16)",
+  "hex" => "to_i(8)"
 }

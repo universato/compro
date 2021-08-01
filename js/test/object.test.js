@@ -1,4 +1,4 @@
-const { keys, values, hasKey } = require('../object');
+const { keys, values, hasKey } = require('../Object');
 
 test('keys', () => {
   // expect(keys({}).toString()).toBe([].toString());

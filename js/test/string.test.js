@@ -1,4 +1,4 @@
-const { chr, ord, chars, capitalize, isEmptyString, reverseString } = require('../string');
+const { chr, ord, chars, capitalize, isEmptyString, reverseString } = require('../String');
 
 test('chr', () => {
   expect(chr(65)).toBe("A");

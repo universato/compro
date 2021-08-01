@@ -1,6 +1,6 @@
 require "spec"
 
-require "../union_find.cr"
+require "../UnionFind.cr"
 
 describe UnionFind do
   describe "#unite" do

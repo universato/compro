@@ -1,5 +1,5 @@
 require "spec"
-require "../min_cost_flow.cr"
+require "../MinCostFlow.cr"
 
 describe MinCostFlow do
   describe "mincostflow" do

@@ -1,5 +1,5 @@
 require "spec"
-require "../max_flow.cr"
+require "../MaxFlow.cr"
 
 describe MaxFlow do
   describe "maxflow" do

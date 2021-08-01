@@ -113,6 +113,19 @@ class Integer
     to_s(2).count('1')
   end
 
+  def find_first_set
+    return 0 if self == 0
+
+    n = self
+    cnt = 1
+    while n & 1 == 0
+      cnt += 1
+      n >>= 1
+    end
+    cnt
+  end
+  alias ffs find_first_set
+
   # integer floor division
   def floor_div(other_int)
     self / other_int

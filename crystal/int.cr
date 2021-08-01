@@ -80,7 +80,7 @@ struct Int
   end
 
   def bit_length
-    n = self
+    n = self.abs
     res = 0
     while n > 0
       res += 1
@@ -171,8 +171,8 @@ describe Int do
   end
 end
 
-p 5.divisors
-p 100.divisors
+# p 5.divisors
+# p 100.divisors
 
 # pow
 # https://atcoder.jp/contests/jsc2021/tasks/jsc2021_d

@@ -154,7 +154,7 @@ class Deque
   def dig(*args)
     case args.size
     when 0
-      raise ArgumentError, "wrong number of arguments (given 0, expected 1+)"
+      raise ArgumentError.new("wrong number of arguments (given 0, expected 1+)")
     when 1
       self[args[0].to_int]
     else
@@ -241,7 +241,7 @@ class Deque
   def to_s
     "#{self.class}#{to_a}"
   end
-  # alias inspect to_s
+  alias inspect to_s
 
   def inspect
     "Deque#{to_a}(@n=#{@n}, @buf=#{@buf}, @head=#{@head}, @tail=#{@tail}, size #{size}#{" full" if __full?})"
@@ -304,7 +304,6 @@ class Deque
       @head = 0
       @tail = @n - 1
       @n = @buf.size
-      return
     else
       @buf[(@tail + 1)..(@tail + 1)] = [nil] * @n
       @n = @buf.size

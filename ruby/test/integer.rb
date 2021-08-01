@@ -201,6 +201,15 @@ class IntegerTest < Minitest::Test
     assert_equal [1, 5, 25], 25.each_divisor.to_a
   end
 
+  def test_ffs
+    assert_equal 0, 0.ffs
+    assert_equal 1, 1.ffs
+    assert_equal 1, 0b1001.ffs
+    assert_equal 2, 0b1010.ffs
+    # assert_equal 3, 0b1100.ffs
+    # assert_equal 4, 0b1000.ffs
+  end
+
   def test_modinv
     assert_equal 8, 5.modinv(13)
     assert_equal 4, 3.modinv(11)
