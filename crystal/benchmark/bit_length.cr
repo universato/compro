@@ -30,12 +30,12 @@ struct Int
   end
 end
 
-p -1.bit_length
-p -1.bit_length2
-p -3.bit_length
-p -3.bit_length2
-p -4.bit_length
-p -4.bit_length2
+# p -1.bit_length
+# p -1.bit_length2
+# p -3.bit_length
+# p -3.bit_length2
+# p -4.bit_length
+# p -4.bit_length2
 # p 0.bit_length
 # p 0.bit_length2
 # p 1023.bit_length
@@ -50,11 +50,14 @@ n = 1000_000
 x = 1_000_000_000_000_000
 rng = (x...x+n)
 Benchmark.bm do |r|
-  r.report("bit_length"){ n.times{ |i| i.bit_length } }
-  r.report("bit_length"){ n.times{ |i| i.bit_length2 } }
+  r.report("bit_length "){ n.times{ |i| i.bit_length } }
+  r.report("bit_length2"){ n.times{ |i| i.bit_length2 } }
+  # r.report("bit_length3"){ n.times{ |i| i.bit_length3 } } # Slower
 
-  r.report("bit_length"){ rng.each{ |i| i.bit_length } }
-  r.report("bit_length"){ rng.each{ |i| i.bit_length2 } }
+  r.report("bit_length "){ rng.each{ |i| i.bit_length } }
+  r.report("bit_length2"){ rng.each{ |i| i.bit_length2 } }
+  # r.report("bit_length3"){ rng.each{ |i| i.bit_length3 } } # Slower
 end
 
-# to_sを使うと2倍ぐらい遅くなる。
+# $ crystal run crystal/benchmark/bit_length.cr --release
+# to_sを使ったbit_length3は、2(~8)倍ぐらい遅いな。
