@@ -1,4 +1,8 @@
 ruby/Gemfile
 ruby/Gemfile.lcok
+rust
 rust/*
 !rust/*.*
+rust/
+ts/*
+ts
