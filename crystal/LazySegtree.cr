@@ -175,8 +175,8 @@ class LazySegtree
   end
 end
 
+M = 998_244_353
 def alpc
-  M = 998_244_353
   n, q = gets.to_s.split.map{ |e| e.to_i64 }
   a = gets.to_s.split.map { |e| {e.to_i64, 1_i64} }
 
