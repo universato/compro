@@ -6,8 +6,13 @@ class UnionFind
     @parents = Array.new(@size, -1)
   end
 
+  macro check_range(x)
+    raise ArgumentError.new("[UnionFind Error]#{{{x}}} is not in [0, #{@size})") unless (0 <= {{x}} < @size)
+  end
+
   def unite(a, b)
-    raise ArgumentError.new unless (0 <= a < @size) && (0 <= b < @size)
+    check_range(a)
+    check_range(b)
 
     a = root(a)
     b = root(b)
@@ -19,17 +24,18 @@ class UnionFind
   end
 
   def root(a) : Int32
-    raise ArgumentError.new unless 0 <= a < @size
+    check_range(a)
     @parents[a] < 0 ? a : (@parents[a] = root(@parents[a]))
   end
 
   def same?(a, b) : Bool
-    raise ArgumentError.new unless (0 <= a < @size) && (0 <= b < @size)
+    check_range(a)
+    check_range(b)
     root(a) == root(b)
   end
 
   def size(a) : Int32
-    raise ArgumentError.new unless 0 <= a < @size
+    check_range(a)
     -@parents[a]
   end
 

@@ -23,5 +23,20 @@ describe UnionFind do
       uf.unite(0, 1)
       uf.groups.should eq [[0, 1], [2]]
     end
+
+    it "test out of range" do
+      uf = UnionFind.new(10)
+      expect_raises(ArgumentError){ uf.root(10) }
+    end
+
+    it "test out of range" do
+      uf = UnionFind.new(8)
+      expect_raises(ArgumentError){ uf.unite(8, 1) }
+    end
+
+    it "test out of range" do
+      uf = UnionFind.new(8)
+      expect_raises(ArgumentError){ uf.same?(0, 100) }
+    end
   end
 end
