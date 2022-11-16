@@ -203,6 +203,17 @@ class Array
     true
   end
 
+  # for Graph
+  # [[1, 2], [1, 3]].to_adjacency_list #= => {1 => [2, 3], 2 => [1], 3 => [1]}
+  def to_adjacency_hash
+    res = Hash.new{ [] }
+    each do |x, y|
+      res[x] << y
+      res[y] << x
+    end
+    res
+  end
+
   def test(other)
     n = size
     if size == other.size
